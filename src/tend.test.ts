@@ -194,7 +194,7 @@ describe("renderTend", () => {
 			statement: "Conflicts get a merge UI",
 			body: Array.from({ length: 9 }, (_, i) => `line ${i + 1}`).join("\n"),
 		});
-		expect(cardKeys(sprout).map((k) => k.key)).toEqual(["y", "n", "r", "s"]);
+		expect(cardKeys(sprout).map((k) => k.key)).toEqual(["t", "y", "n", "r", "s"]);
 		const cards = sortCards([proposalCards([prop({})], slug)[0] as ProposalCard, sprout]);
 		expect(cards.map((c) => c.id)).toEqual(["s-9f3e", "p-0001"]);
 		const s0 = initialTend(cards);
@@ -205,15 +205,28 @@ describe("renderTend", () => {
 		).join("\n");
 		expect(text).toContain("┌─ sprout s-9f3e ── [agent] claude-opus-5-5 ── expires in 2d ─");
 		expect(text).toContain("Conflicts get a merge UI");
-		expect(text).toContain("line 6");
-		expect(text).not.toContain("line 7");
-		expect(text).toContain("(roots show s-9f3e)");
-		expect(text).toContain("[y] adopt (write it yourself)");
+		expect(text).toContain("line 9"); // the whole body
+		expect(text).toContain("[t] accept w/ thoughts  [y] rewrite as my idea");
 		expect(text).toContain("1 sprout expired");
 		for (const line of text.split("\n").filter((l) => l.startsWith("│"))) {
 			expect([...line].length).toBe(70);
 		}
 		const step = tendStep(s0, { type: "data", data: "y" });
 		expect(step.effects).toEqual([{ type: "decide", card: sprout, action: { type: "accept" } }]);
+		// [t]: type, backspace, enter → endorse; esc cancels; ctrl-e → editor
+		const typed = tendStep(s0, { type: "data", data: "tok!\x7f" }).state;
+		expect(typed.thoughts).toBe("ok");
+		const boxed = renderTend({ state: typed, now: NOW, expired: 0 }, 70, makeColors(false));
+		expect(boxed.join("\n")).toContain("thoughts: ok█");
+		expect(tendStep(typed, { type: "data", data: "\r" }).effects).toEqual([
+			{ type: "decide", card: sprout, action: { type: "endorse", text: "ok", editor: false } },
+		]);
+		expect(tendStep(typed, { type: "data", data: "\x05" }).effects[0]?.action).toEqual({
+			type: "endorse",
+			text: "ok",
+			editor: true,
+		});
+		expect(tendStep(typed, { type: "data", data: "\x1b" }).state.thoughts).toBeNull();
+		expect(tendStep(s0, { type: "data", data: "t\r" }).state.error).toContain("write a thought");
 	});
 });

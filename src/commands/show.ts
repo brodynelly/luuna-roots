@@ -2,6 +2,7 @@
 
 import { relative } from "node:path";
 import { padEnd } from "../color.ts";
+import { type Endorsed, endorsedMarkdown, readEndorsed } from "../endorse.ts";
 import { contributors, eventsFor, readEvents } from "../events.ts";
 import {
 	EDGE_LABEL_WIDTH,
@@ -151,6 +152,7 @@ interface ShowView {
 	mulch: MulchLearning[];
 	now: Date;
 	prose: ReturnType<typeof readNodeProse>;
+	endorsed: Endorsed | null;
 	edges: NeighborView[];
 	questions: QuestionRecord[];
 	proposals: ProposalRecord[];
@@ -168,6 +170,8 @@ function renderShow(out: Output, v: ShowView): string[] {
 	if (!v.prose.exists) lines.push(c.red("(prose file missing)"));
 	else lines.push(`"${v.prose.statement}"`);
 	if (v.prose.body) lines.push("", v.node.kind === "sprout" ? c.dim(v.prose.body) : v.prose.body);
+	if (v.endorsed)
+		lines.push("", ...endorsedMarkdown(v.endorsed, v.node.author).map((l) => c.dim(l)));
 	const blocks = [
 		sproutMeta(out, v.node, v.now),
 		v.edges.map((e) => edgeLine(out, e)),
@@ -213,6 +217,7 @@ export const showCommand: CommandDef = {
 			seeds: idea ? linkedIssues(readSeedsIssues(ws.paths.root), node.id) : [],
 			mulch: idea ? learningsFor(ws.paths.root, node.id) : [],
 			prose,
+			endorsed: idea ? readEndorsed(ws.paths, ws.graph, node, ws.dirs) : null,
 			edges: neighbors(ws.paths, ws.graph, ws.dirs, node),
 			questions: readTable<QuestionRecord>(ws.paths.questions).filter((q) => q.node === node.id),
 			proposals: pendingProposals(readProposals(ws.paths), now, ws.graph).filter(
@@ -226,6 +231,7 @@ export const showCommand: CommandDef = {
 			node,
 			statement: prose.statement,
 			body: prose.body,
+			endorsed: view.endorsed,
 			path: view.path,
 			missing: !prose.exists,
 			edges: view.edges,

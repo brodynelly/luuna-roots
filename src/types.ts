@@ -34,6 +34,12 @@ export interface NodeRecord {
 	decidedBy?: Actor;
 	decidedAt?: string;
 	decisionReason?: string;
+	/**
+	 * Ideas only: adopted by endorsement (`adopt --endorse`, tend [t]). The
+	 * human's idea.md holds only their thoughts; the endorsed agent text is the
+	 * sprout's sprout.md, pinned by its content hash at adoption.
+	 */
+	endorses?: { sprout: string; hash: string };
 }
 
 export interface EdgeRecord {

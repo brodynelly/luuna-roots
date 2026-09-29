@@ -9,6 +9,7 @@
 import { spawnSync } from "node:child_process";
 import { relative } from "node:path";
 import type { RootsConfig } from "./config.ts";
+import { type Endorsed, endorsedMarkdown, readEndorsed } from "./endorse.ts";
 import { type EdgeDirection, edgeLabel } from "./format.ts";
 import { findNode } from "./graph.ts";
 import { learningsFor, type MulchLearning } from "./mulch-link.ts";
@@ -90,6 +91,8 @@ export interface ContextPacket {
 	};
 	statement: string;
 	body: string;
+	/** Endorsed ideas: the agent text the human accepted, quoted (roots-6205). */
+	endorsed: Endorsed | null;
 	/** Prose file relative to the project root (human-owned: agents never edit it). */
 	path: string | null;
 	tier: EffectiveTier & { config: RootsConfig["tier"] };
@@ -208,6 +211,7 @@ export function buildContext(
 		node: { id, kind, slug, status, author, createdAt, updatedAt: node.updatedAt ?? null },
 		statement: prose.statement,
 		body: prose.body,
+		endorsed: readEndorsed(ws.paths, ws.graph, node, ws.dirs),
 		path: prose.path ? relative(ws.paths.root, prose.path) : null,
 		tier: { ...effectiveTier(config, node), config: config.tier },
 		session: opts.session ?? null,
@@ -289,6 +293,14 @@ function headerLines(p: ContextPacket): string[] {
 function ideaLines(p: ContextPacket): string[] {
 	const lines = ["", "## Idea", "", quote(p.statement || "(empty)")];
 	if (p.body) lines.push("", p.body);
+	if (p.endorsed) {
+		lines.push(
+			"",
+			"The human endorsed this agent text; the idea above is their thoughts on it:",
+			"",
+			...endorsedMarkdown(p.endorsed, p.node.author),
+		);
+	}
 	return lines;
 }
 

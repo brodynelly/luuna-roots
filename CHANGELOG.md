@@ -25,6 +25,15 @@ First implementation of roots (stages 1-7 of the original design spec).
   and long card bodies end with "… N more lines".
 
 ### Added
+- **Endorse a sprout (accept with thoughts).** `roots adopt <s-id> --endorse` and `[t]` on a
+  `tend` sprout card accept the sprout as written. idea.md holds only the human's thoughts; the
+  idea records `endorses: {sprout, hash}` (sprout.md pinned at adoption). `view`, `show`,
+  `prime` and `context` quote the sprout with an `[agent] … · endorsed by …` label and flag it
+  if sprout.md changed since. The slug comes from the sprout statement.
+- `tend` `[t]`: type thoughts under the card, enter endorses, ctrl-e continues in `$EDITOR`.
+  Sprout cards show the whole body (clamped to the terminal), not 6 lines.
+- `adopt` puts the sprout in the editor buffer, quoted below a git-style scissors line that is
+  removed on save, so the reference is visible in any terminal (no split pane needed).
 - **`[a] ask agent` in think (tier ≥ 1).** Hands the current question to the agent. After the
   session `agent.command` researches it and attaches findings with
   `roots note <id> --question <q-id> --file <md>`, which reopens the question. Next session the

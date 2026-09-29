@@ -8,7 +8,6 @@ import {
 	daysLeft,
 	expiringSoon,
 	type ProposalCard,
-	SPROUT_BODY_LINES,
 	type SproutCard,
 	type TendCard,
 	type TendState,
@@ -40,19 +39,13 @@ function relationLine(card: ProposalCard): string {
 
 function sproutBody(card: SproutCard, inner: number, c: Colors): string[] {
 	const lines = wrapText(card.statement || "(empty)", inner).map((l) => c.bold(l));
+	// The whole body: the human decides on what the agent actually wrote.
+	// renderTend clamps it to the terminal height.
 	const body = card.body.split("\n").filter((l) => l.trim() !== "");
-	if (body.length > 0) {
-		lines.push("");
-		const wrapped = body.flatMap((l) => wrapText(l, inner));
-		lines.push(...wrapped.slice(0, SPROUT_BODY_LINES).map((l) => c.dim(l)));
-		if (wrapped.length > SPROUT_BODY_LINES) lines.push(c.dim(`… (roots show ${card.id})`));
-	}
-	lines.push(
-		"",
-		...wrapText("adopt = write it as your own idea in $EDITOR; nothing is copied", inner).map((l) =>
-			c.dim(l),
-		),
-	);
+	if (body.length > 0) lines.push("", ...body.flatMap((l) => wrapText(l, inner)));
+	const hint =
+		"[t] keeps this as the agent's text, quoted, plus your thoughts · [y] you rewrite it (nothing copied)";
+	lines.push("", ...wrapText(hint, inner).map((l) => c.dim(l)));
 	return lines;
 }
 
@@ -159,6 +152,12 @@ export function renderTend(v: TendView, columns: number, c: Colors, rows = 0): s
 	const s = v.state;
 	const footer: string[] = [];
 	if (s.reason !== null) footer.push(`reason: ${s.reason}█`, c.dim("[enter] reject  [esc] cancel"));
+	if (s.thoughts !== null) {
+		footer.push(
+			...wrapText(`thoughts: ${s.thoughts}█`, width),
+			c.dim("[enter] accept with thoughts  [ctrl-e] continue in $EDITOR  [esc] cancel"),
+		);
+	}
 	if (s.busy) footer.push(c.dim("working…"));
 	if (s.error) footer.push(c.red(`! ${s.error}`));
 	else if (s.notice) footer.push(c.green(`✓ ${s.notice}`));

@@ -5,6 +5,7 @@
 // proposals and composted ideas are left out.
 
 import type { RootsConfig } from "./config.ts";
+import { readEndorsed } from "./endorse.ts";
 import { findNode } from "./graph.ts";
 import { readNodeProse } from "./prose.ts";
 import { anchorsOf, type ServesTree, servesAncestors, servesForest } from "./serves-tree.ts";
@@ -18,6 +19,8 @@ export interface PrimeNode {
 	status: NodeRecord["status"];
 	statement: string;
 	tier?: number;
+	/** Endorsed ideas: the agent text the human accepted (roots-6205). */
+	endorses?: { sprout: string; by: string; statement: string; changed: boolean };
 	/** Printed in full earlier; this occurrence is a back-reference. */
 	ref?: boolean;
 	children: PrimeNode[];
@@ -56,12 +59,16 @@ export function primeAnchors(graph: Graph): NodeRecord[] {
 
 function toPrimeNode(ws: WsView, t: ServesTree): PrimeNode {
 	const n = t.node;
+	const e = readEndorsed(ws.paths, ws.graph, n, ws.dirs);
 	return {
 		id: n.id,
 		slug: n.slug,
 		status: n.status,
 		statement: readNodeProse(ws.paths, n, ws.dirs).statement,
 		...(typeof n.tier === "number" ? { tier: n.tier } : {}),
+		...(e
+			? { endorses: { sprout: e.sprout, by: e.by, statement: e.statement, changed: e.changed } }
+			: {}),
 		...(t.ref ? { ref: true } : {}),
 		children: t.children.map((c) => toPrimeNode(ws, c)),
 	};
@@ -119,6 +126,13 @@ function treeLines(nodes: readonly PrimeNode[], depth = 0): string[] {
 		}
 		const tier = n.tier === undefined ? "" : ` · tier ${n.tier}`;
 		lines.push(`${pad}- ${n.id} ${n.slug} [${n.status}${tier}]: ${n.statement || "(empty)"}`);
+		const e = n.endorses;
+		if (e) {
+			const changed = e.changed ? "; sprout changed since" : "";
+			lines.push(
+				`${pad}  endorses ${e.sprout} ([agent] text a human accepted${changed}): ${e.statement}`,
+			);
+		}
 		lines.push(...treeLines(n.children, depth + 1));
 	}
 	return lines;

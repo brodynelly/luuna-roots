@@ -1,12 +1,13 @@
 import { describe, expect, test } from "bun:test";
-import { readdirSync, readFileSync, writeFileSync } from "node:fs";
+import { chmodSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
+import { SCISSORS } from "../editor.ts";
 import { EXIT } from "../errors.ts";
 import { readEvents } from "../events.ts";
 import { findNode, readGraph } from "../graph.ts";
 import { rootsPaths } from "../paths.ts";
 import { fileSprout } from "../sprouts.ts";
-import { fakeEditor, initProject, run, runJson } from "../test-helpers.ts";
+import { fakeEditor, forceStatus, initProject, run, runJson } from "../test-helpers.ts";
 import type { EdgeRecord, NodeRecord } from "../types.ts";
 
 const SPROUT_TEXT = "Conflicts get a merge UI";
@@ -74,6 +75,61 @@ describe("roots adopt", () => {
 		const again = await runJson(["adopt", sprout], root, { env: { EDITOR: editor } });
 		expect(again.exitCode).toBe(EXIT.conflict);
 		expect((await run(["unlink", r.body.edge.id], root)).exitCode).toBe(EXIT.usage);
+	});
+
+	test("the editor buffer quotes the sprout below the scissors; only text above is kept", async () => {
+		const { root, sprout } = await setup();
+		const seen = join(root, "seen.md");
+		const editor = join(root, "prepend.sh");
+		writeFileSync(
+			editor,
+			`#!/bin/sh\ncp "$1" '${seen}'\n{ printf 'Mine, not the agent\\n'; cat '${seen}'; } > "$1"\n`,
+		);
+		chmodSync(editor, 0o755);
+		const r = await runJson<Adopted>(["adopt", sprout], root, { env: { EDITOR: editor } });
+		expect(r.exitCode).toBe(0);
+		const buffer = readFileSync(seen, "utf8");
+		expect(buffer).toContain(SCISSORS);
+		expect(buffer).toContain(`> ${SPROUT_TEXT}`);
+		expect(buffer).toContain("> Agent body: users lose edits.");
+		expect(readFileSync(join(root, r.body.path), "utf8")).toBe("Mine, not the agent\n");
+	});
+
+	test("--endorse: idea.md holds only the thoughts; readers quote the sprout as the agent's", async () => {
+		const { root, paths, sprout } = await setup();
+		const editor = fakeEditor(root, "Yes, and start with manual merges\n");
+		const r = await runJson<Adopted & { idea: NodeRecord }>(["adopt", sprout, "--endorse"], root, {
+			env: { EDITOR: editor },
+		});
+		expect(r.exitCode).toBe(0);
+		expect(r.stderr).toContain("Endorsing");
+		expect(r.body.slug).toBe("conflicts-get-merge-ui-2");
+		const idea = readFileSync(join(root, r.body.path), "utf8");
+		expect(idea).toBe("Yes, and start with manual merges\n");
+		const node = findNode(readGraph(paths), r.body.id);
+		expect(node?.endorses?.sprout).toBe(sprout);
+		expect(node?.endorses?.hash).toMatch(/^sha256:/);
+		expect(readEvents(paths).at(-1)).toMatchObject({ type: "adopt", mode: "endorse" });
+		const label = `[agent] opus · ${sprout} · endorsed by human:test-human`;
+		const show = await run(["show", r.body.id], root);
+		expect(show.stdout).toContain(label);
+		expect(show.stdout).toContain(`> ${SPROUT_TEXT}`);
+		await forceStatus(root, r.body.id, "committed");
+		const view = await run(["view"], root);
+		expect(view.stdout).toContain(`> _${label}_`);
+		expect(view.stdout).toContain("> Agent body: users lose edits.");
+		const html = await run(["view", "--html"], root);
+		expect(html.stdout).toContain('class="endorsed"');
+		const prime = await run(["prime"], root);
+		expect(prime.stdout).toContain(`endorses ${sprout} ([agent] text a human accepted)`);
+		const ctx = await runJson<{ endorsed: { sprout: string } }>(["context", r.body.id], root);
+		expect(ctx.body.endorsed.sprout).toBe(sprout);
+		const md = await run(["context", r.body.id], root);
+		expect(md.stdout).toContain("The human endorsed this agent text");
+		// the pinned hash flags a sprout edited after endorsement
+		const dir = join(paths.sprouts, readdirSync(paths.sprouts)[0] ?? "");
+		writeFileSync(join(dir, "sprout.md"), "Something else\n");
+		expect((await run(["show", r.body.id], root)).stdout).toContain("CHANGED since endorsement");
 	});
 
 	test("an empty save cancels: no node, no files, no events", async () => {

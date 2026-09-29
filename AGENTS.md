@@ -81,7 +81,9 @@ src/*.ts            store, ids, config, output, graph, etc.
   boundary.ts       agent writes only under .roots/agent/ (no traversal, symlinks, human/)
   node-create.ts    createNode(): hex + slug + prose file (plant, adopt, sprout)
   sprouts.ts        fileSprout() (tier, cap, dedup, TTL), lazy expiry, sproutView()
-  adopt.ts          completeAdoption(): idea + `derives` edge + sprout adopted, one lock
+  adopt.ts          completeAdoption(): idea + `derives` edge + sprout adopted, one lock;
+                    endorse: idea.md = human thoughts, node.endorses pins sprout.md's hash
+  endorse.ts        readEndorsed()/endorsedMarkdown(): endorsed agent text, quoted + [agent] label
   sprout-decide.ts  s- decider: accept = adopt (needs ctx.adopt / TTY), reject (permanent)
   notes.ts          attachNote()/listNotes(): agent/notes/<hex>/YYYY-MM-DD-<slug>.<ext>
   serves-tree.ts    anchor → incoming-serves DFS with back-refs (shared by prime and view)

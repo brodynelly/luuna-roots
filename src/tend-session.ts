@@ -2,9 +2,12 @@
 // cards, drive the pure reducer (tend.ts) from keys, execute decisions
 // through decide.ts, and hand off to the human's editor when needed: an
 // accepted split opens a think session (with the proposal shown as guidance),
-// an adopted sprout opens the adopt flow (AdoptRunner). The terminal leaves
+// an adopted sprout opens the adopt flow (AdoptRunner); [t] thoughts endorse
+// the sprout in place (adopt.ts endorse) or via the editor. The terminal leaves
 // raw mode for the hand-off and comes back to the next card.
 
+import { relative } from "node:path";
+import { completeAdoption } from "./adopt.ts";
 import type { Colors } from "./color.ts";
 import { acceptItem, type Decision, rejectItem } from "./decide.ts";
 import { CancelledError } from "./errors.ts";
@@ -12,7 +15,7 @@ import { findNode, readGraph } from "./graph.ts";
 import type { RootsPaths } from "./paths.ts";
 import { expireProposals, pendingProposals, readProposals } from "./proposals.ts";
 import { readNodeProse } from "./prose.ts";
-import "./sprout-decide.ts";
+import { sproutDecision } from "./sprout-decide.ts";
 import { expireSprouts, openSprouts } from "./sprouts.ts";
 import {
 	type CardNode,
@@ -39,9 +42,11 @@ export type ThinkRunner = (node: string, guidance: string) => Promise<string>;
 
 /**
  * Adopts a sprout interactively (commands/adopt.ts runAdoption): the human
- * writes the idea in $EDITOR. Throws CancelledError on an empty save.
+ * writes the idea in $EDITOR. With `endorse` (their thoughts so far), it
+ * endorses instead and the editor opens on those thoughts. Throws
+ * CancelledError on an empty save.
  */
-export type AdoptRunner = (sproutId: string) => Promise<Decision>;
+export type AdoptRunner = (sproutId: string, endorse?: string) => Promise<Decision>;
 
 export interface TendDeps {
 	paths: RootsPaths;
@@ -117,12 +122,27 @@ async function handOff<T>(live: Live, fn: () => Promise<T>): Promise<T> {
 	}
 }
 
+/** [t]: typed thoughts endorse right away; ctrl-e hands off to the editor. */
+async function endorse(live: Live, id: string, text: string, editor: boolean): Promise<Decision> {
+	const { paths, by } = live.deps;
+	const runner = live.deps.adopt;
+	if (editor) {
+		if (!runner) throw new Error("no editor hand-off here; press enter to endorse");
+		return handOff(live, () => runner(id, text === "" ? "" : `${text}\n`));
+	}
+	const r = await completeAdoption(paths, { sprout: id, text: `${text}\n`, by, endorse: true });
+	const d = sproutDecision(id, "accept", r.sprout, r.idea, relative(paths.root, r.file));
+	d.edge = r.edge;
+	return d;
+}
+
 async function decide(live: Live, card: TendCard, action: TendAction): Promise<Decision> {
 	const now = (live.deps.clock ?? (() => new Date()))();
 	const runner = live.deps.adopt;
 	const adopt = runner ? (id: string) => handOff(live, () => runner(id)) : undefined;
 	const ctx = { paths: live.deps.paths, by: live.deps.by, now, adopt };
 	if (action.type === "reject") return rejectItem(ctx, card.id, action.reason);
+	if (action.type === "endorse") return endorse(live, card.id, action.text, action.editor);
 	if (action.type !== "accept") throw new Error(`nothing to decide for ${action.type}`);
 	return acceptItem(ctx, card.id, { rel: action.rel, keep: action.keep });
 }
@@ -141,6 +161,7 @@ function outcomeOf(d: Decision): TendOutcome {
 
 function noticeOf(d: Decision): string {
 	const s = d.sprout;
+	if (s?.idea?.endorses) return `${s.node.id} endorsed as ${s.idea.id} ${s.idea.slug}`;
 	if (s?.idea) return `${s.node.id} adopted as ${s.idea.id} ${s.idea.slug}`;
 	if (s) return `${s.node.id} ${s.node.status}`;
 	if (d.edge) return `${d.edge.id}: ${d.edge.from} ${d.edge.rel} ${d.edge.to}`;

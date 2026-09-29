@@ -8,8 +8,10 @@
 // there is one) and decide.ts decides the whole group. Cards are ordered by
 // expiry, soonest first; ones expiring within EXPIRING_SOON_DAYS are flagged.
 //
-// Sprout cards: one per open sprout. [y] adopts it (tend-session hands off
-// to the adopt editor flow), [n]/[r] reject it (permanent), [s] skips.
+// Sprout cards: one per open sprout. [t] accepts it with thoughts (an inline
+// box under the card: enter endorses, ctrl-e continues in $EDITOR; see
+// adopt.ts endorse), [y] adopts it by rewriting (tend-session hands off to the
+// adopt editor flow), [n]/[r] reject it (permanent), [s] skips.
 // Proposal and sprout cards are interleaved by expiry. The reducer only sees
 // keys → actions.
 
@@ -56,15 +58,13 @@ export interface SproutCard {
 	ids: string[];
 	slug: string;
 	statement: string;
-	/** Prose after the statement (shown dimmed, a few lines at most). */
+	/** Prose after the statement (shown in full, clamped to the terminal). */
 	body: string;
 	author: Actor;
 	expiresAt: string | null;
 }
 
 export type TendCard = ProposalCard | SproutCard;
-
-export const SPROUT_BODY_LINES = 6;
 
 export interface SproutSource {
 	id: string;
@@ -97,12 +97,14 @@ export type TendAction =
 	| { type: "accept"; rel?: EdgeRel; keep?: string }
 	| { type: "reject"; reason?: string }
 	| { type: "skip" }
-	| { type: "quit" };
+	| { type: "quit" }
+	/** Accept a sprout as written with the human's thoughts; `editor` continues in $EDITOR. */
+	| { type: "endorse"; text: string; editor: boolean };
 
 export interface CardKey {
 	key: string;
 	label: string;
-	action: TendAction | { type: "reason" };
+	action: TendAction | { type: "reason" } | { type: "thoughts" };
 }
 
 // ── cards ───────────────────────────────────────────────────────────────────
@@ -210,7 +212,8 @@ function acceptKeys(card: ProposalCard): CardKey[] {
 export function cardKeys(card: TendCard): CardKey[] {
 	if (card.type === "sprout") {
 		return [
-			{ key: "y", label: "adopt (write it yourself)", action: { type: "accept" } },
+			{ key: "t", label: "accept w/ thoughts", action: { type: "thoughts" } },
+			{ key: "y", label: "rewrite as my idea", action: { type: "accept" } },
 			...REJECT_KEYS,
 		];
 	}
@@ -226,6 +229,8 @@ export interface TendState {
 	index: number;
 	/** Typing a rejection reason. */
 	reason: string | null;
+	/** Typing thoughts on a sprout ([t]). */
+	thoughts: string | null;
 	/** A decision is being executed; input waits. */
 	busy: boolean;
 	outcomes: Record<string, TendOutcome>;
@@ -251,6 +256,7 @@ export function initialTend(cards: TendCard[]): TendState {
 		cards,
 		index: 0,
 		reason: null,
+		thoughts: null,
 		busy: false,
 		outcomes: {},
 		notice: null,
@@ -280,7 +286,7 @@ function act(s: TendState, card: TendCard, action: TendAction): TendStep {
 	if (action.type === "quit") return { state: { ...s, ended: true }, effects: [] };
 	if (action.type === "skip") return { state: advance(s, card, "skipped"), effects: [] };
 	return {
-		state: { ...s, busy: true, error: null, reason: null },
+		state: { ...s, busy: true, error: null, reason: null, thoughts: null },
 		effects: [{ type: "decide", card, action }],
 	};
 }
@@ -294,10 +300,29 @@ function onReasonChar(s: TendState, card: TendCard, ch: string): TendStep {
 		return act(s, card, { type: "reject", reason });
 	}
 	if (ch === "\x1b") return { state: { ...s, reason: null, notice: "cancelled" }, effects: [] };
-	if (ch === "\x7f" || ch === "\b")
-		return { state: { ...s, reason: text.slice(0, -1) }, effects: [] };
-	if (ch < " ") return { state: s, effects: [] };
-	return { state: { ...s, reason: text + ch }, effects: [] };
+	return { state: { ...s, reason: edited(text, ch) }, effects: [] };
+}
+
+/** Printable input appended to `text`; backspace deletes; other controls are ignored. */
+function edited(text: string, ch: string): string {
+	if (ch === "\x7f" || ch === "\b") return text.slice(0, -1);
+	return ch < " " ? text : text + ch;
+}
+
+function onThoughtsChar(s: TendState, card: TendCard, ch: string): TendStep {
+	const text = s.thoughts ?? "";
+	if (ch === "\x1b") return { state: { ...s, thoughts: null, notice: "cancelled" }, effects: [] };
+	if (ch === "\x05") return act(s, card, { type: "endorse", text: text.trim(), editor: true });
+	if (ch === "\r" || ch === "\n") {
+		if (text.trim() === "") {
+			return {
+				state: { ...s, error: "write a thought first (or ctrl-e for $EDITOR)" },
+				effects: [],
+			};
+		}
+		return act(s, card, { type: "endorse", text: text.trim(), editor: false });
+	}
+	return { state: { ...s, thoughts: edited(text, ch), error: null }, effects: [] };
 }
 
 function onCardKey(s: TendState, card: TendCard, ch: string): TendStep {
@@ -307,6 +332,9 @@ function onCardKey(s: TendState, card: TendCard, ch: string): TendStep {
 	if (!hit) return { state: s, effects: [] };
 	if (hit.action.type === "reason") {
 		return { state: { ...s, reason: "", notice: null, error: null }, effects: [] };
+	}
+	if (hit.action.type === "thoughts") {
+		return { state: { ...s, thoughts: "", notice: null, error: null }, effects: [] };
 	}
 	return act(s, card, hit.action);
 }
@@ -330,6 +358,7 @@ function onChar(s: TendState, ch: string): TendStep {
 	const card = currentCard(s);
 	if (!card) return { state: s, effects: [] };
 	if (ch === "\x03" || ch === "\x04") return act(s, card, { type: "quit" });
+	if (s.thoughts !== null) return onThoughtsChar(s, card, ch);
 	return s.reason !== null ? onReasonChar(s, card, ch) : onCardKey(s, card, ch);
 }
 

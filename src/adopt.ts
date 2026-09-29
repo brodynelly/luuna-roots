@@ -11,6 +11,12 @@
 // removed, so nothing is left behind. An empty text cancels before anything
 // is written (CancelledError): no node, no files, no events.
 // Events (after the lock): `plant` for the idea (with `sprout`), then `adopt`.
+//
+// Endorsement (endorse: true, roots-6205): the human accepts the sprout as
+// written and adds their thoughts. idea.md still holds only the human's text;
+// the idea records `endorses: {sprout, hash}` (sprout.md's hash, pinning the
+// exact agent text agreed to) and view/show/prime/context quote that text,
+// labeled as the agent's. The slug defaults to the sprout statement's.
 
 import { rmSync } from "node:fs";
 import { dirname } from "node:path";
@@ -18,9 +24,9 @@ import { insertEdge } from "./edges.ts";
 import { CancelledError, ConflictError, GuardError, NotFoundError } from "./errors.ts";
 import { appendEvent, makeEvent } from "./events.ts";
 import { findNode, readGraph, updateGraph } from "./graph.ts";
-import { createNode } from "./node-create.ts";
+import { chooseSlug, createNode } from "./node-create.ts";
 import type { RootsPaths } from "./paths.ts";
-import { contentHash, parseProse } from "./prose.ts";
+import { contentHash, parseProse, readNodeProse } from "./prose.ts";
 import { expireSprouts, isSproutOverdue } from "./sprouts.ts";
 import { isoNow } from "./time.ts";
 import type { Actor, EdgeRecord, Graph, NodeRecord } from "./types.ts";
@@ -56,6 +62,8 @@ export interface AdoptInput {
 	by: Actor;
 	slug?: string;
 	now?: Date;
+	/** Accept the sprout as written; `text` is the human's thoughts on it. */
+	endorse?: boolean;
 }
 
 export interface AdoptResult {
@@ -67,17 +75,25 @@ export interface AdoptResult {
 	statement: string;
 }
 
+function endorsement(paths: RootsPaths, sprout: NodeRecord) {
+	const prose = readNodeProse(paths, sprout);
+	if (!prose.exists) throw new NotFoundError(`${sprout.id} has no sprout.md to endorse`);
+	return { statement: prose.statement, hash: contentHash(prose.text) };
+}
+
 function adoptInGraph(paths: RootsPaths, graph: Graph, input: AdoptInput, statement: string) {
 	const now = input.now ?? new Date();
 	const sprout = openSproutIn(graph, input.sprout, now);
+	const endorsed = input.endorse ? endorsement(paths, sprout) : null;
 	const created = createNode(paths, graph, {
 		kind: "idea",
 		text: input.text,
 		statement,
-		slug: input.slug,
+		slug: input.slug ?? (endorsed ? chooseSlug(graph, endorsed.statement, undefined) : undefined),
 		by: input.by,
 		status: "planted",
 		now,
+		extra: endorsed ? { endorses: { sprout: sprout.id, hash: endorsed.hash } } : undefined,
 	});
 	try {
 		const { edge } = insertEdge(
@@ -130,6 +146,7 @@ export async function completeAdoption(paths: RootsPaths, input: AdoptInput): Pr
 			refs: [r.idea.id],
 			idea: r.idea.id,
 			edge: r.edge.id,
+			...(r.idea.endorses ? { mode: "endorse", sproutHash: r.idea.endorses.hash } : {}),
 		}),
 	);
 	return r;

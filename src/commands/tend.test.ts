@@ -15,6 +15,7 @@ import {
 	runJson,
 	waitFor,
 } from "../test-helpers.ts";
+import type { NodeRecord } from "../types.ts";
 
 const AGENT = ["--as", "agent:opus"];
 
@@ -190,7 +191,7 @@ describe("roots tend", () => {
 		const terminal = fakeTerminal(72);
 		const running = run(["tend"], s.root, { terminal, env: { EDITOR: editor } });
 		await waitFor(() => terminal.screen().includes(`sprout ${one}`), 3000, "sprout card");
-		expect(terminal.screen()).toContain("[y] adopt");
+		expect(terminal.screen()).toContain("[y] rewrite as my idea");
 		terminal.send("y");
 		await waitFor(() => terminal.screen().includes(`sprout ${two}`), 5000, "second sprout");
 		expect(terminal.screen()).toContain(`${one} adopted as r-`);
@@ -203,6 +204,49 @@ describe("roots tend", () => {
 		expect(findNode(g, one)?.status).toBe("adopted");
 		expect(findNode(g, two)?.status).toBe("rejected");
 		expect(g.edges.filter((e) => e.rel === "derives").map((e) => e.to)).toEqual([one]);
+	});
+	test("sprout card: [t] endorses with typed thoughts; ctrl-e continues in the editor", async () => {
+		const s = await setup();
+		const sprout = async (text: string) =>
+			(await runJson<{ id: string }>(["sprout", text, ...AGENT], s.root)).body.id;
+		const one = await sprout("Conflicts get a merge UI");
+		const two = await sprout("Offline mode has a banner");
+		const editor = fakeEditor(s.root, "Longer thoughts from the editor\n");
+		const terminal = fakeTerminal(72);
+		const running = run(["tend"], s.root, { terminal, env: { EDITOR: editor } });
+		await waitFor(() => terminal.screen().includes(`sprout ${one}`), 3000, "sprout card");
+		terminal.send("t");
+		terminal.send("\r");
+		await waitFor(() => terminal.screen().includes("write a thought first"), 3000, "empty guard");
+		terminal.send("yes, but manual first");
+		await waitFor(
+			() => terminal.screen().includes("thoughts: yes, but manual first█"),
+			3000,
+			"box",
+		);
+		terminal.send("\r");
+		await waitFor(() => terminal.screen().includes(`sprout ${two}`), 5000, "second sprout");
+		expect(terminal.screen()).toContain(`${one} endorsed as r-`);
+		terminal.send("tbanner\x05");
+		const r = await running;
+		expect(r.stdout).toContain("2 accepted, 0 rejected, 0 skipped");
+		const g = readGraph(s.paths);
+		const ideas = g.nodes.filter((n) => n.endorses);
+		expect(ideas.map((n) => n.endorses?.sprout)).toEqual([one, two]);
+		const [first, second] = ideas;
+		expect(first?.slug).toBe("conflicts-get-merge-ui-2"); // from the sprout, not "yes-but"
+		expect(readNodeProse(s.paths, first as NodeRecord).text).toBe("yes, but manual first\n");
+		expect(readNodeProse(s.paths, second as NodeRecord).text).toBe(
+			"Longer thoughts from the editor\n",
+		);
+		expect(
+			readEvents(s.paths)
+				.filter((e) => e.type === "adopt")
+				.at(0),
+		).toMatchObject({
+			node: one,
+			mode: "endorse",
+		});
 	});
 	test("sprout card: an empty save cancels the adoption and skips the card", async () => {
 		const s = await setup();

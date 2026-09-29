@@ -113,7 +113,8 @@ export const tendCommand: CommandDef = {
 			terminal,
 			colors: makeColors(colorEnabled(io.env, true)),
 			think: thinkRunner(io, by, !flagBool(flags, "no-split")),
-			adopt: (id) => runAdoption(io, ws.paths, id, { by, split: !flagBool(flags, "no-split") }),
+			adopt: (id, endorse) =>
+				runAdoption(io, ws.paths, id, { by, split: !flagBool(flags, "no-split"), endorse }),
 		});
 		await printSummary(out, summary);
 		await printNext(out, ws.paths);

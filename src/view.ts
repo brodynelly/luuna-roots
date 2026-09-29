@@ -22,11 +22,12 @@
 
 import { answerBlocks, buildBlame } from "./blame.ts";
 import type { RootsConfig } from "./config.ts";
+import { type Endorsed, endorsedMarkdown, readEndorsed } from "./endorse.ts";
 import { findNode } from "./graph.ts";
 import { readNodeProse } from "./prose.ts";
 import { byCreated, flattenForest, type ServesTree, servesForest } from "./serves-tree.ts";
 import { openSprouts } from "./sprouts.ts";
-import type { EventRecord, Graph, NodeRecord, QuestionRecord } from "./types.ts";
+import type { Actor, EventRecord, Graph, NodeRecord, QuestionRecord } from "./types.ts";
 import type { Workspace } from "./workspace.ts";
 
 export interface ViewIdea {
@@ -37,6 +38,9 @@ export interface ViewIdea {
 	body: string;
 	/** The body split by the question each part answered (roots blame). */
 	blocks: ViewBlock[];
+	/** Endorsed ideas: the agent text the human accepted (quoted, labeled). */
+	endorsed?: Endorsed | null;
+	author?: Actor;
 }
 
 export interface ViewBlock {
@@ -144,7 +148,9 @@ function readIdea(src: Src, n: NodeRecord): ViewIdea {
 		return { question: q ? viewQuestion(q) : null, text: b.text };
 	});
 	const { statement, body } = prose;
-	return { id: n.id, slug: n.slug, status: n.status, statement, body, blocks };
+	const endorsed = readEndorsed(src.ws.paths, src.ws.graph, n, src.ws.dirs);
+	const idea: ViewIdea = { id: n.id, slug: n.slug, status: n.status, statement, body, blocks };
+	return endorsed ? { ...idea, endorsed, author: n.author } : idea;
 }
 
 function toViewNode(ideas: Record<string, ViewIdea>, t: ServesTree): ViewNode {
@@ -287,6 +293,7 @@ function nodeLines(n: ViewNode, depth: number): string[] {
 		`\`${n.id}\` · ${n.slug} · ${n.status}`,
 	];
 	lines.push("");
+	if (n.endorsed) lines.push(...endorsedMarkdown(n.endorsed, n.author), "");
 	lines.push(...blockLines(n));
 	for (const c of n.children) lines.push(...nodeLines(c, depth + 1));
 	return lines;

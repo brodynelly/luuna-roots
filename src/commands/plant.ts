@@ -5,7 +5,7 @@ import { tmpdir } from "node:os";
 import { join, relative } from "node:path";
 import { resolveHumanActor } from "../actor.ts";
 import { flagString } from "../args.ts";
-import { openEditor } from "../editor.ts";
+import { openEditor, stripReference } from "../editor.ts";
 import { CancelledError, UsageError } from "../errors.ts";
 import { appendEvent, makeEvent } from "../events.ts";
 import { updateGraph } from "../graph.ts";
@@ -19,14 +19,18 @@ import type { CommandDef } from "../registry.ts";
 import type { Actor, NodeRecord } from "../types.ts";
 import { openWorkspace } from "../workspace.ts";
 
-/** Open $EDITOR on an empty temp idea.md and return what the human saved. */
-export function composeInEditor(io: Io): string {
+/**
+ * Open $EDITOR on a temp idea.md and return what the human saved. `initial`
+ * may hold a reference below the scissors line (editor.ts referenceBuffer);
+ * that part is stripped from the result.
+ */
+export function composeInEditor(io: Io, initial = ""): string {
 	const dir = mkdtempSync(join(tmpdir(), "roots-plant-"));
 	const file = join(dir, "idea.md");
 	try {
-		writeFileSync(file, "");
+		writeFileSync(file, initial);
 		openEditor(file, io);
-		return readFileSync(file, "utf8");
+		return stripReference(readFileSync(file, "utf8"));
 	} finally {
 		rmSync(dir, { recursive: true, force: true });
 	}

@@ -10,6 +10,7 @@
 // as escaped plain text (paragraphs, line breaks kept); it is never parsed as
 // Markdown or HTML, so no human or agent text can inject markup or script.
 
+import { endorsedLabel } from "./endorse.ts";
 import type { EventRecord } from "./types.ts";
 import type { ViewData, ViewIdea, ViewNode, ViewSprout } from "./view.ts";
 
@@ -161,6 +162,18 @@ function proseHtml(text: string): string {
 		.join("\n");
 }
 
+/** An endorsed idea's agent text: quoted and labeled, never shown as human prose. */
+function endorsedHtml(i: ViewIdea): string {
+	if (!i.endorsed) return "";
+	const e = i.endorsed;
+	const text = e.body ? `${e.statement}\n\n${e.body}` : e.statement;
+	return [
+		`<blockquote class="endorsed"><p class="by">${esc(endorsedLabel(e, i.author))}</p>`,
+		proseHtml(text || "(sprout.md missing)"),
+		"</blockquote>",
+	].join("\n");
+}
+
 function blocksHtml(i: ViewIdea): string {
 	return i.blocks
 		.map((b) => {
@@ -207,6 +220,7 @@ function nodeHtml(n: ViewNode, depth: number, tl: Timelines): string {
 		`<section class="idea" id="${esc(n.id)}" data-id="${esc(n.id)}">`,
 		`<h${h}>${esc(statementOf(n.statement))}</h${h}>`,
 		metaHtml(n),
+		endorsedHtml(n),
 		blocksHtml(n),
 		timelineHtml(tl(n.id)),
 		...n.children.map((c) => nodeHtml(c, depth + 1, tl)),
@@ -287,6 +301,7 @@ main{max-width:860px;margin:0 auto;padding:24px 16px 64px}
 h1{font-size:1.7rem;margin:0 0 4px}
 .graph{overflow-x:auto;border:1px solid var(--line);border-radius:8px;background:var(--card);margin:16px 0 32px}
 svg{display:block;margin:0 auto}
+.endorsed{margin:8px 0;border-left:3px solid var(--line);padding-left:12px;color:var(--muted)}
 svg .node rect{fill:var(--card);stroke:var(--accent);stroke-width:1.5}
 svg .node text{fill:var(--fg);font-size:12px;text-anchor:middle}
 svg .node.agent{opacity:.5}

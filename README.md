@@ -108,7 +108,7 @@ Commit `.roots/` with your code. Roots never runs git for you.
 | Term | Meaning |
 |------|---------|
 | **Idea** (`r-xxxx`) | One human claim, stated in one sentence (the first line of `idea.md`). |
-| **Sprout** (`s-xxxx`) | An idea proposed by an agent. Lives only in `.roots/agent/`. A human can `adopt` it by rewriting it in their own words. |
+| **Sprout** (`s-xxxx`) | An idea proposed by an agent. Lives only in `.roots/agent/`. A human can `adopt` it by rewriting it in their own words, or endorse it (`adopt --endorse`, `[t]` in `tend`): the sprout stays the agent's text, pinned by hash and quoted with an `[agent]` label, and the human writes only their thoughts on it. |
 | **Edge** | `serves`, `tension`, `replaces` (composts the target) or `derives` (idea from sprout). Only humans create edges. |
 | **Proposal** (`p-xxxx`) | A pending agent suggestion: `edge`, `split`, `merge` or `compost`. Must quote the human's words. Capped, and expires after `limits.proposalTtlDays`. |
 | **Question** (`q-xxxx`) | A prompt about one idea, from a rule or an agent. |
@@ -141,14 +141,14 @@ error}`), `-h`/`--help` and `-q`/`--quiet`. `roots --version` prints the version
 | `roots plant [<statement>]` | Create an idea. With no argument, opens `$EDITOR` |
 | `roots think [<id>] [--no-split]` | Run a think session. With no id, picks from the queue |
 | `roots flow [<id>] [--no-split]` | Think, review and plant in one session; the agent works in the background |
-| `roots adopt <sprout-id>` | Create an idea from a sprout: you write it in `$EDITOR`; a `derives` edge keeps the lineage |
+| `roots adopt <sprout-id> [--endorse]` | Create an idea from a sprout: you write it in `$EDITOR` (the sprout is quoted below a scissors line, removed on save); a `derives` edge keeps the lineage. `--endorse`: accept the sprout as written and write only your thoughts |
 | `roots mv <id> <new-slug>` | Rename an idea or sprout (the id is stable) |
 
 ### Structure (human)
 
 | Command | Description |
 |---------|-------------|
-| `roots tend` | Interactive review: proposals and sprouts, soonest expiry first (TTY) |
+| `roots tend` | Interactive review: proposals and sprouts, soonest expiry first (TTY). On a sprout, `[t]` accepts it with thoughts typed under the card (ctrl-e continues in `$EDITOR`) |
 | `roots accept <p-id\|s-id>` | Accept a proposal (`--rel` for mention edges, `--keep` for merges); `s-` adopts a sprout |
 | `roots reject <p-id\|s-id> [--reason <t>]` | Reject; remembered permanently |
 | `roots link <a> <b> <rel>` | Add an edge directly |

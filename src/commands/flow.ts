@@ -42,7 +42,7 @@ function steps(io: Io, ws: Workspace, by: Actor, split: boolean) {
 				terminal,
 				colors: makeColors(colorEnabled(io.env, true)),
 				think: thinkRunner(io, by, split),
-				adopt: (id) => runAdoption(io, ws.paths, id, { by, split }),
+				adopt: (id, endorse) => runAdoption(io, ws.paths, id, { by, split, endorse }),
 			});
 			return tendLine(s);
 		},
