@@ -15,6 +15,10 @@ First implementation of roots (stages 1-7 of the original design spec).
   zellij. Fixes `tend` → adopt opening a second pane under herdr.
 
 ### Fixed
+- Endorsed ideas use the endorsed sprout statement as their claim, not the human's thoughts.
+  `list`, `view` headings, `show`, `prime`, `context`, rule questions and mention targets used
+  to print the thoughts ("lgtm") as the idea. `--cite` now also matches the endorsed text.
+  `show`/`context` JSON add `thoughts` (idea.md); `prime` prints them after `endorses`.
 - `think`'s agent status line no longer prints a new line per frame in narrow panes (cut to the
   terminal width).
 - `think` and `tend` screens fill the terminal height, with keys pinned to the bottom.

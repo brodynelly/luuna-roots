@@ -22,6 +22,7 @@ import type { Colors } from "./color.ts";
 import type { RootsConfig } from "./config.ts";
 import { findingPreview } from "./delegation.ts";
 import { type ChangedLine, changedLines, type DiffSpan, diffSpan, formatSpan } from "./diff.ts";
+import { claimText, readEndorsed } from "./endorse.ts";
 import { NotFoundError } from "./errors.ts";
 import { appendEvent, makeEvent, readEvents } from "./events.ts";
 import { findNode, readGraph, updateGraph } from "./graph.ts";
@@ -172,7 +173,9 @@ export async function prepareQuestions(
 ): Promise<QuestionRecord[]> {
 	const { paths, config, node } = deps;
 	const existing = readQuestions(paths);
-	const ctx = ruleContextFor(graph, node, text, readEvents(paths), config, now);
+	// roots-9699: rules judge an endorsed idea's claim, not only the thoughts.
+	const claim = claimText(text, readEndorsed(paths, graph, node));
+	const ctx = ruleContextFor(graph, node, claim, readEvents(paths), config, now);
 	const due = dueQuestions(existing, node.id, now).filter((q) => agents || !isAgentQuestion(q));
 	const plan = planQuestions(due, newCandidates(ctx, existing), config.limits.questionsPerSession);
 	const drafts = plan.create.map((c) => draftFromCandidate(node.id, c));

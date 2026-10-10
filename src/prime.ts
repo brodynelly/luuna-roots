@@ -5,9 +5,9 @@
 // proposals and composted ideas are left out.
 
 import type { RootsConfig } from "./config.ts";
-import { readEndorsed } from "./endorse.ts";
+import { readClaim } from "./endorse.ts";
+import { truncate } from "./format.ts";
 import { findNode } from "./graph.ts";
-import { readNodeProse } from "./prose.ts";
 import { anchorsOf, type ServesTree, servesAncestors, servesForest } from "./serves-tree.ts";
 import { type EffectiveTier, effectiveTier } from "./tier.ts";
 import type { Graph, NodeRecord } from "./types.ts";
@@ -19,8 +19,11 @@ export interface PrimeNode {
 	status: NodeRecord["status"];
 	statement: string;
 	tier?: number;
-	/** Endorsed ideas: the agent text the human accepted (roots-6205). */
-	endorses?: { sprout: string; by: string; statement: string; changed: boolean };
+	/**
+	 * Endorsed ideas: the agent text the human accepted (roots-6205). It is
+	 * also `statement` (roots-9699); `thoughts` is the human's idea.md.
+	 */
+	endorses?: { sprout: string; by: string; statement: string; thoughts: string; changed: boolean };
 	/** Printed in full earlier; this occurrence is a back-reference. */
 	ref?: boolean;
 	children: PrimeNode[];
@@ -59,15 +62,24 @@ export function primeAnchors(graph: Graph): NodeRecord[] {
 
 function toPrimeNode(ws: WsView, t: ServesTree): PrimeNode {
 	const n = t.node;
-	const e = readEndorsed(ws.paths, ws.graph, n, ws.dirs);
+	const { prose, endorsed: e, statement } = readClaim(ws.paths, ws.graph, n, ws.dirs);
+	const thoughts = prose.text.trim();
 	return {
 		id: n.id,
 		slug: n.slug,
 		status: n.status,
-		statement: readNodeProse(ws.paths, n, ws.dirs).statement,
+		statement,
 		...(typeof n.tier === "number" ? { tier: n.tier } : {}),
 		...(e
-			? { endorses: { sprout: e.sprout, by: e.by, statement: e.statement, changed: e.changed } }
+			? {
+					endorses: {
+						sprout: e.sprout,
+						by: e.by,
+						statement: e.statement,
+						thoughts,
+						changed: e.changed,
+					},
+				}
 			: {}),
 		...(t.ref ? { ref: true } : {}),
 		children: t.children.map((c) => toPrimeNode(ws, c)),
@@ -116,6 +128,11 @@ export function buildPrime(ws: WsView, config: RootsConfig, scope: NodeRecord | 
 
 // ── Markdown ──────────────────────────────────────────────────────────────
 
+/** The human's thoughts on one line: prime is one line per idea. */
+function oneLine(text: string): string {
+	return truncate(text.replace(/\s*\n\s*/g, " "), 160) || "(none)";
+}
+
 function treeLines(nodes: readonly PrimeNode[], depth = 0): string[] {
 	const pad = "  ".repeat(depth);
 	const lines: string[] = [];
@@ -130,7 +147,7 @@ function treeLines(nodes: readonly PrimeNode[], depth = 0): string[] {
 		if (e) {
 			const changed = e.changed ? "; sprout changed since" : "";
 			lines.push(
-				`${pad}  endorses ${e.sprout} ([agent] text a human accepted${changed}): ${e.statement}`,
+				`${pad}  endorses ${e.sprout} ([agent] text a human accepted${changed}); thoughts: ${oneLine(e.thoughts)}`,
 			);
 		}
 		lines.push(...treeLines(n.children, depth + 1));

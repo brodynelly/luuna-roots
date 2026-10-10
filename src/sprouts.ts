@@ -22,13 +22,14 @@
 //     Expired sprouts do not block: nobody looked at them.
 
 import { loadConfig } from "./config.ts";
+import { readClaim } from "./endorse.ts";
 import { GuardError, UsageError, ValidationError } from "./errors.ts";
 import { appendEvent, makeEvent } from "./events.ts";
 import { readGraph, updateGraph } from "./graph.ts";
 import { createNode } from "./node-create.ts";
 import type { RootsPaths } from "./paths.ts";
 import { expiresAt } from "./proposals.ts";
-import { contentHash, readNodeProse } from "./prose.ts";
+import { contentHash } from "./prose.ts";
 import { requireTier } from "./tier.ts";
 import { isoNow } from "./time.ts";
 import type { Actor, Graph, NodeRecord } from "./types.ts";
@@ -116,7 +117,7 @@ export function findStatementDuplicate(
 	const key = statementKey(statement);
 	return graph.nodes.find((n) => {
 		if (isSprout(n) && (!BLOCKING_SPROUT.has(n.status) || isSproutOverdue(n, now))) return false;
-		return statementKey(readNodeProse(paths, n).statement) === key;
+		return statementKey(readClaim(paths, graph, n).statement) === key;
 	});
 }
 

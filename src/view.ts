@@ -22,7 +22,7 @@
 
 import { answerBlocks, buildBlame } from "./blame.ts";
 import type { RootsConfig } from "./config.ts";
-import { type Endorsed, endorsedMarkdown, readEndorsed } from "./endorse.ts";
+import { claimStatement, type Endorsed, endorsedMarkdown, readEndorsed } from "./endorse.ts";
 import { findNode } from "./graph.ts";
 import { readNodeProse } from "./prose.ts";
 import { byCreated, flattenForest, type ServesTree, servesForest } from "./serves-tree.ts";
@@ -34,6 +34,7 @@ export interface ViewIdea {
 	id: string;
 	slug: string;
 	status: NodeRecord["status"];
+	/** The claim: for an endorsed idea, the endorsed agent statement (roots-9699). */
 	statement: string;
 	body: string;
 	/** The body split by the question each part answered (roots blame). */
@@ -150,7 +151,16 @@ function readIdea(src: Src, n: NodeRecord): ViewIdea {
 	const { statement, body } = prose;
 	const endorsed = readEndorsed(src.ws.paths, src.ws.graph, n, src.ws.dirs);
 	const idea: ViewIdea = { id: n.id, slug: n.slug, status: n.status, statement, body, blocks };
-	return endorsed ? { ...idea, endorsed, author: n.author } : idea;
+	if (!endorsed) return idea;
+	// roots-9699: the endorsed text is the claim; all of idea.md is the human's thoughts.
+	const thoughts = statement ? [{ question: null, text: statement }, ...blocks] : blocks;
+	return {
+		...idea,
+		statement: claimStatement(statement, endorsed),
+		blocks: thoughts,
+		endorsed,
+		author: n.author,
+	};
 }
 
 function toViewNode(ideas: Record<string, ViewIdea>, t: ServesTree): ViewNode {

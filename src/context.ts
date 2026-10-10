@@ -9,13 +9,12 @@
 import { spawnSync } from "node:child_process";
 import { relative } from "node:path";
 import type { RootsConfig } from "./config.ts";
-import { type Endorsed, endorsedMarkdown, readEndorsed } from "./endorse.ts";
+import { type Endorsed, endorsedMarkdown, readClaim } from "./endorse.ts";
 import { type EdgeDirection, edgeLabel } from "./format.ts";
 import { findNode } from "./graph.ts";
 import { learningsFor, type MulchLearning } from "./mulch-link.ts";
 import { listNotes, type NoteEntry } from "./notes.ts";
 import { readProposals } from "./proposals.ts";
-import { readNodeProse } from "./prose.ts";
 import { readQuestions } from "./questions.ts";
 import { type LinkedIssue, linkedIssues, readSeedsIssues } from "./seeds-link.ts";
 import { type EffectiveTier, effectiveTier } from "./tier.ts";
@@ -89,10 +88,13 @@ export interface ContextPacket {
 	node: Pick<NodeRecord, "id" | "kind" | "slug" | "status" | "author" | "createdAt"> & {
 		updatedAt: string | null;
 	};
+	/** The idea's claim: for an endorsed idea, the endorsed agent text (roots-9699). */
 	statement: string;
 	body: string;
 	/** Endorsed ideas: the agent text the human accepted, quoted (roots-6205). */
 	endorsed: Endorsed | null;
+	/** Endorsed ideas: idea.md, the human's thoughts on the endorsed text. */
+	thoughts: string | null;
 	/** Prose file relative to the project root (human-owned: agents never edit it). */
 	path: string | null;
 	tier: EffectiveTier & { config: RootsConfig["tier"] };
@@ -132,7 +134,7 @@ function neighbors(ws: WsView, node: NodeRecord): ContextNeighbor[] {
 		const direction: EdgeDirection = e.from === node.id ? "out" : "in";
 		const otherId = direction === "out" ? e.to : e.from;
 		const other = findNode(ws.graph, otherId);
-		const statement = other ? readNodeProse(ws.paths, other, ws.dirs).statement : "";
+		const statement = other ? readClaim(ws.paths, ws.graph, other, ws.dirs).statement : "";
 		out.push({
 			edge: e.id,
 			rel: e.rel,
@@ -200,7 +202,8 @@ export function buildContext(
 	node: NodeRecord,
 	opts: ContextOptions = {},
 ): ContextPacket {
-	const prose = readNodeProse(ws.paths, node, ws.dirs);
+	const { prose, endorsed } = readClaim(ws.paths, ws.graph, node, ws.dirs);
+	const claim = endorsed?.statement ? endorsed : prose;
 	const questions = readQuestions(ws.paths);
 	const mine = questions
 		.filter((q) => q.node === node.id)
@@ -209,9 +212,10 @@ export function buildContext(
 	return {
 		project: config.project,
 		node: { id, kind, slug, status, author, createdAt, updatedAt: node.updatedAt ?? null },
-		statement: prose.statement,
-		body: prose.body,
-		endorsed: readEndorsed(ws.paths, ws.graph, node, ws.dirs),
+		statement: claim.statement,
+		body: claim.body,
+		endorsed,
+		thoughts: endorsed ? prose.text.trim() : null,
 		path: prose.path ? relative(ws.paths.root, prose.path) : null,
 		tier: { ...effectiveTier(config, node), config: config.tier },
 		session: opts.session ?? null,
@@ -291,16 +295,22 @@ function headerLines(p: ContextPacket): string[] {
 }
 
 function ideaLines(p: ContextPacket): string[] {
-	const lines = ["", "## Idea", "", quote(p.statement || "(empty)")];
-	if (p.body) lines.push("", p.body);
 	if (p.endorsed) {
-		lines.push(
+		return [
 			"",
-			"The human endorsed this agent text; the idea above is their thoughts on it:",
+			"## Idea",
+			"",
+			"The human endorsed this agent text; it is the idea's claim:",
 			"",
 			...endorsedMarkdown(p.endorsed, p.node.author),
-		);
+			"",
+			"Their thoughts on it (idea.md):",
+			"",
+			p.thoughts || "(empty)",
+		];
 	}
+	const lines = ["", "## Idea", "", quote(p.statement || "(empty)")];
+	if (p.body) lines.push("", p.body);
 	return lines;
 }
 

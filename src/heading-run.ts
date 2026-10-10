@@ -6,11 +6,11 @@
 
 import { type AgentRunResult, agentActorFor, agentEnv, runAgentCommand } from "./agent-runner.ts";
 import type { RootsConfig } from "./config.ts";
+import { readClaim } from "./endorse.ts";
 import type { FlowTrail } from "./flow.ts";
 import { readGraph } from "./graph.ts";
 import { activeHeading, dismissedHeadings, readHeadings } from "./headings.ts";
 import type { RootsPaths } from "./paths.ts";
-import { readNodeProse } from "./prose.ts";
 import { isDue, readQuestions } from "./questions.ts";
 import { effectiveTier } from "./tier.ts";
 import type { Actor, Graph, HeadingRecord, NodeRecord } from "./types.ts";
@@ -59,12 +59,12 @@ function trailLines(trail: FlowTrail): string[] {
 	return lines.length > 0 ? lines : ["(nothing yet)"];
 }
 
-function ideaBlocks(paths: RootsPaths, nodes: readonly NodeRecord[]): string[] {
+function ideaBlocks(paths: RootsPaths, graph: Graph, nodes: readonly NodeRecord[]): string[] {
 	return nodes.flatMap((n) => [
 		`### ${n.id} ${n.slug} (${n.status})`,
 		"",
 		"```markdown",
-		readNodeProse(paths, n).text.trimEnd(),
+		readClaim(paths, graph, n).text.trimEnd(),
 		"```",
 		"",
 	]);
@@ -102,13 +102,14 @@ export function headingPacket(
 		"",
 		...ideaBlocks(
 			paths,
+			graph,
 			live.filter((n) => touched.has(n.id)),
 		),
 		"## Other ideas",
 		"",
 		...(others.length > 0
 			? others.map(
-					(n) => `- ${n.id} ${n.slug} (${n.status}): "${readNodeProse(paths, n).statement}"`,
+					(n) => `- ${n.id} ${n.slug} (${n.status}): "${readClaim(paths, graph, n).statement}"`,
 				)
 			: ["(none)"]),
 		"",

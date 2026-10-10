@@ -22,12 +22,12 @@
 // draft (for `roots propose`); otherwise failing drafts are skipped and
 // reported (for automatic filing at session end and in `roots scan`).
 
+import { readClaim } from "./endorse.ts";
 import { ConflictError, ValidationError } from "./errors.ts";
 import { appendEvent, makeEvent } from "./events.ts";
 import { readGraph } from "./graph.ts";
 import { generateId, hexSet } from "./ids.ts";
 import type { RootsPaths } from "./paths.ts";
-import { readNodeProse } from "./prose.ts";
 import { readTable, updateTable } from "./store.ts";
 import { isoNow } from "./time.ts";
 import type {
@@ -229,7 +229,7 @@ export function checkCitations(
 		const node = graph.nodes.find((n) => n.id === c.node);
 		if (!node) return `cited node ${c.node} does not exist`;
 		if (c.quote.trim() === "") return `empty cite quote for ${c.node}`;
-		if (!readNodeProse(paths, node).text.includes(c.quote)) {
+		if (!readClaim(paths, graph, node).text.includes(c.quote)) {
 			return `cite quote not found in ${c.node}`;
 		}
 	}

@@ -108,7 +108,7 @@ Commit `.roots/` with your code. Roots never runs git for you.
 | Term | Meaning |
 |------|---------|
 | **Idea** (`r-xxxx`) | One human claim, stated in one sentence (the first line of `idea.md`). |
-| **Sprout** (`s-xxxx`) | An idea proposed by an agent. Lives only in `.roots/agent/`. A human can `adopt` it by rewriting it in their own words, or endorse it (`adopt --endorse`, `[t]` in `tend`): the sprout stays the agent's text, pinned by hash and quoted with an `[agent]` label, and the human writes only their thoughts on it. |
+| **Sprout** (`s-xxxx`) | An idea proposed by an agent. Lives only in `.roots/agent/`. A human can `adopt` it by rewriting it in their own words, or endorse it (`adopt --endorse`, `[t]` in `tend`): the sprout stays the agent's text, pinned by hash and quoted with an `[agent]` label, and the human writes only their thoughts on it. The endorsed statement is the idea's claim in `list`, `view`, `prime` and citations. |
 | **Edge** | `serves`, `tension`, `replaces` (composts the target) or `derives` (idea from sprout). Only humans create edges. |
 | **Proposal** (`p-xxxx`) | A pending agent suggestion: `edge`, `split`, `merge` or `compost`. Must quote the human's words. Capped, and expires after `limits.proposalTtlDays`. |
 | **Question** (`q-xxxx`) | A prompt about one idea, from a rule or an agent. |

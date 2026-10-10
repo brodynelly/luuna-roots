@@ -2,11 +2,11 @@
 
 import { flagBool, flagString } from "../args.ts";
 import { padEnd, visibleLength } from "../color.ts";
+import { readClaim } from "../endorse.ts";
 import { UsageError } from "../errors.ts";
 import { formatNodeRef, formatStatus, truncate } from "../format.ts";
 import { isAnchor, isOrphan } from "../graph.ts";
 import type { Output } from "../output.ts";
-import { readNodeProse } from "../prose.ts";
 import type { CommandDef } from "../registry.ts";
 import { sproutView } from "../sprouts.ts";
 import { daysLeft } from "../tend.ts";
@@ -110,7 +110,7 @@ export const listCommand: CommandDef = {
 		const graph = { ...ws.graph, nodes: ws.graph.nodes.map((n) => sproutView(n, now)) };
 		const rows: Row[] = filterNodes(graph, filter).map((node) => ({
 			node,
-			statement: readNodeProse(ws.paths, node, ws.dirs).statement,
+			statement: readClaim(ws.paths, ws.graph, node, ws.dirs).statement,
 		}));
 		await out.result({
 			count: rows.length,

@@ -20,12 +20,12 @@
 // (roots-9c29).
 
 import { loadConfig, type RootsConfig } from "./config.ts";
+import { readClaim } from "./endorse.ts";
 import { GuardError, UsageError, ValidationError } from "./errors.ts";
 import { readGraph } from "./graph.ts";
 import { checkEdge, isLinkRel, LINK_RELS } from "./graph-rules.ts";
 import type { RootsPaths } from "./paths.ts";
 import { fileProposals, type ProposalDraft } from "./proposals.ts";
-import { readNodeProse } from "./prose.ts";
 import { resolveNode } from "./resolve.ts";
 import { requireTier } from "./tier.ts";
 import type {
@@ -133,7 +133,7 @@ function addMentionCite(paths: RootsPaths, graph: Graph, draft: ProposalDraft): 
 	}
 	const other = citesFrom ? draft.to : draft.from;
 	const target = graph.nodes.find((n) => n.id === other);
-	const statement = target ? readNodeProse(paths, target).statement : "";
+	const statement = target ? readClaim(paths, graph, target).statement : "";
 	if (statement !== "" && other) draft.cites.push({ node: other, quote: statement });
 }
 

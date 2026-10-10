@@ -2,7 +2,7 @@
 
 import { relative } from "node:path";
 import { padEnd } from "../color.ts";
-import { type Endorsed, endorsedMarkdown, readEndorsed } from "../endorse.ts";
+import { claimStatement, type Endorsed, endorsedMarkdown, readEndorsed } from "../endorse.ts";
 import { contributors, eventsFor, readEvents } from "../events.ts";
 import {
 	EDGE_LABEL_WIDTH,
@@ -161,17 +161,30 @@ interface ShowView {
 	path: string | null;
 }
 
+/** The statement and body; for an endorsed idea, the endorsed claim, then the thoughts. */
+function proseLines(out: Output, v: ShowView): string[] {
+	const c = out.c;
+	const lines: string[] = [];
+	if (!v.prose.exists) lines.push(c.red("(prose file missing)"));
+	if (v.endorsed) {
+		// roots-9699: the endorsed text is the claim; idea.md is the human's thoughts on it.
+		lines.push(`"${claimStatement(v.prose.statement, v.endorsed)}"`);
+		lines.push("", ...endorsedMarkdown(v.endorsed, v.node.author).map((l) => c.dim(l)));
+		if (v.prose.text.trim()) lines.push("", c.dim("thoughts"), v.prose.text.trim());
+		return lines;
+	}
+	if (v.prose.exists) lines.push(`"${v.prose.statement}"`);
+	if (v.prose.body) lines.push("", v.node.kind === "sprout" ? c.dim(v.prose.body) : v.prose.body);
+	return lines;
+}
+
 function renderShow(out: Output, v: ShowView): string[] {
 	const c = out.c;
 	const agent = v.node.kind === "sprout" ? `${c.dim("[agent]")} ` : "";
 	const lines = [
 		`${agent}${c.id(c.bold(v.node.id))}  ${v.node.slug}  ${formatStatus(c, v.node.status)}`,
 	];
-	if (!v.prose.exists) lines.push(c.red("(prose file missing)"));
-	else lines.push(`"${v.prose.statement}"`);
-	if (v.prose.body) lines.push("", v.node.kind === "sprout" ? c.dim(v.prose.body) : v.prose.body);
-	if (v.endorsed)
-		lines.push("", ...endorsedMarkdown(v.endorsed, v.node.author).map((l) => c.dim(l)));
+	lines.push(...proseLines(out, v));
 	const blocks = [
 		sproutMeta(out, v.node, v.now),
 		v.edges.map((e) => edgeLine(out, e)),
@@ -229,9 +242,10 @@ export const showCommand: CommandDef = {
 		};
 		await out.result({
 			node,
-			statement: prose.statement,
-			body: prose.body,
+			statement: claimStatement(prose.statement, view.endorsed),
+			body: view.endorsed?.statement ? view.endorsed.body : prose.body,
 			endorsed: view.endorsed,
+			thoughts: view.endorsed ? prose.text.trim() : null,
 			path: view.path,
 			missing: !prose.exists,
 			edges: view.edges,

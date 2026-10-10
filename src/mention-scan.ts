@@ -5,10 +5,11 @@
 
 import type { RootsConfig } from "./config.ts";
 import type { ChangedLine } from "./diff.ts";
+import { readClaim } from "./endorse.ts";
 import { findMentions, type Mention, type MentionTarget } from "./mentions.ts";
 import type { RootsPaths } from "./paths.ts";
 import { type FileResult, fileProposals, MENTION_ACTOR, type ProposalDraft } from "./proposals.ts";
-import { type NodeDirs, readNodeProse } from "./prose.ts";
+import type { NodeDirs } from "./prose.ts";
 import type { Graph } from "./types.ts";
 
 /** Live ideas with a statement on disk. */
@@ -16,7 +17,7 @@ export function mentionTargets(paths: RootsPaths, graph: Graph, dirs?: NodeDirs)
 	const out: MentionTarget[] = [];
 	for (const n of graph.nodes) {
 		if (n.kind !== "idea" || n.status === "composted") continue;
-		const { statement } = readNodeProse(paths, n, dirs);
+		const { statement } = readClaim(paths, graph, n, dirs);
 		if (statement !== "") out.push({ id: n.id, slug: n.slug, statement });
 	}
 	return out;

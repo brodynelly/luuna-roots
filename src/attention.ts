@@ -13,9 +13,10 @@
 // ideas never come up on their own (`roots think <id>` still works for built).
 
 import type { RootsConfig } from "./config.ts";
+import { readClaim } from "./endorse.ts";
 import { readEvents } from "./events.ts";
 import type { RootsPaths } from "./paths.ts";
-import { type NodeDirs, readNodeProse } from "./prose.ts";
+import type { NodeDirs } from "./prose.ts";
 import {
 	dueQuestions,
 	hasFindings,
@@ -79,11 +80,11 @@ export function collectAttention(
 	const out: IdeaAttention[] = [];
 	for (const node of graph.nodes) {
 		if (!isQueueable(node)) continue;
-		const prose = readNodeProse(paths, node, dirs);
-		const ctx = ruleContextFor(graph, node, prose.text, events, config, now);
+		const { prose, statement, text } = readClaim(paths, graph, node, dirs);
+		const ctx = ruleContextFor(graph, node, text, events, config, now);
 		out.push({
 			node,
-			statement: prose.statement,
+			statement,
 			due: dueQuestions(questions, node.id, now),
 			candidates: prose.exists ? newCandidates(ctx, questions) : [],
 			activity: nodeActivity(events, node),

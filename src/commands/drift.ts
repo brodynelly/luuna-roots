@@ -18,11 +18,12 @@ import {
 	ideaFile,
 	matchDrift,
 } from "../drift.ts";
+import { readClaim } from "../endorse.ts";
 import { readGraph } from "../graph.ts";
 import type { Io } from "../io.ts";
 import type { Output } from "../output.ts";
 import { findProjectRoot, rootsPaths } from "../paths.ts";
-import { readNodeProse, scanNodeDirs } from "../prose.ts";
+import { scanNodeDirs } from "../prose.ts";
 import type { CommandDef } from "../registry.ts";
 import { readSeedsIssues } from "../seeds-link.ts";
 
@@ -74,7 +75,7 @@ function packetFrom(io: Io, root: string, rev: string): Outcome {
 		id: node.id,
 		slug: node.slug,
 		status: node.status,
-		statement: readNodeProse(paths, node, dirs).statement,
+		statement: readClaim(paths, graph, node, dirs).statement,
 		path: ideaFile(paths, node, dirs),
 		reasons,
 	}));
