@@ -5,7 +5,7 @@ import { findNode, readGraph } from "../graph.ts";
 import { rootsPaths } from "../paths.ts";
 import { initProject, plant, run, runJson } from "../test-helpers.ts";
 
-describe("roots tier", () => {
+describe("luuna-roots tier", () => {
 	test("sets and clears the per-idea override; one tier event per change", async () => {
 		const root = await initProject();
 		const id = await plant(root, "Think about this alone");

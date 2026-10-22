@@ -1,6 +1,6 @@
 // The context packet for one idea (roots-e3a2):
 // what an agent needs to ask good, specific questions. Read-only. Used by
-// `roots context` and by `think` as the stdin of agent.command.
+// `luuna-roots context` and by `think` as the stdin of agent.command.
 //
 // Prior questions include dismissed ones on purpose: they tell the agent what
 // the human already refused. Repo state is cheap and failsafe (git branch +
@@ -30,7 +30,7 @@ import type { Workspace } from "./workspace.ts";
 
 type WsView = Pick<Workspace, "paths" | "graph" | "dirs">;
 
-/** Longest question `roots ask` accepts (characters, after whitespace is collapsed). */
+/** Longest question `luuna-roots ask` accepts (characters, after whitespace is collapsed). */
 export const QUESTION_MAX_LENGTH = 280;
 export const REPO_COMMITS = 5;
 const GIT_TIMEOUT_MS = 2000;
@@ -78,7 +78,7 @@ export interface ContextLimits {
 	questionsPerSession: number;
 	/** Agent questions on this idea not yet answered or dismissed. */
 	agentQuestionsOpen: number;
-	/** How many more `roots ask` calls the cap allows right now. */
+	/** How many more `luuna-roots ask` calls the cap allows right now. */
 	asksRemaining: number;
 	questionMaxLength: number;
 }
@@ -103,9 +103,9 @@ export interface ContextPacket {
 	questions: ContextQuestion[];
 	rejectedProposals: ContextRejection[];
 	notes: ContextNote[];
-	/** Seeds issues linked to this idea (read from .seeds/issues.jsonl). */
+	/** Missions issues linked to this idea (read from .luuna/missions/issues.jsonl). */
 	seeds: LinkedIssue[];
-	/** Mulch records citing this idea (read from .mulch/expertise/). */
+	/** Mulch records citing this idea (read from .luuna/atlas/expertise/). */
 	mulch: MulchLearning[];
 	limits: ContextLimits;
 	repo: RepoState | null;
@@ -263,7 +263,7 @@ function delegatedLines(p: ContextPacket): string[] {
 	const qs = p.questions.filter((q) => q.status === "delegated");
 	if (qs.length === 0) return [];
 	return section(
-		`Delegated questions (research these; attach findings with \`roots note ${p.node.id} --question <q-id> --file <md>\`)`,
+		`Delegated questions (research these; attach findings with \`luuna-roots note ${p.node.id} --question <q-id> --file <md>\`)`,
 		qs.map((q) => `- ${q.id}: ${q.text}`),
 		"",
 	);
@@ -283,7 +283,7 @@ function headerLines(p: ContextPacket): string[] {
 	const t = p.tier;
 	const via = t.source === "idea" ? "per-idea override" : "project default";
 	const lines = [
-		`# roots context: ${p.node.id} ${p.node.slug}`,
+		`# luuna-roots context: ${p.node.id} ${p.node.slug}`,
 		"",
 		`- project: ${p.project}`,
 		`- status: ${p.node.status} · planted ${p.node.createdAt.slice(0, 10)} by ${p.node.author}`,
@@ -320,7 +320,7 @@ function integrationLines(p: ContextPacket): string[] {
 	if (p.seeds.length > 0) {
 		lines.push(
 			...section(
-				"Seeds issues (the work that realizes this idea)",
+				"Missions issues (the work that realizes this idea)",
 				p.seeds.map((i) => `- ${i.id} [${i.status}] ${i.title}`),
 				"",
 			),
@@ -329,7 +329,7 @@ function integrationLines(p: ContextPacket): string[] {
 	if (p.mulch.length > 0) {
 		lines.push(
 			...section(
-				"Mulch learnings citing this idea",
+				"Atlas expertise citing this idea",
 				p.mulch.map((l) => `- ${l.id ?? "(no id)"} ${l.domain}/${l.type}: ${l.summary}`),
 				"",
 			),

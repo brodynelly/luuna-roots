@@ -1,4 +1,4 @@
-// headings.jsonl: the agent's short read on where a `roots flow` session is
+// headings.jsonl: the agent's short read on where a `luuna-roots flow` session is
 // going (roots-6f2a). Advisory only: shown in the flow pane labeled [agent],
 // never in `view`, `prime` or any human file. Every write is validated
 // (AGENTS.md invariant 4):
@@ -94,7 +94,7 @@ function checkCites(paths: RootsPaths, graph: Graph, config: RootsConfig, cites:
 	}
 	for (const c of cites) {
 		const node = liveIdea(graph, c.node, "cited idea");
-		requireTier(config, 1, "`roots heading`", node);
+		requireTier(config, 1, "`luuna-roots heading`", node);
 		if (!readNodeProse(paths, node).text.includes(c.quote)) {
 			throw new ValidationError(`cite quote not found in ${c.node}`);
 		}
@@ -129,7 +129,7 @@ export async function fileHeading(
 	config: RootsConfig,
 	input: HeadingInput,
 ): Promise<HeadingRecord> {
-	requireTier(config, 1, "`roots heading`");
+	requireTier(config, 1, "`luuna-roots heading`");
 	if (!isLiveFlow(paths, input.flow)) {
 		throw new GuardError(`${input.flow} is not a running flow session`);
 	}
@@ -138,7 +138,7 @@ export async function fileHeading(
 	checkCites(paths, graph, config, input.cites);
 	checkRefs(paths, text, input.cites);
 	if (input.next)
-		requireTier(config, 1, "`roots heading --next`", liveIdea(graph, input.next, "--next"));
+		requireTier(config, 1, "`luuna-roots heading --next`", liveIdea(graph, input.next, "--next"));
 	const now = input.now ?? new Date();
 	const record = await withLock(paths.headings, async () => {
 		const all = readHeadings(paths);

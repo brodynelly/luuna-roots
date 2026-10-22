@@ -46,7 +46,7 @@ describe("heading run", () => {
 			root,
 			[
 				"cat > prompt.txt",
-				`roots heading "Converging on ${a}; unsaid: how secrets stay out." --cite "${a}:named principal" --next ${b}`,
+				`luuna-roots heading "Converging on ${a}; unsaid: how secrets stay out." --cite "${a}:named principal" --next ${b}`,
 			].join("\n"),
 		);
 		const r = await runHeadingPhase({

@@ -73,7 +73,7 @@ describe("context packet", () => {
 		const { root, a, b } = await fixture();
 		const p = packetFor(root, a, { session: "ss-9", repo: false });
 		expect(p.statement).toBe("Sync works offline");
-		expect(p.path).toMatch(/^\.roots\/human\/[0-9a-f]{4}-sync-works-offline\/idea\.md$/);
+		expect(p.path).toMatch(/^\.luuna\/roots\/human\/[0-9a-f]{4}-sync-works-offline\/idea\.md$/);
 		expect(p.session).toBe("ss-9");
 		expect(p.tier).toEqual({ tier: 2, name: "propose", source: "config", config: 2 });
 		expect(p.neighbors).toEqual([
@@ -94,7 +94,7 @@ describe("context packet", () => {
 		]);
 		expect(p.rejectedProposals).toMatchObject([{ id: "p-0001", decisionReason: "no it does not" }]);
 		expect(p.notes).toMatchObject([
-			{ name: "prior-art.md", path: `.roots/agent/notes/${a.slice(2)}/prior-art.md` },
+			{ name: "prior-art.md", path: `.luuna/roots/agent/notes/${a.slice(2)}/prior-art.md` },
 		]);
 		expect(p.limits).toEqual({
 			questionsPerSession: 3,
@@ -108,7 +108,7 @@ describe("context packet", () => {
 	test("markdown packet is compact and complete", async () => {
 		const { root, a } = await fixture();
 		const md = renderContextMarkdown(packetFor(root, a, { repo: false }));
-		expect(md).toStartWith(`# roots context: ${a} sync-works-offline\n`);
+		expect(md).toStartWith(`# luuna-roots context: ${a} sync-works-offline\n`);
 		expect(md).toContain("> Sync works offline");
 		expect(md).toContain("tension ↔ r-");
 		expect(md).toContain(': "The server is always authoritative"');

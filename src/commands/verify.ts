@@ -1,4 +1,4 @@
-// roots verify [--json] (read, anyone): check the human/agent boundary, the
+// luuna-roots verify [--json] (read, anyone): check the human/agent boundary, the
 // idea.md hash ledger and the graph invariants. Read-only. Exits non-zero
 // (validation, 6) when any error is found; warnings alone exit 0. Issue codes
 // are listed in src/verify.ts.
@@ -31,7 +31,7 @@ export const verifyCommand: CommandDef = {
 	summary: "Check the human/agent boundary + graph invariants",
 	usage: "verify",
 	description:
-		"Checks: files under .roots/human/ that are not an idea's idea.md or assets/, symlinks\n" +
+		"Checks: files under .luuna/roots/human/ that are not an idea's idea.md or assets/, symlinks\n" +
 		"leaving human/, idea.md edits outside a think session and not in a human commit (hash\n" +
 		"ledger), authors (ideas human:*, sprouts agent:*, edges human:*, proposals agent:*/roots),\n" +
 		"graph invariants, dangling references, missing/orphan directories, malformed JSONL\n" +

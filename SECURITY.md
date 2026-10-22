@@ -23,15 +23,15 @@ Report vulnerabilities privately through
 
 ## Scope
 
-Roots is a local CLI that reads and writes files under `.roots/` and runs one user-configured
+Roots is a local CLI that reads and writes files under `.luuna/roots/` and runs one user-configured
 agent command. These are security issues:
 
 - **Command injection** -- unsanitized input reaching a shell (`agent.command` runs through
   `sh` by design; injection through idea text, slugs or flags is a bug)
-- **Path traversal** -- agent commands (`note`, `sprout`) writing outside `.roots/agent/`
-- **Boundary bypass** -- any agent-facing command that writes under `.roots/human/`, or any way to
-  make `roots guard` allow an agent edit there
-- **Symlink attacks** -- following symlinks out of `.roots/`
+- **Path traversal** -- agent commands (`note`, `sprout`) writing outside `.luuna/roots/agent/`
+- **Boundary bypass** -- any agent-facing command that writes under `.luuna/roots/human/`, or any way to
+  make `luuna-roots guard` allow an agent edit there
+- **Symlink attacks** -- following symlinks out of `.luuna/roots/`
 - **Temp file races** -- TOCTOU in lock or atomic-write handling
 
 Not in scope:
@@ -44,8 +44,8 @@ Not in scope:
 ## Security Measures
 
 - Atomic writes (temp file + rename) and advisory file locks with stale-lock detection
-- Agent writes confined to `.roots/agent/` (no traversal, no symlinks, no `human/`)
-- `roots guard` PreToolUse hook denies harness edits to `.roots/human/**`
-- Hash ledger: `roots verify` reports human files changed outside a recorded session or a
+- Agent writes confined to `.luuna/roots/agent/` (no traversal, no symlinks, no `human/`)
+- `luuna-roots guard` PreToolUse hook denies harness edits to `.luuna/roots/human/**`
+- Hash ledger: `luuna-roots verify` reports human files changed outside a recorded session or a
   human-authored commit
 - Zero runtime dependencies

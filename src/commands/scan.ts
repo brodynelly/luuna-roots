@@ -1,4 +1,4 @@
-// roots scan [<id>]: find mentions in edits made outside a think session.
+// luuna-roots scan [<id>]: find mentions in edits made outside a think session.
 //
 // Roots never caches prose, so there is no "before" text to diff against.
 // Instead each idea's current content hash is compared with its last
@@ -103,7 +103,7 @@ async function printScan(out: Output, items: ScanItem[]): Promise<void> {
 	}
 	const summary = `scanned ${scanned.length} changed idea${scanned.length === 1 ? "" : "s"}; ${filed.length} proposal${filed.length === 1 ? "" : "s"} filed`;
 	await out.success(summary);
-	if (filed.length > 0) await out.info(c.dim("review them with `roots tend`"));
+	if (filed.length > 0) await out.info(c.dim("review them with `luuna-roots tend`"));
 }
 
 export const scanCommand: CommandDef = {

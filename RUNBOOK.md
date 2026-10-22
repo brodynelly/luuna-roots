@@ -1,6 +1,6 @@
 # Roots Operations Runbook
 
-Procedures only. For conventions see `AGENTS.md`; for direction see seeds (`sd ready`). Read each section as
+Procedures only. For conventions see `AGENTS.md`; for direction see seeds (`lms ready`). Read each section as
 "run X; if Y, then Z".
 
 Roots is pre-release (`"private": true`, version `0.0.0`). There is no publish workflow yet, so
@@ -42,20 +42,20 @@ first publish.
    tests, wait on screen content with `waitFor()` from `src/test-helpers.ts`.
 4. Fix the test or the code. Do not add retries.
 
-## 3. A project's `.roots/` looks wrong
+## 3. A project's `.luuna/roots/` looks wrong
 
-1. Run `roots verify` (exit 6 on errors). It reports boundary breaks, bad authors, graph
+1. Run `luuna-roots verify` (exit 6 on errors). It reports boundary breaks, bad authors, graph
    invariant breaks, dangling references, malformed JSONL lines and human files changed outside
    a session.
-2. **Merge conflict in `*.jsonl`:** there should be none, because `roots init` adds
-   `.roots/*.jsonl merge=union` to `.gitattributes`. If the line is missing, add it, keep both
-   sides of the conflict and run `roots verify`. Duplicate records are fine: reads keep the last
+2. **Merge conflict in `*.jsonl`:** there should be none, because `luuna-roots init` adds
+   `.luuna/roots/*.jsonl merge=union` to `.gitattributes`. If the line is missing, add it, keep both
+   sides of the conflict and run `luuna-roots verify`. Duplicate records are fine: reads keep the last
    occurrence.
 3. **A command hangs on a lock:** a crashed process left `<file>.lock`. Stale locks are reclaimed
    automatically after the stale timeout (see `src/store.ts`). If one persists and no `roots`
    process is running, delete the `.lock` file.
 4. **Human prose changed outside a session:** `verify` reports it through the hash ledger. If a
-   human made the edit, commit it (a human-authored commit clears it) or run a `roots think`
+   human made the edit, commit it (a human-authored commit clears it) or run a `luuna-roots think`
    session. If an agent made it, restore the file from git.
 5. Never hand-edit `graph.jsonl`, `proposals.jsonl` or `events.jsonl` to change decisions. Use
    the CLI so each change logs one event.
@@ -63,5 +63,5 @@ first publish.
 ## 4. Roll back a bad change
 
 Roots does not commit for you. Revert the offending commit on `main` with `git revert <sha>`,
-run `bun run verify`, and open a PR. `.roots/` data in user projects is plain git history:
-restore it with `git checkout <sha> -- .roots/`.
+run `bun run verify`, and open a PR. `.luuna/roots/` data in user projects is plain git history:
+restore it with `git checkout <sha> -- .luuna/roots/`.

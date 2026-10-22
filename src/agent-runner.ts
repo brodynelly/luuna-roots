@@ -4,9 +4,9 @@
 // The command runs through `/bin/sh -c` in the project root, in its own
 // process group (so a timeout kills the whole tree). stdin gets
 // AGENT_INSTRUCTION followed by the Markdown context packet. The agent
-// answers by calling `roots ask`, which validates every question; its stdout
+// answers by calling `luuna-roots ask`, which validates every question; its stdout
 // is ignored except as a diagnostic tail. Env:
-//   ROOTS_AGENT    agent:<model> — the identity its `roots ask` calls use
+//   ROOTS_AGENT    agent:<model> — the identity its `luuna-roots ask` calls use
 //   ROOTS_SESSION  the think session, so asks attach to it
 //   ROOTS_NODE     the idea id
 //   ROOTS_FLOW     the flow session (heading runs only)
@@ -30,10 +30,10 @@ its context (neighbors, earlier questions, rejected proposals, repo state) are b
 Your only job: ask up to {{asks}} questions that will help the human sharpen THIS idea.
 Ask each question by running this shell command, once per question:
 
-  roots ask {{id}} "<your question>" --as {{actor}}
+  luuna-roots ask {{id}} "<your question>" --as {{actor}}
 
 Rules:
-- Ask questions only. Do not create, edit or delete any file, and never touch .roots/human/.
+- Ask questions only. Do not create, edit or delete any file, and never touch .luuna/roots/human/.
   The human answers by rewriting the idea in their own words.
 - Be specific to this idea: its claims, edge cases, trade-offs, what "done" means, how it
   conflicts with its neighbors or with the repo. Never ask a generic question that would fit
@@ -41,7 +41,7 @@ Rules:
 - One question per command: one sentence, ending with "?", at most {{max}} characters.
 - Never repeat or rephrase a question under "Prior questions". A dismissed question is one
   the human refused; do not ask anything close to it.
-- If \`roots ask\` fails, read its error, then fix the question or move on. Stop after
+- If \`luuna-roots ask\` fails, read its error, then fix the question or move on. Stop after
   {{asks}} successful asks.
 - Fewer sharp questions beat more weak ones. If nothing useful comes to mind, ask nothing.
 - When you are done, exit. roots ignores anything you print.
@@ -85,11 +85,12 @@ export function agentEnv(
 ): Record<string, string> {
 	const env: Record<string, string> = {};
 	for (const [k, v] of Object.entries(base)) {
-		if (v === undefined || k === "ROOTS_USER" || k === "ROOTS_FORCE_TTY") continue;
+		if (v === undefined || k === "ROOTS_USER" || k === "LUUNA_ROOTS_USER" || k === "ROOTS_FORCE_TTY") continue;
 		if (k === "ROOTS_SESSION" || k === "ROOTS_NODE" || k === "ROOTS_FLOW") continue;
 		env[k] = v;
 	}
 	env.ROOTS_AGENT = vars.actor;
+	env.LUUNA_ROOTS_AGENT = vars.actor;
 	if (vars.session) env.ROOTS_SESSION = vars.session;
 	if (vars.node) env.ROOTS_NODE = vars.node;
 	if (vars.flow) env.ROOTS_FLOW = vars.flow;

@@ -1,5 +1,5 @@
 // What needs thinking: per-idea open questions and rule candidates, ranked.
-// Used by `roots think` (no id) to pick an idea and by `roots queue`.
+// Used by `luuna-roots think` (no id) to pick an idea and by `luuna-roots queue`.
 //
 // Queue order (first = most in need):
 //   1. ideas with due questions (asked before, still open, or snoozed and
@@ -10,7 +10,7 @@
 //   4. least recently touched by a human first
 //   5. id, for a stable order
 // Only planted/shaping/committed ideas are queued; built and composted
-// ideas never come up on their own (`roots think <id>` still works for built).
+// ideas never come up on their own (`luuna-roots think <id>` still works for built).
 
 import type { RootsConfig } from "./config.ts";
 import { readClaim } from "./endorse.ts";

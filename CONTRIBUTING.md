@@ -2,7 +2,7 @@
 
 Thanks for your interest in contributing to Roots. This guide covers what you need to get started.
 
-Direction lives in seeds issues and roots ideas; there is no spec doc. If a change conflicts with
+Direction lives in Missions issues and roots ideas; there is no spec doc. If a change conflicts with
 recorded intent, raise it in the issue or PR. Do not quietly pick one.
 
 ## Getting Started
@@ -52,7 +52,7 @@ raising its budget.
 - Cognitive complexity of at most 15 per function. Split functions rather than suppress the rule.
 - One file per subcommand in `src/commands/`, registered in `src/register-all.ts`.
 - Keep the invariants in [AGENTS.md](AGENTS.md): agent commands never write under
-  `.roots/human/`, human commands need a TTY, every mutation logs one event, nothing
+  `.luuna/roots/human/`, human commands need a TTY, every mutation logs one event, nothing
   auto-accepts.
 
 ## Testing

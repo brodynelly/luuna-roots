@@ -48,7 +48,7 @@ async function proposeEdge(root: string, a: string, b: string, rel: string): Pro
 	return r.body.id;
 }
 
-/** A human edit mentioning `b` by id, then `roots scan` files a rel:null mention proposal. */
+/** A human edit mentioning `b` by id, then `luuna-roots scan` files a rel:null mention proposal. */
 async function mention(root: string, a: string, b: string): Promise<string> {
 	const paths = rootsPaths(root);
 	const node = findNode(readGraph(paths), a);
@@ -60,7 +60,7 @@ async function mention(root: string, a: string, b: string): Promise<string> {
 	return id;
 }
 
-describe("roots accept", () => {
+describe("luuna-roots accept", () => {
 	test("edge: human makes the edge; provenance kept; one accept event", async () => {
 		const { root, a, b, paths } = await setup();
 		const p = await proposeEdge(root, a, b, "tension");
@@ -136,7 +136,7 @@ describe("roots accept", () => {
 		const p = await proposeEdge(root, a, b, "tension");
 		const r = await runJson<Decided>(["accept", p, "--rel", "serves"], root);
 		expect(r.exitCode).toBe(EXIT.usage);
-		expect(r.body.error).toContain(`roots link ${a} ${b} serves`);
+		expect(r.body.error).toContain(`luuna-roots link ${a} ${b} serves`);
 	});
 
 	test("invalid edges are refused and the proposal stays pending", async () => {
@@ -217,14 +217,14 @@ describe("roots accept", () => {
 		expect(agent.exitCode).toBe(EXIT.guard);
 		const noTty = await runJson<Decided>(["accept", "s-9f3e"], root, { tty: false });
 		expect(noTty.exitCode).toBe(EXIT.guard);
-		expect(noTty.body.error).toContain("roots adopt s-9f3e");
+		expect(noTty.body.error).toContain("luuna-roots adopt s-9f3e");
 		const missing = await runJson<Decided>(["accept", "s-9f3e"], root);
 		expect(missing.exitCode).toBe(EXIT.notFound);
 		expect((await runJson<Decided>(["reject", a], root)).exitCode).toBe(EXIT.usage);
 	});
 });
 
-describe("roots reject", () => {
+describe("luuna-roots reject", () => {
 	test("rejects the whole card; remembered permanently", async () => {
 		const { root, a, b, paths } = await setup();
 		const m = await mention(root, a, b);

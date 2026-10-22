@@ -49,7 +49,7 @@ describe("seeds + mulch integration", () => {
 		expect(j.body.mulch.map((m) => m.id)).toEqual(["mx-1"]);
 	});
 
-	test("no .seeds/ or .mulch/: show has no such sections and json has empty lists", async () => {
+	test("no .luuna/missions/ or .luuna/atlas/: show has no such sections and json has empty lists", async () => {
 		const root = await initProject();
 		const id = await plant(root, "Plain idea");
 		const r = await run(["show", id], root);
@@ -71,11 +71,11 @@ describe("seeds + mulch integration", () => {
 			built: { id: string; slug: string; issues: string[]; command: string }[];
 		}>(["queue"], root);
 		expect(j.body.built).toEqual([
-			{ id, slug: "offline-sync", issues: ["sd-1", "sd-2"], command: `roots status ${id} built` },
+			{ id, slug: "offline-sync", issues: ["sd-1", "sd-2"], command: `luuna-roots status ${id} built` },
 		]);
 		const r = await run(["queue"], root);
 		expect(r.stdout).toContain("Ready to mark built (1)");
-		expect(r.stdout).toContain(`roots status ${id} built`);
+		expect(r.stdout).toContain(`luuna-roots status ${id} built`);
 		// Never auto-changes status (invariant 5).
 		const show = await runJson<{ node: { status: string } }>(["show", id], root);
 		expect(show.body.node.status).toBe("committed");
@@ -95,7 +95,7 @@ describe("seeds + mulch integration", () => {
 		expect(md.stdout).toContain("- mx-1 store/decision: Use a local WAL");
 	});
 
-	test("commit hints at seeds issues at tier ≥ 2 with .seeds/ present", async () => {
+	test("commit hints at seeds issues at tier ≥ 2 with .luuna/missions/ present", async () => {
 		const { root, id, other } = await project();
 		await forceStatus(root, id, "shaping");
 		const j = await runJson<{ seedsHint: string | null }>(["commit", id], root);

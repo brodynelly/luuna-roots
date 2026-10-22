@@ -1,4 +1,4 @@
-// Open $EDITOR (or, for `roots adopt`, a pager on the sprout) in a split
+// Open $EDITOR (or, for `luuna-roots adopt`, a pager on the sprout) in a split
 // pane next to roots, when a terminal
 // multiplexer is detectable. Detection: $TMUX (tmux), $ZELLIJ (zellij).
 // Otherwise the human opens the file in another pane themselves; think
@@ -101,7 +101,7 @@ export function launchEditorSplit(
 	return launchInSplit(env, { command: resolveEditor(env), file, cwd }, spawn);
 }
 
-/** Read-only pager for reference text (`roots adopt` shows the sprout this way). */
+/** Read-only pager for reference text (`luuna-roots adopt` shows the sprout this way). */
 export function resolvePager(env: Io["env"]): string {
 	return env.PAGER?.trim() || "less";
 }

@@ -45,7 +45,7 @@ describe("cli runner", () => {
 		const dir = tempDir();
 		const r = await run(["lst"], dir);
 		expect(r.exitCode).toBe(2);
-		expect(r.stderr).toContain("Did you mean `roots list`?");
+		expect(r.stderr).toContain("Did you mean `luuna-roots list`?");
 		const j = JSON.parse((await run(["shw", "--json"], dir)).stdout);
 		expect(j).toMatchObject({ success: false, command: "shw", code: "usage", suggestion: "show" });
 		expect((await run(["zzzzzz"], dir)).stderr).not.toContain("Did you mean");

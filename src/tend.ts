@@ -1,4 +1,4 @@
-// `roots tend`, pure part: cards and the key reducer (the card renderer lives in
+// `luuna-roots tend`, pure part: cards and the key reducer (the card renderer lives in
 // tend-render.ts, roots-9c29). No I/O here; tend-session.ts is the
 // shell that executes decisions.
 //

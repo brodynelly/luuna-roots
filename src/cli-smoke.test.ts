@@ -63,13 +63,13 @@ describe("roots binary", () => {
 	test("unknown command exits 2 with a suggestion", async () => {
 		const r = await spawnCli(["plnt"], tempDir());
 		expect(r.exitCode).toBe(2);
-		expect(r.stderr).toContain("roots plant");
+		expect(r.stderr).toContain("luuna-roots plant");
 	});
 
 	test("malformed graph lines are skipped, not fatal", async () => {
 		const dir = tempDir();
 		await spawnCli(["init"], dir);
-		writeFileSync(join(dir, ".roots", "graph.jsonl"), "garbage\n");
+		writeFileSync(join(dir, ".luuna/roots", "graph.jsonl"), "garbage\n");
 		const r = await spawnCli(["list", "--json"], dir);
 		expect(r.exitCode).toBe(0);
 		expect(JSON.parse(r.stdout).count).toBe(0);
@@ -181,7 +181,7 @@ describe("roots binary", () => {
 		writeFileSync(join(dir, "r.md"), "# research\n");
 		const noted = await spawnCli(["note", idea, "--file", "r.md", "--as", "agent:opus"], dir);
 		expect(noted.exitCode).toBe(0);
-		expect(noted.stdout).toContain(".roots/agent/notes/");
+		expect(noted.stdout).toContain(".luuna/roots/agent/notes/");
 		const noTty = await spawnCli(["adopt", s], dir);
 		expect(noTty.exitCode).toBe(4);
 		expect(noTty.stderr).toContain("interactive terminal");

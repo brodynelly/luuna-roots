@@ -72,7 +72,7 @@ export async function removeEdge(paths: RootsPaths, edgeId: string): Promise<Edg
 	return updateGraph(paths, (graph) => {
 		const idx = graph.edges.findIndex((e) => e.id === id || e.id === `e-${id}`);
 		const edge = graph.edges[idx];
-		if (!edge) throw new NotFoundError(`no edge ${edgeId}; \`roots show <id>\` lists edge ids`);
+		if (!edge) throw new NotFoundError(`no edge ${edgeId}; \`luuna-roots show <id>\` lists edge ids`);
 		if (edge.rel === "derives") {
 			throw new UsageError(`${edge.id} is a \`derives\` edge (adoption lineage); it stays`);
 		}

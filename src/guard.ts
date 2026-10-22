@@ -27,7 +27,7 @@ export function requireTty(io: Pick<Io, "env" | "stdinIsTTY">, command: string):
 }
 
 /**
- * Human commands that change what agents may do (e.g. `roots tier`) refuse to
+ * Human commands that change what agents may do (e.g. `luuna-roots tier`) refuse to
  * run inside an agent session. `think` sets ROOTS_AGENT for the agent.command
  * it spawns, and harnesses set it for their agent, so an agent cannot raise
  * its own permissions by calling a non-interactive human command.

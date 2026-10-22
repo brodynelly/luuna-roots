@@ -1,4 +1,4 @@
-// `roots flow`, the shell (roots-ed3c): one long session that moves from
+// `luuna-roots flow`, the shell (roots-ed3c): one long session that moves from
 // idea to idea without dropping to the shell. Between think sessions it
 // shows the transition card (flow.ts / flow-render.ts): the trail, the
 // agent's heading, running agent work, the inbox and the next pick.
@@ -58,7 +58,7 @@ export interface FlowDeps {
 	plant: () => Promise<string | null>;
 	/** Formats a finished session for the card notice. */
 	tally: (s: SessionSummary) => string;
-	/** `roots flow <id>`: think about this idea first. */
+	/** `luuna-roots flow <id>`: think about this idea first. */
 	start?: string;
 	/** Card refresh interval (inbox, heading, picks). Default 1000ms. */
 	refreshMs?: number;

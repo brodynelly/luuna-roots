@@ -1,4 +1,4 @@
-// roots context <id> (agent-facing, read-only): the context packet for one
+// luuna-roots context <id> (agent-facing, read-only): the context packet for one
 // idea. Markdown for agents to read; --json for tools. Never writes.
 
 import { flagString } from "../args.ts";
@@ -16,7 +16,7 @@ export const contextCommand: CommandDef = {
 	description:
 		"Read-only. Prints the idea's prose, status, neighbors, prior questions (dismissed\n" +
 		"ones included, so agents learn what not to ask), rejected proposals, agent notes,\n" +
-		"linked seeds issues and mulch learnings, the effective agent tier and limits, and\n" +
+		"linked Missions issues and Atlas expertise, the effective agent tier and limits, and\n" +
 		"recent repo state.",
 	flags: {
 		session: {

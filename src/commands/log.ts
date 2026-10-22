@@ -1,4 +1,4 @@
-// roots log [<id>]: event history.
+// luuna-roots log [<id>]: event history.
 
 import { flagInt } from "../args.ts";
 import { padEnd } from "../color.ts";

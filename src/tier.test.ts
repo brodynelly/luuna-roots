@@ -23,13 +23,13 @@ describe("tiers", () => {
 	});
 
 	test("requireTier names the tier needed and how to change it", () => {
-		expect(requireTier(config, 1, "`roots ask`").tier).toBe(1);
-		expect(() => requireTier(config, 2, "`roots propose`")).toThrow(GuardError);
-		expect(() => requireTier(config, 2, "`roots propose`", { id: "r-a1b2" })).toThrow(
-			/needs agent tier 2 \(propose\).*config.yaml.*roots tier r-a1b2 2/,
+		expect(requireTier(config, 1, "`luuna-roots ask`").tier).toBe(1);
+		expect(() => requireTier(config, 2, "`luuna-roots propose`")).toThrow(GuardError);
+		expect(() => requireTier(config, 2, "`luuna-roots propose`", { id: "r-a1b2" })).toThrow(
+			/needs agent tier 2 \(propose\).*config.yaml.*luuna-roots tier r-a1b2 2/,
 		);
-		expect(() => requireTier(config, 1, "`roots ask`", { id: "r-a1b2", tier: 0 })).toThrow(
-			/r-a1b2 is at tier 0 \(off\) by a per-idea override.*roots tier r-a1b2 1/,
+		expect(() => requireTier(config, 1, "`luuna-roots ask`", { id: "r-a1b2", tier: 0 })).toThrow(
+			/r-a1b2 is at tier 0 \(off\) by a per-idea override.*luuna-roots tier r-a1b2 1/,
 		);
 	});
 });

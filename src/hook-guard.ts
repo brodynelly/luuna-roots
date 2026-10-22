@@ -1,20 +1,20 @@
-// `roots guard`: the Claude Code PreToolUse hook (roots-ecaa; human/agent
+// `luuna-roots guard`: the Claude Code PreToolUse hook (roots-ecaa; human/agent
 // boundary guard 3). Pure decision logic; commands/guard.ts does the I/O.
 //
 // Input: the hook JSON on stdin ({tool_name, tool_input, cwd, ...}).
 //   Write | Edit | MultiEdit   tool_input.file_path
 //   NotebookEdit               tool_input.notebook_path
 //   Bash                       tool_input.command (best effort, see below)
-// A file target is denied when it lies under any `.roots/human/` directory:
+// A file target is denied when it lies under any `.luuna/roots/human/` directory:
 // relative paths resolve against the hook's cwd, `..` is normalized, and
 // symlinks are followed (a link anywhere on the path, including a dangling
-// final link, whose target is under .roots/human/). The check does not need a
-// roots project: any path with `.roots/human` in it is protected. The
+// final link, whose target is under .luuna/roots/human/). The check does not need a
+// roots project: any path with `.luuna/roots/human` in it is protected. The
 // comparison ignores case, since macOS filesystems do.
 //
 // Bash is best effort. The command is split into segments on ; && || | and
-// newlines, and a segment is denied when it mentions `.roots/human` and
-//   - redirects output (>, >>, &>) to a path under .roots/human/, or
+// newlines, and a segment is denied when it mentions `.luuna/roots/human` and
+//   - redirects output (>, >>, &>) to a path under .luuna/roots/human/, or
 //   - runs rm/rmdir/mv/touch/truncate/chmod/chown/unlink/shred/mkdir/tee on it, or
 //   - runs cp/ln/install/rsync with the last argument under it, or
 //   - runs sed/perl with -i (in place), dd with of=..., or git
@@ -50,9 +50,9 @@ export interface HookInput {
 	cwd?: unknown;
 }
 
-const HUMAN_SEGMENT = /(^|[\\/])\.roots[\\/]+human([\\/]|$)/i;
+const HUMAN_SEGMENT = /(^|[\\/])(?:\.luuna[\\/]+roots|\.roots)[\\/]+human([\\/]|$)/i;
 
-/** True when an absolute, normalized path has a `.roots/human` component pair. */
+/** True when an absolute, normalized path has a `.luuna/roots/human` component pair. */
 export function lexicallyHuman(abs: string): boolean {
 	return HUMAN_SEGMENT.test(abs.split(sep).join("/"));
 }
@@ -86,7 +86,7 @@ export function resolveWriteTarget(p: string): string {
 	return resolve(realOrSelf(probe), ...tail);
 }
 
-/** True when writing `p` (relative to `cwd`) would touch a `.roots/human/` tree. */
+/** True when writing `p` (relative to `cwd`) would touch a `.luuna/roots/human/` tree. */
 export function isProtectedPath(p: string, cwd: string): boolean {
 	const abs = resolve(cwd, p);
 	return lexicallyHuman(abs) || lexicallyHuman(resolveWriteTarget(abs));
@@ -117,7 +117,7 @@ function unquote(t: string): string {
 
 function mentionsHuman(s: string, cwd: string): boolean {
 	const t = unquote(s);
-	return t !== "" && (/\.roots[\\/]+human/i.test(t) || isProtectedPath(t, cwd));
+	return t !== "" && (/(?:\.luuna[\\/]+roots|\.roots)[\\/]+human/i.test(t) || isProtectedPath(t, cwd));
 }
 
 function commandWords(segment: string): string[] {
@@ -155,18 +155,18 @@ function segmentWrites(segment: string, cwd: string): boolean {
 	return false;
 }
 
-/** Best-effort: does this shell command look like it writes under .roots/human/? */
+/** Best-effort: does this shell command look like it writes under .luuna/roots/human/? */
 export function bashWritesHuman(command: string, cwd: string): boolean {
-	if (!/\.roots[\\/]+human/i.test(command)) return false;
+	if (!/(?:\.luuna[\\/]+roots|\.roots)[\\/]+human/i.test(command)) return false;
 	return command.split(/\n|;|&&|\|\||\|/).some((seg) => segmentWrites(seg, cwd));
 }
 
 // ── Decision ──────────────────────────────────────────────────────────────
 
 export const DENY_REASON =
-	"roots: .roots/human/ holds human-written intent; agents never edit it. " +
-	"Ask a question with `roots ask`, propose with `roots propose`/`roots sprout`, " +
-	"or attach material with `roots note`.";
+	"roots: .luuna/roots/human/ holds human-written intent; agents never edit it. " +
+	"Ask a question with `luuna-roots ask`, propose with `luuna-roots propose`/`luuna-roots sprout`, " +
+	"or attach material with `luuna-roots note`.";
 
 function field(obj: unknown, key: string): unknown {
 	return typeof obj === "object" && obj !== null

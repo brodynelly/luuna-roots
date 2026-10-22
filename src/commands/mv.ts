@@ -1,4 +1,4 @@
-// roots mv <id> <new-slug>: rename a node's slug and directory. The id is stable.
+// luuna-roots mv <id> <new-slug>: rename a node's slug and directory. The id is stable.
 
 import { existsSync, renameSync } from "node:fs";
 import { relative } from "node:path";

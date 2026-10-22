@@ -2,12 +2,12 @@
 // suggest; no tier lets an agent write human content.
 //
 //   0 off      nothing (deterministic questions only)
-//   1 ask      `roots ask`, `roots note`
-//   2 propose  tier 1 + `roots propose`, `roots sprout`
+//   1 ask      `luuna-roots ask`, `luuna-roots note`
+//   2 propose  tier 1 + `luuna-roots propose`, `luuna-roots sprout`
 //   3 observe  tier 2 + harness hooks on repo activity
 //
 // Effective tier for an idea = its per-idea override (node field `tier`, set
-// by `roots tier <id> <0-3>`) else config.yaml `tier`. Agent commands call
+// by `luuna-roots tier <id> <0-3>`) else config.yaml `tier`. Agent commands call
 // requireTier() before any write.
 
 import type { RootsConfig, Tier } from "./config.ts";
@@ -69,12 +69,12 @@ export function requireTier(
 	if (eff.source === "idea" && node) {
 		throw new GuardError(
 			`${action} needs agent ${need}; ${node.id} is at ${have} by a per-idea override. ` +
-				`Only a human can raise it: \`roots tier ${node.id} ${min}\``,
+				`Only a human can raise it: \`luuna-roots tier ${node.id} ${min}\``,
 		);
 	}
 	throw new GuardError(
 		`${action} needs agent ${need}; this project is at ${have}. ` +
-			`Only a human can raise it: set \`tier: ${min}\` in .roots/config.yaml` +
-			(node ? ` or run \`roots tier ${node.id} ${min}\`` : ""),
+			`Only a human can raise it: set \`tier: ${min}\` in .luuna/roots/config.yaml` +
+			(node ? ` or run \`luuna-roots tier ${node.id} ${min}\`` : ""),
 	);
 }

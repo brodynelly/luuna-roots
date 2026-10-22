@@ -10,7 +10,7 @@ import { esc, layoutView, renderViewHtml, servesDepths } from "./view-html.ts";
 const EVIL = `<script>alert("x")</script><img src=x onerror='alert(1)'>`;
 
 function ideaDir(root: string, id: string): string {
-	const dir = join(root, ".roots", "human");
+	const dir = join(root, ".luuna/roots", "human");
 	return join(dir, readdirSync(dir).find((n) => n.startsWith(`${id.slice(2)}-`)) ?? "");
 }
 
@@ -67,7 +67,7 @@ describe("layout", () => {
 	});
 });
 
-describe("roots view --html", () => {
+describe("luuna-roots view --html", () => {
 	test("self-contained, XSS-safe, graph + timeline, agent content dimmed", async () => {
 		const root = await initProject();
 		const goal = await plant(root, `Goal ${EVIL}`, ["--slug", "goal"]);

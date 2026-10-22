@@ -13,7 +13,7 @@ describe("openWorkspace", () => {
 		await expect(openWorkspace(tempDir())).rejects.toBeInstanceOf(NotInitializedError);
 	});
 
-	test("finds .roots/ from a subdirectory", async () => {
+	test("finds .luuna/roots/ from a subdirectory", async () => {
 		const root = await initProject();
 		const sub = join(root, "a", "b");
 		mkdirSync(sub, { recursive: true });

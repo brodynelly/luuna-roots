@@ -1,4 +1,4 @@
-// `roots tend`, pure renderer: draws the current card as a box (roots-9c29). Split out of tend.ts (cards + reducer).
+// `luuna-roots tend`, pure renderer: draws the current card as a box (roots-9c29). Split out of tend.ts (cards + reducer).
 
 import type { Colors } from "./color.ts";
 import { edgeLabel, truncate } from "./format.ts";
@@ -142,7 +142,7 @@ export function renderTend(v: TendView, columns: number, c: Colors, rows = 0): s
 	const width = Math.max(CARD_MIN_WIDTH, Math.min(CARD_MAX_WIDTH, columns));
 	const inner = width - 4;
 	const card = currentCard(v.state);
-	const top = [c.bold(`roots tend`) + c.dim(`  card ${v.state.index + 1}/${v.state.cards.length}`)];
+	const top = [c.bold(`luuna-roots tend`) + c.dim(`  card ${v.state.index + 1}/${v.state.cards.length}`)];
 	if (v.expired > 0) top.push(c.dim(`${v.expired} proposal${v.expired === 1 ? "" : "s"} expired`));
 	const es = v.expiredSprouts ?? 0;
 	if (es > 0) top.push(c.dim(`${es} sprout${es === 1 ? "" : "s"} expired`));

@@ -43,7 +43,7 @@ describe("renderFlowCard", () => {
 			30,
 		);
 		const text = lines.join("\n");
-		expect(lines[0]).toContain("roots flow ── warren ── 23m ── inbox 3");
+		expect(lines[0]).toContain("luuna-roots flow ── warren ── 23m ── inbox 3");
 		expect(text).toContain("r-c818 team-agent-platform");
 		expect(text).toContain("3 answered · 1 open  shaping  ← last");
 		expect(text).toContain("+ adopted r-0c3e · accepted 2");
@@ -86,7 +86,7 @@ describe("renderFlowCard", () => {
 		const lines = renderFlowCard({ ...long, notice: "idea-19 done" }, F, 70, c, 16);
 		const text = lines.join("\n");
 		expect(lines).toHaveLength(16);
-		expect(lines[0]).toContain("roots flow ── warren");
+		expect(lines[0]).toContain("luuna-roots flow ── warren");
 		expect(text).toContain("earlier");
 		expect(text).toContain("r-a013 idea-19");
 		expect(text).toContain("✓ idea-19 done");

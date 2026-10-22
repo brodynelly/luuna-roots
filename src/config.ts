@@ -1,4 +1,4 @@
-// .roots/config.yaml: load with defaults, validate, write.
+// .luuna/roots/config.yaml: load with defaults, validate, write.
 
 import { existsSync, readFileSync } from "node:fs";
 import { ConfigError } from "./errors.ts";
@@ -27,7 +27,7 @@ export interface RootsConfig {
 	/** Thresholds for the deterministic question rules (see src/rules.ts). */
 	questions: QuestionThresholds;
 	view: { write: boolean };
-	/** `roots flow`: heading = ask the agent where the session is going. */
+	/** `luuna-roots flow`: heading = ask the agent where the session is going. */
 	flow: { heading: boolean };
 }
 
@@ -204,7 +204,7 @@ export function renderConfig(config: RootsConfig): string {
 	return stringifyYaml(toYaml(config));
 }
 
-/** Commented config written by `roots init`. Parses back to `config`. */
+/** Commented config written by `luuna-roots init`. Parses back to `config`. */
 export function renderInitialConfig(config: RootsConfig): string {
 	const q = (s: string) => JSON.stringify(s);
 	const command = config.agent.command
@@ -232,9 +232,9 @@ export function renderInitialConfig(config: RootsConfig): string {
 		`  staleAfterDays: ${t.staleAfterDays}       # stale: committed, untouched for N days`,
 		`  snoozeDays: ${t.snoozeDays}            # [z] in think hides a question for N days`,
 		"view:",
-		`  write: ${config.view.write}             # true: \`roots view\` also writes ROOTS.md`,
+		`  write: ${config.view.write}             # true: \`luuna-roots view\` also writes ROOTS.md`,
 		"flow:",
-		`  heading: ${config.flow.heading}           # \`roots flow\`: the agent says where the session is going`,
+		`  heading: ${config.flow.heading}           # \`luuna-roots flow\`: the agent says where the session is going`,
 		"",
 	].join("\n");
 }

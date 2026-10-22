@@ -32,7 +32,7 @@ type Adopted = {
 	error?: string;
 };
 
-describe("roots adopt", () => {
+describe("luuna-roots adopt", () => {
 	test("new idea in the human's words; derives edge; sprout adopted; sprout text never copied", async () => {
 		const { root, paths, sprout } = await setup();
 		const sproutFile = readFileSync(
@@ -48,7 +48,7 @@ describe("roots adopt", () => {
 		const idea = readFileSync(join(root, r.body.path), "utf8");
 		expect(idea).toBe("Humans resolve conflicts by hand\n\nIn my words.\n");
 		expect(idea).not.toContain(SPROUT_TEXT);
-		expect(r.body.path.startsWith(".roots/human/")).toBe(true);
+		expect(r.body.path.startsWith(".luuna/roots/human/")).toBe(true);
 		const g = readGraph(paths);
 		expect(findNode(g, r.body.id)).toMatchObject({
 			kind: "idea",
@@ -182,7 +182,7 @@ describe("accept / reject on sprouts", () => {
 		const { root, paths, sprout } = await setup();
 		const noTty = await runJson<{ error: string }>(["accept", sprout], root, { tty: false });
 		expect(noTty.exitCode).toBe(EXIT.guard);
-		expect(noTty.body.error).toContain(`roots adopt ${sprout}`);
+		expect(noTty.body.error).toContain(`luuna-roots adopt ${sprout}`);
 		const editor = fakeEditor(root, "My own claim\n");
 		const r = await runJson<{ sprout: NodeRecord; idea: NodeRecord }>(["accept", sprout], root, {
 			env: { EDITOR: editor },

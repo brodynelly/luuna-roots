@@ -1,4 +1,4 @@
-// One editor pane for a whole `roots flow` (tmux only). The first think
+// One editor pane for a whole `luuna-roots flow` (tmux only). The first think
 // session opens $EDITOR in a split and remembers the pane id; later sessions
 // switch that pane to the next idea.md instead of opening another split.
 // Switching is done only for vim-family editors still running in the pane:

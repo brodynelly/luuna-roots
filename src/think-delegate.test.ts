@@ -25,7 +25,7 @@ case "$input" in
 *"## Delegated questions"*)
 	q=$(printf '%s\\n' "$input" | sed -n 's/^- \\(q-[0-9a-f]*\\): .*/\\1/p' | head -n 1)
 	printf '# Findings\\n\\nThree services sync today: api, worker and mobile.\\n\\nSources below.\\n' > findings.md
-	roots note "$ROOTS_NODE" --question "$q" --file findings.md
+	luuna-roots note "$ROOTS_NODE" --question "$q" --file findings.md
 	;;
 esac
 `;
@@ -98,7 +98,7 @@ describe("[a] ask agent", () => {
 		expect(screen).toContain("question 1/");
 		expect(screen).toContain(q?.text.slice(0, 30) ?? "?");
 		expect(screen).toContain("Three services sync today: api, worker and mobile.");
-		expect(screen).toContain("full: .roots/agent/notes/");
+		expect(screen).toContain("full: .luuna/roots/agent/notes/");
 		two.terminal.send("q");
 		expect((await run2).delegation).toBeNull();
 	}, 40000);

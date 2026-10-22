@@ -1,6 +1,6 @@
-// roots accept <p-id|s-id> · roots reject <p-id|s-id> [--reason <t>]
+// luuna-roots accept <p-id|s-id> · luuna-roots reject <p-id|s-id> [--reason <t>]
 // (human, no TTY; refused inside an agent session). The non-interactive form
-// of the decisions `roots tend` makes. See src/decide.ts.
+// of the decisions `luuna-roots tend` makes. See src/decide.ts.
 
 import { flagString } from "../args.ts";
 import { acceptItem, type Decision, rejectItem } from "../decide.ts";
@@ -27,7 +27,7 @@ export function decisionLines(out: Output, d: Decision): string[] {
 	for (const s of d.statusChanges) lines.push(`  ${s.node} ${s.from} → ${s.to}`);
 	if (d.think) {
 		lines.push(
-			`  do the split yourself: \`roots think ${d.think.node}\``,
+			`  do the split yourself: \`luuna-roots think ${d.think.node}\``,
 			c.dim(`  suggested: ${d.think.guidance}`),
 		);
 	}
@@ -71,10 +71,10 @@ export const acceptCommand: CommandDef = {
 	description:
 		"edge: creates the edge. A mention proposal names no relation: pass --rel.\n" +
 		"merge: pass --keep <id> (the survivor replaces the other idea, which is composted).\n" +
-		"split: marks it accepted; then split the idea yourself in `roots think <id>`.\n" +
+		"split: marks it accepted; then split the idea yourself in `luuna-roots think <id>`.\n" +
 		"compost: composts the idea. Pending edge proposals on the same pair are decided\n" +
 		"together (one `tend` card).\n" +
-		"sprout (s-): accepting means adopting: same as `roots adopt <s-id>` (needs a TTY;\n" +
+		"sprout (s-): accepting means adopting: same as `luuna-roots adopt <s-id>` (needs a TTY;\n" +
 		"you write the idea yourself in $EDITOR).",
 	flags: {
 		rel: {

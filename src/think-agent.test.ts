@@ -66,8 +66,8 @@ describe("think with agent.command", () => {
 			root,
 			[
 				'cat > "$ROOTS_NODE.prompt"',
-				'roots ask "$ROOTS_NODE" "What happens to an edit made offline on a deleted record?"',
-				'roots ask "$ROOTS_NODE" "Who wins when two devices edit the same field offline?"',
+				'luuna-roots ask "$ROOTS_NODE" "What happens to an edit made offline on a deleted record?"',
+				'luuna-roots ask "$ROOTS_NODE" "Who wins when two devices edit the same field offline?"',
 			].join("\n"),
 		);
 		const { d, terminal, statuses } = deps(root, id, { config: config(agent) });
@@ -99,7 +99,7 @@ describe("think with agent.command", () => {
 		expect(statuses[1]).toBe("stop:");
 		const prompt = Bun.file(join(root, `${id}.prompt`));
 		const text = await prompt.text();
-		expect(text).toContain(`roots ask ${id} "<your question>" --as agent:agent-sh`);
+		expect(text).toContain(`luuna-roots ask ${id} "<your question>" --as agent:agent-sh`);
 		expect(text).toContain(`- think session: ${s.session}`);
 	}, 30000);
 
@@ -192,7 +192,7 @@ describe("think in background mode (flow)", () => {
 			root,
 			[
 				"while [ ! -f go ]; do sleep 0.05; done",
-				'roots ask "$ROOTS_NODE" "Which record wins after a delete?"',
+				'luuna-roots ask "$ROOTS_NODE" "Which record wins after a delete?"',
 			].join("\n"),
 		);
 		const jobs: BackgroundJob[] = [];

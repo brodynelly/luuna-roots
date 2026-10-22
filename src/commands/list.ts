@@ -1,4 +1,4 @@
-// roots list: ideas and sprouts, filtered.
+// luuna-roots list: ideas and sprouts, filtered.
 
 import { flagBool, flagString } from "../args.ts";
 import { padEnd, visibleLength } from "../color.ts";
@@ -119,7 +119,7 @@ export const listCommand: CommandDef = {
 		if (rows.length === 0) {
 			const empty = ws.graph.nodes.length === 0;
 			await out.line(
-				empty ? 'No ideas yet. Plant one: roots plant "<one sentence>"' : "No matches.",
+				empty ? 'No ideas yet. Plant one: luuna-roots plant "<one sentence>"' : "No matches.",
 			);
 			return;
 		}

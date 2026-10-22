@@ -15,12 +15,12 @@
 //      one pair become one card), or an existing edge on the pair
 //   5. cap: pending count stays below limits.proposals
 // Tier checks belong to the caller: deterministic mention proposals
-// (`roots:mention`) are allowed at every tier; `roots propose` (Stage 4)
+// (`roots:mention`) are allowed at every tier; `luuna-roots propose` (Stage 4)
 // must check tier >= 2 before calling.
 //
 // `strict: true` throws a ValidationError/ConflictError on the first failing
-// draft (for `roots propose`); otherwise failing drafts are skipped and
-// reported (for automatic filing at session end and in `roots scan`).
+// draft (for `luuna-roots propose`); otherwise failing drafts are skipped and
+// reported (for automatic filing at session end and in `luuna-roots scan`).
 
 import { readClaim } from "./endorse.ts";
 import { ConflictError, ValidationError } from "./errors.ts";
@@ -259,7 +259,7 @@ function checkDraft(s: CheckState, d: ProposalDraft): SkippedDraft | null {
 	if (dup) return skip("duplicate", `already proposed as ${dup.id}`);
 	if (edgeExists(s.graph, d)) return skip("exists", "these nodes are already linked");
 	if (s.pending >= s.opts.cap) {
-		return skip("cap", `pending proposals are at the limit (${s.opts.cap}); run \`roots tend\``);
+		return skip("cap", `pending proposals are at the limit (${s.opts.cap}); run \`luuna-roots tend\``);
 	}
 	return null;
 }

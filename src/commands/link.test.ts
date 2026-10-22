@@ -13,7 +13,7 @@ async function setup() {
 	return { root, a, b, paths: rootsPaths(root) };
 }
 
-describe("roots link / unlink", () => {
+describe("luuna-roots link / unlink", () => {
 	test("link adds a human edge (no TTY needed); unlink removes it; one event each", async () => {
 		const { root, a, b, paths } = await setup();
 		const r = await runJson<{ id: string; edge: EdgeRecord }>(
@@ -56,7 +56,7 @@ describe("roots link / unlink", () => {
 		const self = await runJson<{ error: string }>(["link", a, a, "serves"], root);
 		expect(self.body.error).toContain("itself");
 		const rel = await runJson<{ error: string }>(["link", a, c, "derives"], root);
-		expect(rel.body.error).toContain("roots adopt");
+		expect(rel.body.error).toContain("luuna-roots adopt");
 		const bad = await runJson<{ error: string }>(["link", a, c, "blocks"], root);
 		expect(bad.exitCode).toBe(EXIT.usage);
 	});

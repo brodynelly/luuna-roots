@@ -1,10 +1,11 @@
 {
-	"name": "@os-eco/roots-cli",
+	"name": "@luuna/roots-cli",
 	"version": "0.0.0",
 	"description": "Git-native intent for projects: humans write ideas, agents ask and propose",
 	"type": "module",
 	"bin": {
-		"roots": "./src/index.ts"
+		"luuna-roots": "./src/index.ts",
+		"lrt": "./src/index.ts"
 	},
 	"main": "src/index.ts",
 	"files": [
@@ -14,18 +15,19 @@
 	"engines": {
 		"bun": ">=1.0.0"
 	},
-	"author": "Jaymin West",
+	"author": "Brodynelly",
+	"contributors": ["Jaymin West (original Roots author)"],
 	"license": "MIT",
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/jayminwest/roots.git"
+		"url": "https://github.com/brodynelly/luuna-roots.git"
 	},
 	"scripts": {
 		"test": "bun test",
 		"lint": "biome check --error-on-warnings .",
 		"lint:fix": "biome check --write --error-on-warnings .",
 		"typecheck": "tsc --noEmit",
-		"check:agents": "bun run scripts/validate-agents-md.ts --known-missing idea.md --known-missing .mulch/archive --known-missing .roots --known-missing .roots/human",
+		"check:agents": "bun run scripts/validate-agents-md.ts --known-missing idea.md --known-missing .luuna/atlas/archive --known-missing .luuna/roots --known-missing .luuna/roots/human",
 		"check:dups": "bunx jscpd",
 		"check:deps": "knip --dependencies",
 		"check:size": "bun run scripts/check-file-sizes.ts --budget scripts/file-size-budgets.json",

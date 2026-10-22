@@ -1,4 +1,4 @@
-// roots prime [--scope <id>] (agent-facing, read-only): the accepted graph
+// luuna-roots prime [--scope <id>] (agent-facing, read-only): the accepted graph
 // as agent context plus how to use roots as an agent. Meant for harness
 // SessionStart hooks (`--hook`: silent outside a roots project, so a
 // user-level hook costs nothing elsewhere).

@@ -56,7 +56,7 @@ async function fixture() {
 
 const slugs = (b: ListBody) => b.nodes.map((n) => n.slug);
 
-describe("roots list", () => {
+describe("luuna-roots list", () => {
 	test("default hides composted ideas and closed sprouts; ideas first", async () => {
 		const { root } = await fixture();
 		const { body } = await runJson<ListBody>(["list"], root);

@@ -1,6 +1,6 @@
-// roots note <id> --file <path> [--name <n>] --as agent:<model> (agent,
+// luuna-roots note <id> --file <path> [--name <n>] --as agent:<model> (agent,
 // tier ≥ 1): attach an artifact to a human idea. Copies it into
-// .roots/agent/notes/<hex>/YYYY-MM-DD-<slug>.<ext>. With --question, the
+// .luuna/roots/agent/notes/<hex>/YYYY-MM-DD-<slug>.<ext>. With --question, the
 // note is findings on a question the human delegated ([a] in think), and the
 // question comes back to the human. See src/notes.ts.
 
@@ -19,9 +19,9 @@ export const noteCommand: CommandDef = {
 	usage: "note <id> --file <path>",
 	description:
 		"Copies the file (research, a diagram, HTML, an image) to\n" +
-		".roots/agent/notes/<hex>/YYYY-MM-DD-<name>.<ext>. The human's idea.md is never\n" +
+		".luuna/roots/agent/notes/<hex>/YYYY-MM-DD-<name>.<ext>. The human's idea.md is never\n" +
 		`touched. Limit: ${NOTE_MAX_BYTES / 1024 / 1024} MiB per file. Refused below tier 1 (per-idea override, else\n` +
-		"config). `roots show` and `roots context` list an idea's notes.\n" +
+		"config). `luuna-roots show` and `luuna-roots context` list an idea's notes.\n" +
 		"--question <q-id>: findings on a question the human handed to the agent ([a] in\n" +
 		"think). Text only (.md/.txt); its first paragraph is shown under the question when\n" +
 		"it comes back to the human, who still answers it in idea.md.",

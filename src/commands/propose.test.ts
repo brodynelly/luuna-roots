@@ -19,7 +19,7 @@ async function setup() {
 
 type Body = { id: string; proposal: ProposalRecord; error: string; code: string };
 
-describe("roots propose edge", () => {
+describe("luuna-roots propose edge", () => {
 	test("files a validated edge proposal; quotes may contain colons", async () => {
 		const { root, a, b, paths } = await setup();
 		const r = await runJson<Body>(
@@ -89,7 +89,7 @@ describe("roots propose edge", () => {
 			[...base.slice(0, 4), "derives", "--reason", "r", ...AGENT],
 			root,
 		);
-		expect(derives.body.error).toContain("roots adopt");
+		expect(derives.body.error).toContain("luuna-roots adopt");
 		const self = await runJson<Body>(
 			["propose", "edge", a, a, "serves", "--reason", "r", ...AGENT],
 			root,
@@ -182,7 +182,7 @@ describe("roots propose edge", () => {
 	});
 });
 
-describe("roots propose split|merge|compost", () => {
+describe("luuna-roots propose split|merge|compost", () => {
 	test("shapes and citation rules", async () => {
 		const { root, a, b } = await setup();
 		const split = await runJson<Body>(
@@ -241,7 +241,7 @@ describe("roots propose split|merge|compost", () => {
 		const bad = await runJson<Body>(["propose", "graft", a, "--reason", "r", ...AGENT], root);
 		expect(bad.body.error).toContain("unknown proposal kind");
 		const arity = await runJson<Body>(["propose", "merge", a, "--reason", "r", ...AGENT], root);
-		expect(arity.body.error).toContain("usage: roots propose merge <a> <b>");
+		expect(arity.body.error).toContain("usage: luuna-roots propose merge <a> <b>");
 		const mention = await runJson<Body>(
 			["propose", "split", a, "--mention", "--reason", "r", "--cite", `${a}:Sync`, ...AGENT],
 			root,

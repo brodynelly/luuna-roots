@@ -1,16 +1,16 @@
-// Locating .roots/ and the files inside it.
+// Locating .luuna/roots/ and the files inside it.
 
 import { existsSync, statSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
 import { NotInitializedError } from "./errors.ts";
 import type { NodeKind } from "./types.ts";
 
-export const ROOTS_DIR = ".roots";
+export const ROOTS_DIR = ".luuna/roots";
 
 export interface RootsPaths {
-	/** Project root: the directory containing .roots/. */
+	/** Project root: the directory containing .luuna/roots/. */
 	root: string;
-	/** Absolute path to .roots/. */
+	/** Absolute path to .luuna/roots/. */
 	dir: string;
 	config: string;
 	graph: string;
@@ -53,7 +53,7 @@ function isDir(p: string): boolean {
 	}
 }
 
-/** Walk up from `start` to the nearest directory containing `.roots/`. */
+/** Walk up from `start` to the nearest directory containing `.luuna/roots/`. */
 export function findProjectRoot(start: string): string | null {
 	let cur = resolve(start);
 	while (true) {

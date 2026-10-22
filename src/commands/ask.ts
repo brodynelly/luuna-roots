@@ -1,4 +1,4 @@
-// roots ask <id> <question> --as agent:<model> (agent, tier ≥ 1): queue a
+// luuna-roots ask <id> <question> --as agent:<model> (agent, tier ≥ 1): queue a
 // question about one idea. See src/agent-questions.ts for every check.
 
 import { resolveAgentActor } from "../actor.ts";
@@ -14,7 +14,7 @@ export const askCommand: CommandDef = {
 	summary: "Queue a question about an idea (tier ≥ 1)",
 	usage: "ask <id> <question>",
 	description:
-		"The question shows up in the human's next `roots think` session on the idea (or the\n" +
+		"The question shows up in the human's next `luuna-roots think` session on the idea (or the\n" +
 		'current one). One line, ending with "?", specific to this idea. Refused when the tier\n' +
 		"is below 1, when the idea already has limits.questionsPerSession open agent\n" +
 		"questions, or when the same question is open or was dismissed.",

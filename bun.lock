@@ -3,7 +3,7 @@
   "configVersion": 1,
   "workspaces": {
     "": {
-      "name": "@os-eco/roots-cli",
+      "name": "@luuna/roots-cli",
       "devDependencies": {
         "@biomejs/biome": "^2.4.14",
         "@types/bun": "latest",

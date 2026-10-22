@@ -1,13 +1,13 @@
-// `roots drift`: which ideas a repo change touches (roots-4689: the
-// tier-3 Stop hook `roots drift --diff HEAD`). Read-only
-// and deterministic; no LLM. The agent reads the packet and may `roots ask`
+// `luuna-roots drift`: which ideas a repo change touches (roots-4689: the
+// tier-3 Stop hook `luuna-roots drift --diff HEAD`). Read-only
+// and deterministic; no LLM. The agent reads the packet and may `luuna-roots ask`
 // "does this still hold?". Nothing here writes.
 //
 // Changed files (gatherDrift): `git diff --name-only --relative <rev>` (the
 // working tree + index against <rev>) plus untracked, non-ignored files
 // (an agent's new file is as much a change as an edit), relative to the
-// project root and limited to it. Files under .roots/, .seeds/, .mulch/ and
-// .canopy/ are left out: they are tool data, not the code ideas are about. Commit messages:
+// project root and limited to it. Files under .luuna/roots/, .luuna/missions/, .luuna/atlas/ and
+// .luuna/beacon/ are left out: they are tool data, not the code ideas are about. Commit messages:
 // `git log <rev>..HEAD` (empty for the default rev HEAD). Every git call has
 // a timeout; any git failure yields `{ ok: false }`, never an exception.
 //
@@ -88,9 +88,9 @@ function parseCommits(out: string): DriftCommit[] {
 		});
 }
 
-const TOOL_DIRS = [".roots", ".seeds", ".mulch", ".canopy"];
+const TOOL_DIRS = [".luuna", ".roots", ".seeds", ".mulch", ".canopy"];
 
-/** os-eco tool data (.roots/, .seeds/, .mulch/, .canopy/), not the code ideas are about. */
+/** os-eco tool data (.luuna/roots/, .luuna/missions/, .luuna/atlas/, .luuna/beacon/), not the code ideas are about. */
 function isToolData(path: string): boolean {
 	return TOOL_DIRS.some((d) => path === d || path.startsWith(`${d}/`));
 }

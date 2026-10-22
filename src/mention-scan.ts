@@ -1,5 +1,5 @@
 // Turn mentions in changed lines into `edge` proposals (rel: null, by
-// roots:mention). Shared by the end of a `think` session and `roots scan`.
+// roots:mention). Shared by the end of a `think` session and `luuna-roots scan`.
 // Each proposal cites the human's mentioning line plus the target's
 // statement, so the human's own words are the evidence.
 

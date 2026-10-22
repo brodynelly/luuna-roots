@@ -11,7 +11,7 @@
 // Skips are not mutations and log nothing.
 //
 // Agents (tier ≥ 1, see agent-phase.ts): after session.start, agent.command
-// (if configured) runs with the context packet and calls `roots ask`; those
+// (if configured) runs with the context packet and calls `luuna-roots ask`; those
 // questions are due and come before new rule questions. During the session,
 // agent questions that land in questions.jsonl (a harness calling `roots
 // ask`) are queued live through the reducer's `arrive` input.
@@ -106,7 +106,7 @@ export interface ThinkDeps {
 	/** Shown on the screen for the whole session (e.g. an accepted split from `tend`). */
 	guidance?: ScreenGuidance | null;
 	/**
-	 * Background mode (`roots flow`): agent.command runs without blocking the
+	 * Background mode (`luuna-roots flow`): agent.command runs without blocking the
 	 * session (its questions arrive live) and is handed to this callback; the
 	 * session-end proposal run is skipped and left to the caller, which gets
 	 * the changed lines in the summary.

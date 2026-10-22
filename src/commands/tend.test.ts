@@ -55,7 +55,7 @@ async function tend(root: string, script: (t: ReturnType<typeof fakeTerminal>) =
 	return running;
 }
 
-describe("roots tend", () => {
+describe("luuna-roots tend", () => {
 	test("needs a TTY and a human; --json lists cards without one", async () => {
 		const s = await setup();
 		const edge = await s.propose(edgeArgs(s));

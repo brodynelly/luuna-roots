@@ -8,8 +8,8 @@ import { rootsPaths } from "../paths.ts";
 import { run, runJson, tempDir } from "../test-helpers.ts";
 import { ensureGitattributes, GITATTRIBUTES_LINE } from "./init.ts";
 
-describe("roots init", () => {
-	test("creates the .roots layout", async () => {
+describe("luuna-roots init", () => {
+	test("creates the .luuna/roots layout", async () => {
 		const dir = tempDir();
 		const { exitCode, body } = await runJson<{ created: string[]; gitattributes: string }>(
 			["init"],
@@ -25,7 +25,7 @@ describe("roots init", () => {
 		expect(readFileSync(p.gitignore, "utf8")).toContain("*.lock");
 		expect(readFileSync(join(dir, ".gitattributes"), "utf8")).toBe(`${GITATTRIBUTES_LINE}\n`);
 		expect(loadConfig(p)).toEqual(defaultConfig(dir.split("/").pop() ?? ""));
-		expect(body.created).toContain(".roots/config.yaml");
+		expect(body.created).toContain(".luuna/roots/config.yaml");
 		const events = readEvents(p);
 		expect(events).toHaveLength(1);
 		expect(events[0]).toMatchObject({ type: "init", by: "human:test-human" });
@@ -58,7 +58,7 @@ describe("roots init", () => {
 
 	test("human output", async () => {
 		const r = await run(["init"], tempDir());
-		expect(r.stdout).toContain("initialized .roots/");
+		expect(r.stdout).toContain("initialized .luuna/roots/");
 		expect(r.stdout).toContain("merge=union");
 		const q = await run(["init", "-q"], tempDir());
 		expect(q.stdout).toBe("");

@@ -1,4 +1,4 @@
-// Shared types and helpers for `roots verify` (verify.ts, verify-boundary.ts).
+// Shared types and helpers for `luuna-roots verify` (verify.ts, verify-boundary.ts).
 
 import { existsSync, readFileSync } from "node:fs";
 import type { GitProbe } from "./git-trust.ts";

@@ -2,9 +2,9 @@
 //
 //   accept  = adopt: needs ctx.adopt (an interactive terminal), because the
 //             human rewrites the sprout as an idea in $EDITOR (adopt.ts).
-//             Without a TTY the error says to run `roots adopt <id>`.
+//             Without a TTY the error says to run `luuna-roots adopt <id>`.
 //   reject  status open → rejected, decidedBy/decidedAt/decisionReason. The
-//             rejection is permanent: `roots sprout` refuses the same
+//             rejection is permanent: `luuna-roots sprout` refuses the same
 //             statement forever (sprouts.ts dedup). One `reject` event.
 // Overdue sprouts are expired first (lazy expiry, one `expire` event each).
 
@@ -39,8 +39,8 @@ export const sproutDecider: Decider = {
 		if (!ctx.adopt) {
 			throw new GuardError(
 				`accepting ${id} means adopting it: you write the idea yourself in $EDITOR, ` +
-					`so it needs an interactive terminal. Run \`roots adopt ${id}\` in a terminal ` +
-					`(or \`roots reject ${id}\`)`,
+					`so it needs an interactive terminal. Run \`luuna-roots adopt ${id}\` in a terminal ` +
+					`(or \`luuna-roots reject ${id}\`)`,
 			);
 		}
 		return ctx.adopt(id);
@@ -52,7 +52,7 @@ export const sproutDecider: Decider = {
 		const node = await updateGraph(ctx.paths, (graph) => {
 			const n = findNode(graph, id);
 			if (n?.kind !== "sprout") {
-				throw new NotFoundError(`no sprout ${id}; \`roots list --kind sprout\` lists them`);
+				throw new NotFoundError(`no sprout ${id}; \`luuna-roots list --kind sprout\` lists them`);
 			}
 			if (n.status !== "open") {
 				const who = n.decidedBy ? ` by ${n.decidedBy}` : "";

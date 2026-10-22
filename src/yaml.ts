@@ -1,4 +1,4 @@
-// Minimal YAML subset for .roots/config.yaml (zero deps).
+// Minimal YAML subset for .luuna/roots/config.yaml (zero deps).
 //
 // Supported:
 //   - Block mappings nested by indentation (spaces only).

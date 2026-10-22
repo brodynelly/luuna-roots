@@ -1,6 +1,6 @@
-// roots guard: Claude Code PreToolUse hook handler (installed by
-// `roots setup claude`). Reads the hook JSON on stdin. Denies Write / Edit /
-// MultiEdit / NotebookEdit under any .roots/human/, and (best effort) Bash
+// luuna-roots guard: Claude Code PreToolUse hook handler (installed by
+// `luuna-roots setup claude`). Reads the hook JSON on stdin. Denies Write / Edit /
+// MultiEdit / NotebookEdit under any .luuna/roots/human/, and (best effort) Bash
 // commands that write there. See hook-guard.ts for the rules.
 //
 // Output follows Claude Code's PreToolUse contract: a denial prints
@@ -25,25 +25,25 @@ function parseInput(raw: string): HookInput | null {
 export const guardCommand: CommandDef = {
 	name: "guard",
 	group: "setup",
-	summary: "PreToolUse hook: deny agent edits to .roots/human/ (reads hook JSON on stdin)",
+	summary: "PreToolUse hook: deny agent edits to .luuna/roots/human/ (reads hook JSON on stdin)",
 	usage: "guard",
 	description:
 		"Claude Code PreToolUse hook handler. Reads {tool_name, tool_input, cwd} on stdin.\n" +
 		"Denies Write/Edit/MultiEdit/NotebookEdit whose target resolves (relative paths, `..`,\n" +
-		"symlinks) under any .roots/human/, and, best effort, Bash commands that write there.\n" +
+		"symlinks) under any .luuna/roots/human/, and, best effort, Bash commands that write there.\n" +
 		"Allows silently otherwise. Unparsable input is allowed with a note on stderr.",
 	maxArgs: 0,
 	async run({ io, out }) {
 		const raw = io.stdinIsTTY || !io.readStdin ? "" : await io.readStdin();
 		const input = parseInput(raw);
 		if (!input) {
-			io.stderr("roots guard: no hook JSON on stdin; allowing\n");
+			io.stderr("luuna-roots guard: no hook JSON on stdin; allowing\n");
 			await out.result({ decision: "allow", reason: "no hook input" });
 			return;
 		}
 		const d = decideHook(input, io.cwd);
 		await out.result({ ...d });
 		if (out.json) return;
-		if (d.decision === "deny") await io.stdout(denyOutput(d.reason ?? "denied by roots guard"));
+		if (d.decision === "deny") await io.stdout(denyOutput(d.reason ?? "denied by luuna-roots guard"));
 	},
 };

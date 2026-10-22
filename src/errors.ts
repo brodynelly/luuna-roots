@@ -72,7 +72,7 @@ export class NotFoundError extends RootsError {
 export class NotInitializedError extends RootsError {
 	constructor(cwd: string) {
 		super(
-			`not a roots project (no .roots/ found from ${cwd}); run \`roots init\``,
+			`not a roots project (no .luuna/roots/ found from ${cwd}); run \`luuna-roots init\``,
 			"not_initialized",
 			EXIT.notFound,
 		);

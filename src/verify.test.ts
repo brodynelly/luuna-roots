@@ -34,7 +34,7 @@ function codes(issues: Issue[]): string[] {
 }
 
 function ideaMd(root: string, id: string): string {
-	const dir = join(root, ".roots", "human");
+	const dir = join(root, ".luuna/roots", "human");
 	const name = readdirSync(dir).find((n) => n.startsWith(`${id.slice(2)}-`)) ?? "";
 	return join(dir, name, "idea.md");
 }
@@ -82,7 +82,7 @@ describe("isAgentCommit", () => {
 	});
 });
 
-describe("roots verify", () => {
+describe("luuna-roots verify", () => {
 	test("a fresh project passes", async () => {
 		const root = await initProject();
 		await plant(root, "Sync works offline");
@@ -138,7 +138,7 @@ describe("roots verify", () => {
 		const root = await initProject();
 		const id = await plant(root, "Sync works offline");
 		const dir = join(ideaMd(root, id), "..");
-		const human = join(root, ".roots", "human");
+		const human = join(root, ".luuna/roots", "human");
 		writeFileSync(join(human, "stray.md"), "x");
 		mkdirSync(join(human, "ffff-unknown"));
 		writeFileSync(join(dir, "notes.md"), "x");
@@ -196,10 +196,10 @@ describe("roots verify", () => {
 			"ref.dangling",
 		]);
 		const parse = r.issues.find((i) => i.code === "jsonl.parse");
-		expect(parse).toMatchObject({ file: ".roots/graph.jsonl", line: 3 });
+		expect(parse).toMatchObject({ file: ".luuna/roots/graph.jsonl", line: 3 });
 		expect(r.issues.find((i) => i.code === "record.invalid")?.line).toBe(4);
 		const text = await run(["verify"], root);
-		expect(text.stdout).toContain(".roots/graph.jsonl:3");
+		expect(text.stdout).toContain(".luuna/roots/graph.jsonl:3");
 		expect(text.stderr).toContain("7 errors");
 	});
 
@@ -217,7 +217,7 @@ describe("roots verify", () => {
 			return { write: true, result: null };
 		});
 		rmSync(ideaMd(root, b));
-		mkdirSync(join(root, ".roots", "agent", "sprouts", "abcd-ghost"), { recursive: true });
+		mkdirSync(join(root, ".luuna/roots", "agent", "sprouts", "abcd-ghost"), { recursive: true });
 		const r = await verify(root);
 		expect(codes(r.issues)).toEqual([
 			"dir.missing",
@@ -230,7 +230,7 @@ describe("roots verify", () => {
 
 	test("smoke: the real binary exits 6 on errors", async () => {
 		const root = await initProject();
-		writeFileSync(join(root, ".roots", "human", "stray.txt"), "x");
+		writeFileSync(join(root, ".luuna/roots", "human", "stray.txt"), "x");
 		const r = await spawnCli(["verify"], root);
 		expect(r.exitCode).toBe(6);
 		expect(r.stdout).toContain("boundary.stray");

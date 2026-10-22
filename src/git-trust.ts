@@ -1,4 +1,4 @@
-// Git probes for `roots verify`'s hash ledger (roots-ecaa; guard 4): an idea.md
+// Git probes for `luuna-roots verify`'s hash ledger (roots-ecaa; guard 4): an idea.md
 // whose content differs from its last trusted hash is still fine when that
 // content comes from a human-authored commit.
 //

@@ -1,4 +1,4 @@
-// Agent questions (`roots ask`, tier ≥ 1). Every agent write is validated
+// Agent questions (`luuna-roots ask`, tier ≥ 1). Every agent write is validated
 // (AGENTS.md invariant 4) before it reaches questions.jsonl:
 //
 //   - the actor is an agent (checked by the command via resolveAgentActor)
@@ -10,7 +10,7 @@
 //     on the idea; dismissals are permanent memory
 //
 // Writes go through addQuestions (one `ask` event each). Nothing here
-// touches .roots/human/.
+// touches .luuna/roots/human/.
 
 import { loadConfig, type RootsConfig } from "./config.ts";
 import { openAgentQuestions, QUESTION_MAX_LENGTH } from "./context.ts";
@@ -127,7 +127,7 @@ export async function askAgentQuestion(paths: RootsPaths, input: AskInput): Prom
 	if (!input.by.startsWith("agent:")) throw new GuardError("only agents ask questions");
 	const config = loadConfig(paths);
 	checkTarget(input.node);
-	requireTier(config, 1, "`roots ask`", input.node);
+	requireTier(config, 1, "`luuna-roots ask`", input.node);
 	const text = checkQuestionText(input.text);
 	const validate = (rows: readonly QuestionRecord[]) => {
 		checkCap(rows, input.node, config);

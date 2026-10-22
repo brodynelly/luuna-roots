@@ -1,4 +1,4 @@
-// roots blame <id>: idea.md with the question each line answered (src/blame.ts).
+// luuna-roots blame <id>: idea.md with the question each line answered (src/blame.ts).
 
 import { relative } from "node:path";
 import { type Blame, buildBlame } from "../blame.ts";
@@ -28,7 +28,7 @@ function fileLines(out: Output, b: Blame): string[] {
 
 function answerLines(out: Output, b: Blame): string[] {
 	const c = out.c;
-	if (b.answers.length === 0) return [c.dim("No answered questions yet. Run `roots think`.")];
+	if (b.answers.length === 0) return [c.dim("No answered questions yet. Run `luuna-roots think`.")];
 	const lines = [c.bold("Questions answered")];
 	for (const a of b.answers) {
 		const where =

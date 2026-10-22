@@ -1,6 +1,6 @@
-// roots sprout <statement> [--file <md>] [--slug <s>] --as agent:<model>
+// luuna-roots sprout <statement> [--file <md>] [--slug <s>] --as agent:<model>
 // (agent, tier ≥ 2): propose a new idea in the agent tree. Writes only
-// .roots/agent/sprouts/<hex>-<slug>/sprout.md. See src/sprouts.ts for every
+// .luuna/roots/agent/sprouts/<hex>-<slug>/sprout.md. See src/sprouts.ts for every
 // check (cap, dedup, permanent rejections, expiry).
 
 import { readFileSync, statSync } from "node:fs";
@@ -27,7 +27,7 @@ function readBody(cwd: string, file: string | undefined): string | undefined {
 	}
 	if (size > SPROUT_BODY_MAX_BYTES) {
 		throw new ValidationError(
-			`--file is ${size} bytes; the limit is ${SPROUT_BODY_MAX_BYTES}. Attach long material with \`roots note\``,
+			`--file is ${size} bytes; the limit is ${SPROUT_BODY_MAX_BYTES}. Attach long material with \`luuna-roots note\``,
 		);
 	}
 	return readFileSync(path, "utf8");
@@ -41,7 +41,7 @@ export const sproutCommand: CommandDef = {
 	description:
 		"The statement is one claim in one line. --file adds prose after it (Markdown).\n" +
 		"A sprout never becomes an idea: a human may adopt it (they rewrite it in their own\n" +
-		"words) or reject it, in `roots tend`. Refused below tier 2, at limits.sprouts open\n" +
+		"words) or reject it, in `luuna-roots tend`. Refused below tier 2, at limits.sprouts open\n" +
 		"sprouts, or when the statement matches an idea, an open or adopted sprout, or a\n" +
 		"rejected one (rejections are permanent). Open sprouts expire after\n" +
 		"limits.sproutTtlDays.",
@@ -77,7 +77,7 @@ export const sproutCommand: CommandDef = {
 		const days = daysLeft(r.node.expiresAt ?? null, new Date());
 		await out.success(`sprouted ${out.c.id(r.node.id)} ${r.node.slug}`);
 		await out.info(
-			`  ${out.c.dim(`${path} · expires in ${days}d · a human decides in \`roots tend\``)}`,
+			`  ${out.c.dim(`${path} · expires in ${days}d · a human decides in \`luuna-roots tend\``)}`,
 		);
 	},
 };

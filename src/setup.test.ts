@@ -39,7 +39,7 @@ describe("claude-settings", () => {
 			hooks: {
 				PreToolUse: [
 					USER_HOOK,
-					{ matcher: "Write", hooks: [{ type: "command", command: "roots guard --old" }] },
+					{ matcher: "Write", hooks: [{ type: "command", command: "luuna-roots guard --old" }] },
 				],
 			},
 		};
@@ -51,10 +51,10 @@ describe("claude-settings", () => {
 		expect(s.model).toBe("opus");
 		expect(s.hooks.PreToolUse).toEqual([
 			USER_HOOK,
-			{ matcher: GUARD_HOOK.matcher, hooks: [{ type: "command", command: "roots guard" }] },
+			{ matcher: GUARD_HOOK.matcher, hooks: [{ type: "command", command: "luuna-roots guard" }] },
 		]);
 		expect(s.hooks.SessionStart).toEqual([
-			{ hooks: [{ type: "command", command: "roots prime --hook" }] },
+			{ hooks: [{ type: "command", command: "luuna-roots prime --hook" }] },
 		]);
 		const twice = syncRootsHooks(once.settings, want);
 		expect(twice.changed).toBe(false);
@@ -68,7 +68,7 @@ describe("claude-settings", () => {
 					{
 						hooks: [
 							{ type: "command", command: "ml prime" },
-							{ type: "command", command: "roots prime" },
+							{ type: "command", command: "luuna-roots prime" },
 						],
 					},
 				],
@@ -77,7 +77,7 @@ describe("claude-settings", () => {
 		const r = syncRootsHooks(before, [PRIME_HOOK]);
 		expect((r.settings as { hooks: { SessionStart: unknown } }).hooks.SessionStart).toEqual([
 			{ hooks: [{ type: "command", command: "ml prime" }] },
-			{ hooks: [{ type: "command", command: "roots prime --hook" }] },
+			{ hooks: [{ type: "command", command: "luuna-roots prime --hook" }] },
 		]);
 	});
 
@@ -95,7 +95,7 @@ describe("claude-settings", () => {
 	});
 });
 
-describe("roots setup claude", () => {
+describe("luuna-roots setup claude", () => {
 	test("project scope: writes .claude/settings.json at the project root, idempotent", async () => {
 		const root = await initProject();
 		mkdirSync(join(root, "src"));
@@ -114,7 +114,7 @@ describe("roots setup claude", () => {
 		const s = settingsOf(root);
 		expect(s.permissions).toEqual({ allow: ["Bash(ls)"] });
 		expect(s.hooks.PreToolUse[0]).toEqual(USER_HOOK);
-		expect(s.hooks.SessionStart[0].hooks[0].command).toBe("roots prime --hook");
+		expect(s.hooks.SessionStart[0].hooks[0].command).toBe("luuna-roots prime --hook");
 		expect(s.hooks.Stop).toBeUndefined();
 		const text = readFileSync(join(root, ".claude", "settings.json"), "utf8");
 		const again = await runJson<{ changed: boolean }>(["setup", "claude"], root);
@@ -128,7 +128,7 @@ describe("roots setup claude", () => {
 		const up = await runJson<{ changed: boolean }>(["setup", "claude"], root);
 		expect(up.body.changed).toBe(true);
 		expect(settingsOf(root).hooks.Stop).toEqual([
-			{ hooks: [{ type: "command", command: "roots drift --diff HEAD" }] },
+			{ hooks: [{ type: "command", command: "luuna-roots drift --diff HEAD" }] },
 		]);
 		const again = await runJson<{ changed: boolean }>(["setup", "claude"], root);
 		expect(again.body.changed).toBe(false);
@@ -137,7 +137,7 @@ describe("roots setup claude", () => {
 		expect(down.body.changed).toBe(true);
 		const s = settingsOf(root);
 		expect(s.hooks.Stop).toBeUndefined();
-		expect(s.hooks.SessionStart[0].hooks[0].command).toBe("roots prime --hook");
+		expect(s.hooks.SessionStart[0].hooks[0].command).toBe("luuna-roots prime --hook");
 		await patchConfig(root, { tier: 3 });
 		await run(["setup", "claude"], root);
 		await run(["setup", "claude", "--remove"], root);
@@ -147,14 +147,14 @@ describe("roots setup claude", () => {
 	test("--dry-run writes nothing; --user uses $HOME", async () => {
 		const root = await initProject();
 		const dry = await run(["setup", "claude", "--dry-run"], root);
-		expect(dry.stdout).toContain('"roots guard"');
+		expect(dry.stdout).toContain('"luuna-roots guard"');
 		expect(existsSync(join(root, ".claude"))).toBe(false);
 		const home = tempDir();
 		const u = await runJson<{ scope: string }>(["setup", "claude", "--user"], root, {
 			env: { HOME: home },
 		});
 		expect(u.body.scope).toBe("user");
-		expect(settingsOf(home).hooks.PreToolUse[0].hooks[0].command).toBe("roots guard");
+		expect(settingsOf(home).hooks.PreToolUse[0].hooks[0].command).toBe("luuna-roots guard");
 		expect(existsSync(join(root, ".claude"))).toBe(false);
 	});
 
@@ -192,7 +192,7 @@ describe("roots setup claude", () => {
 	});
 });
 
-describe("roots prime --hook", () => {
+describe("luuna-roots prime --hook", () => {
 	test("silent outside a roots project; normal inside", async () => {
 		const outside = await run(["prime", "--hook"], tempDir());
 		expect([outside.exitCode, outside.stdout, outside.stderr]).toEqual([0, "", ""]);

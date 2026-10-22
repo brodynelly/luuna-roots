@@ -55,7 +55,7 @@ describe("fileSprout", () => {
 		});
 		expect(r.node.id).toMatch(/^s-[0-9a-f]{4}$/);
 		expect(relative(root, r.file)).toBe(
-			`.roots/agent/sprouts/${r.node.id.slice(2)}-conflicts-get-merge-ui/sprout.md`,
+			`.luuna/roots/agent/sprouts/${r.node.id.slice(2)}-conflicts-get-merge-ui/sprout.md`,
 		);
 		expect(readFileSync(r.file, "utf8")).toBe(
 			"Conflicts get a merge UI\n\nWhy: users lose edits.\n",

@@ -34,7 +34,7 @@ import type { Actor, EdgeRecord, Graph, NodeRecord } from "./types.ts";
 function openSproutIn(graph: Graph, id: string, now: Date): NodeRecord {
 	const node = findNode(graph, id);
 	if (node?.kind !== "sprout") {
-		throw new NotFoundError(`no sprout ${id}; \`roots list --kind sprout\` lists them`);
+		throw new NotFoundError(`no sprout ${id}; \`luuna-roots list --kind sprout\` lists them`);
 	}
 	if (isSproutOverdue(node, now))
 		throw new ConflictError(`${id} has expired`, { status: "expired" });

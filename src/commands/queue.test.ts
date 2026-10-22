@@ -4,7 +4,7 @@ import { fileProposals, MENTION_ACTOR } from "../proposals.ts";
 import { addQuestions } from "../questions.ts";
 import { initProject, plant, run, runJson } from "../test-helpers.ts";
 
-describe("roots queue", () => {
+describe("luuna-roots queue", () => {
 	test("empty project", async () => {
 		const root = await initProject();
 		const r = await run(["queue"], root);

@@ -5,14 +5,14 @@ import { findNode, readGraph } from "../graph.ts";
 import { rootsPaths } from "../paths.ts";
 import { forceStatus, initProject, plant, run, runJson } from "../test-helpers.ts";
 
-describe("roots commit / status / compost", () => {
+describe("luuna-roots commit / status / compost", () => {
 	test("forward along the lifecycle, one event per change", async () => {
 		const root = await initProject();
 		const paths = rootsPaths(root);
 		const id = await plant(root, "Sync works offline");
 		const early = await runJson<{ error: string }>(["commit", id], root, { tty: false });
 		expect(early.exitCode).toBe(EXIT.conflict);
-		expect(early.body.error).toContain(`roots think ${id}`);
+		expect(early.body.error).toContain(`luuna-roots think ${id}`);
 		await forceStatus(root, id, "shaping");
 		const c = await runJson(["commit", id], root, { tty: false });
 		expect(c.body).toMatchObject({ changed: true, from: "shaping", to: "committed" });
@@ -27,7 +27,7 @@ describe("roots commit / status / compost", () => {
 		const built = await run(["status", id, "built"], root);
 		expect(built.stdout).toContain("committed → built");
 		const shaping = await runJson<{ error: string }>(["status", id, "shaping"], root);
-		expect(shaping.body.error).toContain("first `roots think`");
+		expect(shaping.body.error).toContain("first `luuna-roots think`");
 		expect((await runJson(["status", id, "done"], root)).exitCode).toBe(EXIT.usage);
 		const compost = await runJson(["compost", id, "--reason", "shipped and forgotten"], root);
 		expect(compost.body).toMatchObject({ from: "built", to: "composted" });

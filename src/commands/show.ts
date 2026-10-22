@@ -1,4 +1,4 @@
-// roots show <id>: a node with its prose, edges, questions and contributors.
+// luuna-roots show <id>: a node with its prose, edges, questions and contributors.
 
 import { relative } from "node:path";
 import { padEnd } from "../color.ts";
@@ -83,7 +83,7 @@ function proposalLines(
 ): string[] {
 	if (ps.length === 0) return [];
 	const c = out.c;
-	const lines = [c.bold(`Pending proposals (${ps.length})`) + c.dim("  (roots tend)")];
+	const lines = [c.bold(`Pending proposals (${ps.length})`) + c.dim("  (luuna-roots tend)")];
 	for (const p of ps) {
 		const otherId = p.from === node.id ? p.to : p.from;
 		const other = otherId ? ` ${findNode(graph, otherId)?.slug ?? otherId}` : "";
@@ -101,7 +101,7 @@ function sproutMeta(out: Output, node: NodeRecord, now: Date): string[] {
 		const days = daysLeft(node.expiresAt ?? null, now);
 		if (days !== null)
 			lines.push(`${c.dim("expires")} in ${days}d (${node.expiresAt?.slice(0, 10)})`);
-		lines.push(c.dim(`  adopt: roots adopt ${node.id} · reject: roots reject ${node.id}`));
+		lines.push(c.dim(`  adopt: luuna-roots adopt ${node.id} · reject: luuna-roots reject ${node.id}`));
 	} else if (node.status === "expired") {
 		lines.push(`${c.dim("expired")} ${node.expiresAt?.slice(0, 10) ?? ""}`);
 	} else if (node.decidedBy) {
@@ -125,7 +125,7 @@ function seedsLines(out: Output, issues: LinkedIssue[]): string[] {
 	if (issues.length === 0) return [];
 	const c = out.c;
 	const closed = issues.filter((i) => i.closed).length;
-	const lines = [c.bold(`Seeds issues (${closed}/${issues.length} closed)`)];
+	const lines = [c.bold(`Missions issues (${closed}/${issues.length} closed)`)];
 	for (const i of issues) {
 		const mark = i.closed ? c.green("✓") : "○";
 		const via = i.via === "mention" ? c.dim("  (mentions)") : "";
@@ -137,7 +137,7 @@ function seedsLines(out: Output, issues: LinkedIssue[]): string[] {
 function mulchLines(out: Output, learnings: MulchLearning[]): string[] {
 	if (learnings.length === 0) return [];
 	const c = out.c;
-	const lines = [c.bold(`Mulch learnings (${learnings.length})`)];
+	const lines = [c.bold(`Atlas expertise (${learnings.length})`)];
 	for (const l of learnings) {
 		const id = l.id ? `${c.id(l.id)} ` : "";
 		lines.push(`  ${id}${c.dim(`${l.domain}/${l.type}`)}  ${l.summary}`);
@@ -199,7 +199,7 @@ function renderShow(out: Output, v: ShowView): string[] {
 	if (v.path) lines.push(`${c.dim("file")}  ${v.path}`);
 	if (typeof v.node.tier === "number") {
 		lines.push(
-			`${c.dim("tier")}  ${v.node.tier} (per-idea override; \`roots tier ${v.node.id} default\` clears it)`,
+			`${c.dim("tier")}  ${v.node.tier} (per-idea override; \`luuna-roots tier ${v.node.id} default\` clears it)`,
 		);
 	}
 	return lines;
@@ -212,8 +212,8 @@ export const showCommand: CommandDef = {
 	usage: "show <id>",
 	description:
 		"<id> may be r-a1b2, a1b2, a slug, or a unique prefix of any of them.\n" +
-		"For ideas, also lists linked seeds issues (.seeds/issues.jsonl: an `intent` field, else an\n" +
-		"r- id in the title/description/labels) and mulch records that cite the id (read-only).",
+		"For ideas, also lists linked Missions issues (.luuna/missions/issues.jsonl: an `intent` field, else an\n" +
+		"r- id in the title/description/labels) and Atlas records that cite the id (read-only).",
 	minArgs: 1,
 	maxArgs: 1,
 	async run({ io, out, args }) {

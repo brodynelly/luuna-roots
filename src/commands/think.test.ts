@@ -14,7 +14,7 @@ import {
 	waitFor,
 } from "../test-helpers.ts";
 
-describe("roots think", () => {
+describe("luuna-roots think", () => {
 	test("refuses without a TTY (agents cannot run it)", async () => {
 		const root = await initProject();
 		const id = await plant(root, "Sync works offline");
@@ -45,7 +45,7 @@ describe("roots think", () => {
 		expect(screen).toContain("Open");
 		expect(screen).toContain("idea.md");
 		const hex = id.slice(2);
-		const file = join(root, ".roots/human", `${hex}-sync-works-offline`, "idea.md");
+		const file = join(root, ".luuna/roots/human", `${hex}-sync-works-offline`, "idea.md");
 		writeFileSync(file, "Sync works offline\n\nDone when nothing is lost.\n");
 		await waitFor(() => term.screen().includes("question 2/2"), 3000, "advance");
 		term.send("q");
@@ -58,7 +58,7 @@ describe("roots think", () => {
 			reason: "quit",
 			tally: { answered: 1, unasked: 1 },
 			statusChange: { from: "planted", to: "shaping" },
-			path: `.roots/human/${hex}-sync-works-offline/idea.md`,
+			path: `.luuna/roots/human/${hex}-sync-works-offline/idea.md`,
 			split: { mux: null, ok: false },
 		});
 		expect(term.stopped).toBe(true);
@@ -94,7 +94,7 @@ describe("roots think", () => {
 			`#!/bin/sh\nbun "${CLI_ENTRY}" ask "$ROOTS_NODE" "Who wins a conflict?" >/dev/null\nexit 0\n`,
 		);
 		chmodSync(agent, 0o755);
-		const cfg = join(root, ".roots", "config.yaml");
+		const cfg = join(root, ".luuna/roots", "config.yaml");
 		const text = readFileSync(cfg, "utf8").replace(/^ {2}# command: .*$/m, `  command: "${agent}"`);
 		writeFileSync(cfg, text);
 		const term = fakeTerminal();

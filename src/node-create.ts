@@ -1,7 +1,7 @@
 // Creating a node (idea or sprout) inside a locked graph update: pick a free
 // hex + slug, write the prose file, push the node record. Shared by `plant`,
 // `adopt` (ideas, human, TTY) and `sprout` (agent). Sprout files go through
-// boundary.ts so an agent write can never land outside .roots/agent/.
+// boundary.ts so an agent write can never land outside .luuna/roots/agent/.
 
 import { mkdirSync, writeFileSync } from "node:fs";
 import { join } from "node:path";

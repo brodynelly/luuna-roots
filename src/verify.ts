@@ -1,10 +1,10 @@
-// `roots verify`: check the human/agent boundary and graph invariants.
+// `luuna-roots verify`: check the human/agent boundary and graph invariants.
 // Read-only: never writes, never runs the directory fix-up.
 //
 // Every finding is a VerifyIssue with a stable `code` and a severity. Errors
-// make `roots verify` exit non-zero; warnings are reported separately.
+// make `luuna-roots verify` exit non-zero; warnings are reported separately.
 //
-//   jsonl.parse        a line in a .roots/*.jsonl file is not a JSON object
+//   jsonl.parse        a line in a .luuna/roots/*.jsonl file is not a JSON object
 //   record.invalid     a graph record lacks required fields / has bad values
 //   author.idea        an idea's author is not human:*
 //   author.sprout      a sprout's author is not agent:*

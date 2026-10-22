@@ -1,7 +1,7 @@
-// roots drift [--diff <rev>] (agent-facing, read-only; tier 3): a context
-// packet of the ideas a repo change touches, so an agent can `roots ask
+// luuna-roots drift [--diff <rev>] (agent-facing, read-only; tier 3): a context
+// packet of the ideas a repo change touches, so an agent can `luuna-roots ask
 // <id> "does this still hold?"`. Run by the tier-3 Claude Code Stop hook
-// (`roots drift --diff HEAD`), so it must never block or fail a session:
+// (`luuna-roots drift --diff HEAD`), so it must never block or fail a session:
 // outside a roots project, below project tier 3, or when git fails it
 // prints nothing and exits 0 (`--json` says why in `skipped`). With nothing
 // touched it also prints nothing. It never writes (not even the directory
@@ -29,8 +29,8 @@ import { readSeedsIssues } from "../seeds-link.ts";
 
 export const DRIFT_INSTRUCTION =
 	"For each idea below, check whether the change still fits it. If it may not, ask the " +
-	'human one specific question: roots ask <id> "<question>?" --as agent:<model>. ' +
-	"If the change clearly fits, do nothing. Never edit .roots/human/.";
+	'human one specific question: luuna-roots ask <id> "<question>?" --as agent:<model>. ' +
+	"If the change clearly fits, do nothing. Never edit .luuna/roots/human/.";
 
 const SHOWN_FILES = 20;
 
@@ -115,7 +115,7 @@ export function renderDriftMarkdown(p: DriftPacket): string {
 	const shown = p.files.slice(0, SHOWN_FILES);
 	const more = p.files.length - shown.length + (p.truncated ? 1 : 0);
 	const lines = [
-		`# roots drift: ${n} idea${n === 1 ? "" : "s"} touched by changes since ${p.rev}`,
+		`# luuna-roots drift: ${n} idea${n === 1 ? "" : "s"} touched by changes since ${p.rev}`,
 		"",
 		p.instruction,
 		"",
@@ -147,7 +147,7 @@ export const driftCommand: CommandDef = {
 		"Read-only. Lists live ideas touched by changes since <rev> (default HEAD: uncommitted\n" +
 		"and untracked files): slug words in a changed path, idea/notes or a linked seeds issue\n" +
 		"naming a changed file, or a commit in <rev>..HEAD citing the r- id; plus the ideas they\n" +
-		"serve. The agent may then `roots ask <id>` whether the idea still holds.\n" +
+		"serve. The agent may then `luuna-roots ask <id>` whether the idea still holds.\n" +
 		"Hook-safe: never exits non-zero for git/tier/project reasons; below project tier 3\n" +
 		"(or with nothing touched) it prints nothing. --json always explains (`skipped`).",
 	flags: {

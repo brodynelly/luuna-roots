@@ -1,4 +1,4 @@
-// roots think [<id>] (human, TTY): one think session on one idea.
+// luuna-roots think [<id>] (human, TTY): one think session on one idea.
 
 import { relative } from "node:path";
 import { resolveHumanActor } from "../actor.ts";
@@ -75,7 +75,7 @@ async function printSummary(
 		);
 	}
 	if (filed.length + agentFiled.length > 0)
-		await out.info(c.dim("  review them with `roots tend`"));
+		await out.info(c.dim("  review them with `luuna-roots tend`"));
 	const research = delegationLine(s);
 	if (research) await out.info(`  ${research}`);
 	const line = agentLine(s);
@@ -111,7 +111,7 @@ function agentLine(s: SessionSummary): string | null {
 async function nothingQueued(out: Output): Promise<void> {
 	await out.result({ session: null, reason: "nothing-queued" });
 	await out.line("Nothing needs thinking right now.");
-	await out.info(out.c.dim("Run `roots think <id>` to think about a specific idea."));
+	await out.info(out.c.dim("Run `luuna-roots think <id>` to think about a specific idea."));
 }
 
 export interface ThinkRun {
@@ -122,7 +122,7 @@ export interface ThinkRun {
 
 /**
  * Open the editor (split pane when possible) and run one think session on
- * `node`. Shared by `roots think` and `roots tend` (accepted splits).
+ * `node`. Shared by `luuna-roots think` and `luuna-roots tend` (accepted splits).
  */
 export async function startThink(
 	io: Io,
@@ -139,7 +139,7 @@ export async function startThink(
 	},
 ): Promise<ThinkRun> {
 	const terminal = io.terminal;
-	if (!terminal) throw new GuardError("`roots think` needs an interactive terminal");
+	if (!terminal) throw new GuardError("`luuna-roots think` needs an interactive terminal");
 	const prose = readNodeProse(ws.paths, node, ws.dirs);
 	const file = prose.path ? relative(ws.paths.root, prose.path) : "";
 	const launch = !opts.split
@@ -178,7 +178,7 @@ export const thinkCommand: CommandDef = {
 		"Inside tmux or zellij, $EDITOR opens in a split pane; otherwise open the\n" +
 		"printed path in another pane. With no id, think picks the idea most in need:\n" +
 		"ideas with open questions first, then the most pending questions, planted before\n" +
-		"shaping before committed, least recently touched first (see `roots queue`).",
+		"shaping before committed, least recently touched first (see `luuna-roots queue`).",
 	flags: {
 		"no-split": { type: "boolean", description: "Do not open $EDITOR in a split pane" },
 	},

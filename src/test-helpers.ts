@@ -44,7 +44,7 @@ export interface RunOptions {
 	tty?: boolean;
 	/** Interactive terminal for `think` (see fakeTerminal). */
 	terminal?: Terminal;
-	/** Text on stdin (hook handlers such as `roots guard`). */
+	/** Text on stdin (hook handlers such as `luuna-roots guard`). */
 	stdin?: string;
 }
 
@@ -88,7 +88,7 @@ export async function runJson<T = Record<string, unknown>>(
 	return { exitCode: r.exitCode, body: JSON.parse(r.stdout) as T, stderr: r.stderr };
 }
 
-/** A temp dir with `roots init` already run. */
+/** A temp dir with `luuna-roots init` already run. */
 export async function initProject(): Promise<string> {
 	const dir = tempDir();
 	const r = await run(["init"], dir);
@@ -190,7 +190,7 @@ export function fakeTerminal(columns = 60, rows = 0): FakeTerminal {
 	return t;
 }
 
-/** Rewrite .roots/config.yaml with `patch` applied (e.g. a lower tier). */
+/** Rewrite .luuna/roots/config.yaml with `patch` applied (e.g. a lower tier). */
 export async function patchConfig(root: string, patch: Partial<RootsConfig>): Promise<void> {
 	const paths = rootsPaths(root);
 	await writeConfig(paths, { ...loadConfig(paths), ...patch });
@@ -205,18 +205,18 @@ export async function forceStatus(root: string, id: string, status: NodeStatus):
 	});
 }
 
-/** Write <root>/.seeds/issues.jsonl (`extra` is appended raw, e.g. a bad line). */
+/** Write <root>/.luuna/missions/issues.jsonl (`extra` is appended raw, e.g. a bad line). */
 export function writeSeeds(root: string, rows: unknown[], extra = ""): void {
-	mkdirSync(join(root, ".seeds"), { recursive: true });
+	mkdirSync(join(root, ".luuna/missions"), { recursive: true });
 	const body = rows.map((r) => JSON.stringify(r)).join("\n");
-	writeFileSync(join(root, ".seeds", "issues.jsonl"), `${body}\n${extra}`);
+	writeFileSync(join(root, ".luuna/missions", "issues.jsonl"), `${body}\n${extra}`);
 }
 
-/** Write <root>/.mulch/expertise/<domain>.jsonl. */
+/** Write <root>/.luuna/atlas/expertise/<domain>.jsonl. */
 export function writeMulch(root: string, domain: string, rows: unknown[]): void {
-	mkdirSync(join(root, ".mulch", "expertise"), { recursive: true });
+	mkdirSync(join(root, ".luuna/atlas", "expertise"), { recursive: true });
 	const body = rows.map((r) => JSON.stringify(r)).join("\n");
-	writeFileSync(join(root, ".mulch", "expertise", `${domain}.jsonl`), `${body}\n`);
+	writeFileSync(join(root, ".luuna/atlas", "expertise", `${domain}.jsonl`), `${body}\n`);
 }
 
 const GIT_ENV = {

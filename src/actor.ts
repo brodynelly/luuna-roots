@@ -71,12 +71,12 @@ function humanFromRaw(raw: string, source: string): Actor {
  * is available: human commands refuse to run anonymously.
  */
 export function resolveHumanActor(io: Pick<Io, "cwd" | "env">): Actor {
-	const env = io.env.ROOTS_USER?.trim();
-	if (env) return humanFromRaw(env, "ROOTS_USER");
+	const env = (io.env.LUUNA_ROOTS_USER ?? io.env.ROOTS_USER)?.trim();
+	if (env) return humanFromRaw(env, io.env.LUUNA_ROOTS_USER ? "LUUNA_ROOTS_USER" : "ROOTS_USER");
 	const git = gitUserName(io);
 	if (git) return humanFromRaw(git, "git user.name");
 	throw new GuardError(
-		"cannot tell who you are: set ROOTS_USER or `git config user.name` (human commands need a name)",
+		"cannot tell who you are: set LUUNA_ROOTS_USER or `git config user.name` (human commands need a name)",
 	);
 }
 
@@ -86,11 +86,11 @@ export function resolveHumanActor(io: Pick<Io, "cwd" | "env">): Actor {
  * `roots*` are refused: agents can never act as a human.
  */
 export function resolveAgentActor(asFlag: string | undefined, io: Pick<Io, "env">): Actor {
-	const raw = (asFlag ?? io.env.ROOTS_AGENT ?? "").trim();
-	const source = asFlag !== undefined ? "--as" : "ROOTS_AGENT";
+	const raw = (asFlag ?? io.env.LUUNA_ROOTS_AGENT ?? io.env.ROOTS_AGENT ?? "").trim();
+	const source = asFlag !== undefined ? "--as" : io.env.LUUNA_ROOTS_AGENT ? "LUUNA_ROOTS_AGENT" : "ROOTS_AGENT";
 	if (raw === "") {
 		throw new GuardError(
-			"agent commands need an identity: pass --as agent:<model> or set ROOTS_AGENT",
+			"agent commands need an identity: pass --as agent:<model> or set LUUNA_ROOTS_AGENT",
 		);
 	}
 	const candidate = raw.includes(":") ? raw : `agent:${raw}`;

@@ -12,7 +12,7 @@ describe("nextStep", () => {
 	test("empty project → plant", async () => {
 		const root = await initProject();
 		expect(nextStep(rootsPaths(root), now())).toEqual({
-			command: 'roots plant "<one sentence>"',
+			command: 'luuna-roots plant "<one sentence>"',
 			reason: "nothing needs thinking",
 		});
 	});
@@ -22,11 +22,11 @@ describe("nextStep", () => {
 		const a = await plant(root, "Sync works offline");
 		const b = await plant(root, "Server is authoritative");
 		const first = nextStep(rootsPaths(root), now());
-		expect(first.command).toMatch(/^roots think r-/);
+		expect(first.command).toMatch(/^luuna-roots think r-/);
 		expect(first.reason).toMatch(/new question/);
 		const other = first.command.endsWith(a) ? b : a;
 		const excluded = first.command.split(" ").pop();
-		expect(nextStep(rootsPaths(root), now(), excluded).command).toBe(`roots think ${other}`);
+		expect(nextStep(rootsPaths(root), now(), excluded).command).toBe(`luuna-roots think ${other}`);
 	});
 
 	test("returned agent findings put their idea first", async () => {
@@ -39,7 +39,7 @@ describe("nextStep", () => {
 		writeFileSync(join(root, "f.md"), "Last write wins today.\n");
 		await run(["note", b, "--file", "f.md", "--question", q?.id ?? "", "--as", "agent:a"], root);
 		expect(nextStep(paths, now())).toEqual({
-			command: `roots think ${b}`,
+			command: `luuna-roots think ${b}`,
 			reason: "server-authoritative: agent findings ready",
 		});
 	});
@@ -47,7 +47,7 @@ describe("nextStep", () => {
 	test("exclude falls back to the only idea in need", async () => {
 		const root = await initProject();
 		const a = await plant(root, "Sync works offline");
-		expect(nextStep(rootsPaths(root), now(), a).command).toBe(`roots think ${a}`);
+		expect(nextStep(rootsPaths(root), now(), a).command).toBe(`luuna-roots think ${a}`);
 	});
 
 	test("cards waiting → tend first", async () => {
@@ -55,7 +55,7 @@ describe("nextStep", () => {
 		await plant(root, "Sync works offline");
 		await run(["sprout", "Conflicts get a merge UI", "--as", "agent:opus"], root);
 		expect(nextStep(rootsPaths(root), now())).toEqual({
-			command: "roots tend",
+			command: "luuna-roots tend",
 			reason: "1 sprout waiting for review",
 		});
 	});
@@ -65,7 +65,7 @@ describe("next: line", () => {
 	test("plant prints the next step; --json and --quiet do not", async () => {
 		const root = await initProject();
 		const r = await run(["plant", "Sync works offline"], root);
-		expect(r.stdout + r.stderr).toMatch(/next: roots think r-[0-9a-f]{4} — sync-works-offline/);
+		expect(r.stdout + r.stderr).toMatch(/next: luuna-roots think r-[0-9a-f]{4} — sync-works-offline/);
 		const q = await run(["plant", "Another idea", "--quiet"], root);
 		expect(q.stdout + q.stderr).not.toContain("next:");
 	});

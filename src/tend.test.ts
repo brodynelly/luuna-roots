@@ -155,7 +155,7 @@ describe("renderTend", () => {
 			10,
 		);
 		expect(short).toHaveLength(10);
-		expect(short[0]).toContain("roots tend");
+		expect(short[0]).toContain("luuna-roots tend");
 		expect(short.join("\n")).toMatch(/… \d+ more lines?/);
 		expect(short.at(-1)).toBe("[q] quit");
 	});

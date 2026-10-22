@@ -1,5 +1,5 @@
 // Delegated questions: [a] → delegate event → agent.command attaches findings
-// with `roots note --question` → the question is open again with its finding.
+// with `luuna-roots note --question` → the question is open again with its finding.
 // The agent is a real shell script calling the real CLI.
 
 import { describe, expect, test } from "bun:test";
@@ -104,7 +104,7 @@ describe("runDelegation", () => {
 			[
 				"cat > prompt.txt",
 				`printf '# Upserts\\n\\nPostgres raises unless ON CONFLICT is given.\\n\\nDetails.\\n' > findings.md`,
-				`roots note ${id} --question ${q[0]} --file findings.md`,
+				`luuna-roots note ${id} --question ${q[0]} --file findings.md`,
 			].join("\n"),
 		);
 		const r = await runDelegation({
@@ -206,7 +206,7 @@ describe("findings text", () => {
 			{ id: "r-1", slug: "sync", actor: "agent:opus" },
 		);
 		expect(prompt).toContain(
-			"roots note r-1 --question <q-id> --file <findings.md> --as agent:opus",
+			"luuna-roots note r-1 --question <q-id> --file <findings.md> --as agent:opus",
 		);
 		expect(prompt).toContain("- q-1: Which services sync?\n  - earlier findings: old.md");
 		expect(prompt.endsWith("# packet")).toBe(true);

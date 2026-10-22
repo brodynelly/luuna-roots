@@ -1,4 +1,4 @@
-// The interactive terminal used by `roots think`: raw-mode key input and a
+// The interactive terminal used by `luuna-roots think`: raw-mode key input and a
 // full-screen redraw area. Commands get a Terminal through Io so tests can
 // inject a fake one (see test-helpers.fakeTerminal) and never need a TTY.
 //

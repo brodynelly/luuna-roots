@@ -11,7 +11,7 @@
 // questions at all it is a free-writing session that ends only on q.
 //
 // arrive (agent questions asked mid-session, e.g. by a harness calling
-// `roots ask`): each one is queued before the first unreached rule question,
+// `luuna-roots ask`): each one is queued before the first unreached rule question,
 // never ahead of the current one. The queue stays within `cap`
 // (questionsPerSession): when full, the last unreached rule question is
 // bumped (it stays open for the next session); when nothing can be bumped,

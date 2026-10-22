@@ -1,5 +1,5 @@
-// Sprouts: ideas proposed by an agent (`roots sprout`, tier ≥ 2). They live
-// only in .roots/agent/sprouts/<hex>-<slug>/sprout.md and never become ideas;
+// Sprouts: ideas proposed by an agent (`luuna-roots sprout`, tier ≥ 2). They live
+// only in .luuna/roots/agent/sprouts/<hex>-<slug>/sprout.md and never become ideas;
 // a human may adopt one (adopt.ts: they rewrite it in their own words) or
 // reject it.
 //
@@ -151,7 +151,7 @@ function checkBody(body: string | undefined): string {
 	const bytes = Buffer.byteLength(text, "utf8");
 	if (bytes > SPROUT_BODY_MAX_BYTES) {
 		throw new ValidationError(
-			`sprout body is ${bytes} bytes; the limit is ${SPROUT_BODY_MAX_BYTES}. Attach long material with \`roots note\``,
+			`sprout body is ${bytes} bytes; the limit is ${SPROUT_BODY_MAX_BYTES}. Attach long material with \`luuna-roots note\``,
 		);
 	}
 	return text;
@@ -184,7 +184,7 @@ function checkCap(graph: Graph, cap: number, now: Date): void {
 	if (open < cap) return;
 	throw new ValidationError(
 		`${open} sprout${open === 1 ? " is" : "s are"} open (limit ${cap}, limits.sprouts); ` +
-			"wait for the human to adopt or reject them in `roots tend`",
+			"wait for the human to adopt or reject them in `luuna-roots tend`",
 		{ open, cap },
 	);
 }
@@ -194,7 +194,7 @@ export async function fileSprout(paths: RootsPaths, input: SproutInput): Promise
 	if (!input.by.startsWith("agent:")) throw new GuardError("only agents file sprouts");
 	const now = input.now ?? new Date();
 	const config = loadConfig(paths);
-	requireTier(config, 2, "`roots sprout`");
+	requireTier(config, 2, "`luuna-roots sprout`");
 	const statement = checkSproutStatement(input.statement);
 	const body = checkBody(input.body);
 	const dupFirst = findStatementDuplicate(paths, readGraph(paths), statement, now);

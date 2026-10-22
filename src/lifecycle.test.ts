@@ -24,9 +24,9 @@ describe("transitionError", () => {
 	});
 
 	test("refused transitions say why", () => {
-		expect(transitionError(idea("planted"), "committed")).toContain("roots think r-a1b2");
+		expect(transitionError(idea("planted"), "committed")).toContain("luuna-roots think r-a1b2");
 		expect(transitionError(idea("shaping"), "built")).toContain("only from committed");
-		expect(transitionError(idea("committed"), "shaping")).toContain("first `roots think`");
+		expect(transitionError(idea("committed"), "shaping")).toContain("first `luuna-roots think`");
 		expect(transitionError(idea("shaping"), "planted")).toContain("cannot be set by hand");
 		expect(transitionError(idea("composted"), "committed")).toContain("stay composted");
 		const sprout = { ...idea("open"), kind: "sprout" as const, id: "s-9f3e" };

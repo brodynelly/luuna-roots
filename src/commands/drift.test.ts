@@ -34,7 +34,7 @@ function write(root: string, rel: string, text: string): void {
 	writeFileSync(join(root, rel), text);
 }
 
-describe("roots drift", () => {
+describe("luuna-roots drift", () => {
 	test("hook-safe skips: outside a project, below tier 3, no git, bad rev", async () => {
 		const outside = await run(["drift", "--diff", "HEAD"], tempDir());
 		expect([outside.exitCode, outside.stdout, outside.stderr]).toEqual([0, "", ""]);
@@ -60,7 +60,7 @@ describe("roots drift", () => {
 		expect(dash.body.skipped).toContain("invalid revision");
 	});
 
-	test("nothing touched: silent; tool data (.roots/, .seeds/) is ignored", async () => {
+	test("nothing touched: silent; tool data (.luuna/roots/, .luuna/missions/) is ignored", async () => {
 		const root = await tier3Repo();
 		gitInit(root);
 		await plant(root, "Offline sync never loses edits", ["--slug", "offline-sync"]);
@@ -110,9 +110,9 @@ describe("roots drift", () => {
 		expect(j.body.ideas.map((i) => i.id).at(-1)).toBe(goal);
 
 		const md = await run(["drift", "--diff", "HEAD~1"], root);
-		expect(md.stdout).toContain("# roots drift: 4 ideas touched by changes since HEAD~1");
+		expect(md.stdout).toContain("# luuna-roots drift: 4 ideas touched by changes since HEAD~1");
 		expect(md.stdout).toContain(`## ${sync} offline-sync (planted)`);
-		expect(md.stdout).toContain("roots ask <id>");
+		expect(md.stdout).toContain("luuna-roots ask <id>");
 		expect(md.stdout).toContain(`- serves: ${sync} offline-sync serves it`);
 
 		// Default rev HEAD: only the uncommitted edit; the commit is out of range.

@@ -1,4 +1,4 @@
-// roots queue: what needs attention — ideas to think about, open questions,
+// luuna-roots queue: what needs attention — ideas to think about, open questions,
 // pending proposals. Read-only (nothing is expired or asked here).
 
 import { collectAttention, type IdeaAttention, rankAttention } from "../attention.ts";
@@ -23,7 +23,7 @@ function slugOf(graph: Graph, id: string | undefined): string {
 function thinkLines(out: Output, ranked: IdeaAttention[]): string[] {
 	if (ranked.length === 0) return [];
 	const c = out.c;
-	const lines = [c.bold("Think next") + c.dim("  (roots think)")];
+	const lines = [c.bold("Think next") + c.dim("  (luuna-roots think)")];
 	for (const a of ranked) {
 		const parts = [
 			a.due.length ? `${a.due.length} open` : "",
@@ -67,7 +67,7 @@ function proposalLines(out: Output, graph: Graph, ps: ProposalRecord[], now: Dat
 	const soon = ps.filter((p) => isExpiringSoon(p, now)).length;
 	const title = `Pending proposals (${ps.length}${soon ? `, ${soon} expiring soon` : ""})`;
 	return [
-		c.bold(title) + c.dim("  (roots tend)"),
+		c.bold(title) + c.dim("  (luuna-roots tend)"),
 		...ps.map((p) => proposalLine(out, graph, p, now)),
 	];
 }
@@ -81,7 +81,7 @@ function sproutLines(out: Output, sprouts: NodeRecord[], now: Date): string[] {
 	const c = out.c;
 	const soon = sprouts.filter((n) => isSoon(n.expiresAt, now)).length;
 	const title = `Open sprouts (${sprouts.length}${soon ? `, ${soon} expiring soon` : ""})`;
-	const lines = [c.bold(title) + c.dim("  (roots tend · roots adopt <id>)")];
+	const lines = [c.bold(title) + c.dim("  (luuna-roots tend · luuna-roots adopt <id>)")];
 	for (const n of sprouts) {
 		const days = daysLeft(n.expiresAt ?? null, now);
 		const expiry = days === null ? "" : `expires in ${days}d`;
@@ -100,7 +100,7 @@ function builtLines(out: Output, ready: ReadyToBuild[]): string[] {
 	for (const r of ready) {
 		const n = r.issues.length;
 		lines.push(
-			`  ${c.id(r.node.id)} ${r.node.slug}  ${c.dim(`${n} issue${n === 1 ? "" : "s"} closed ·`)} roots status ${r.node.id} built`,
+			`  ${c.id(r.node.id)} ${r.node.slug}  ${c.dim(`${n} issue${n === 1 ? "" : "s"} closed ·`)} luuna-roots status ${r.node.id} built`,
 		);
 	}
 	return lines;
@@ -118,7 +118,7 @@ export const queueCommand: CommandDef = {
 	usage: "queue",
 	description:
 		"Think next: ideas with open questions or questions the rules would ask, in the\n" +
-		"order `roots think` picks them. Then open questions, pending proposals and open\n" +
+		"order `luuna-roots think` picks them. Then open questions, pending proposals and open\n" +
 		"sprouts (soonest expiry first). With seeds in the repo, committed ideas whose linked\n" +
 		'issues are all closed come first under "Ready to mark built" (roots never changes\n' +
 		"status itself).",
@@ -151,7 +151,7 @@ export const queueCommand: CommandDef = {
 				id: r.node.id,
 				slug: r.node.slug,
 				issues: r.issues.map((i) => i.id),
-				command: `roots status ${r.node.id} built`,
+				command: `luuna-roots status ${r.node.id} built`,
 			})),
 			expiring: [
 				...proposals.filter((p) => isExpiringSoon(p, now)).map((p) => p.id),

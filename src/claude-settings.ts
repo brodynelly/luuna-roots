@@ -1,4 +1,4 @@
-// Claude Code hook wiring for `roots setup claude`. Pure: settings in,
+// Claude Code hook wiring for `luuna-roots setup claude`. Pure: settings in,
 // settings out.
 //
 // The real Claude Code schema nests handlers in
@@ -8,14 +8,14 @@
 // (matcher is omitted for SessionStart/Stop, where it would filter the
 // session source, not a tool).
 //
-// Roots owns exactly the handlers whose command is `roots prime|guard|drift`
+// Roots owns exactly the handlers whose command is `luuna-roots prime|guard|drift`
 // (ROOTS_COMMAND_RE). Install strips those and appends one fresh group per
 // wanted hook; everything else in settings.json is left as it was. When the
 // wanted hooks are already present exactly (and no stray roots handlers), the
 // event is left untouched, so re-running is a no-op. Remove strips roots
 // handlers, then drops groups and events they leave empty.
 //
-// The Stop hook (`roots drift --diff HEAD`) is wanted only at tier 3 and only
+// The Stop hook (`luuna-roots drift --diff HEAD`) is wanted only at tier 3 and only
 // when a `drift` command exists (setup.ts passes hasCommand; imported directly,
 // not via the command registry, to avoid a cli → register-all → setup cycle).
 
@@ -29,15 +29,15 @@ export interface RootsHookSpec {
 	command: string;
 }
 
-export const PRIME_HOOK: RootsHookSpec = { event: "SessionStart", command: "roots prime --hook" };
+export const PRIME_HOOK: RootsHookSpec = { event: "SessionStart", command: "luuna-roots prime --hook" };
 export const GUARD_HOOK: RootsHookSpec = {
 	event: "PreToolUse",
 	matcher: "Write|Edit|MultiEdit|NotebookEdit|Bash",
-	command: "roots guard",
+	command: "luuna-roots guard",
 };
-export const DRIFT_HOOK: RootsHookSpec = { event: "Stop", command: "roots drift --diff HEAD" };
+export const DRIFT_HOOK: RootsHookSpec = { event: "Stop", command: "luuna-roots drift --diff HEAD" };
 
-export const ROOTS_COMMAND_RE = /^\s*roots\s+(prime|guard|drift)(\s|$)/;
+export const ROOTS_COMMAND_RE = /^\s*(?:luuna-roots|roots)\s+(prime|guard|drift)(\s|$)/;
 
 export interface HookContext {
 	/** Project tier, or null when there is no project (e.g. --user outside one). */

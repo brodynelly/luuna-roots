@@ -47,7 +47,7 @@ describe("checkEdge", () => {
 
 	test("derives: only via adopt, idea → sprout", () => {
 		const g = graph();
-		expect(checkEdge(g, { from: "r-a", to: "s-x", rel: "derives" })).toContain("roots adopt");
+		expect(checkEdge(g, { from: "r-a", to: "s-x", rel: "derives" })).toContain("luuna-roots adopt");
 		expect(
 			checkEdge(g, { from: "r-a", to: "s-x", rel: "derives" }, { allowDerives: true }),
 		).toBeNull();

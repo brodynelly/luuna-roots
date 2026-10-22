@@ -1,4 +1,4 @@
-// roots adopt <sprout-id> (human, TTY): create a new idea from a sprout. The
+// luuna-roots adopt <sprout-id> (human, TTY): create a new idea from a sprout. The
 // human writes it in their own words: $EDITOR opens on an empty idea.md with
 // the sprout quoted below a scissors line (removed on save, so any editor or
 // terminal shows it), a read-only pager in a split pane under tmux/zellij,
@@ -83,7 +83,7 @@ function referenceBlock(
 /**
  * The interactive adoption: show the sprout, open $EDITOR on an empty file
  * (or the human's thoughts when endorsing), record the idea + `derives` edge. Throws CancelledError on an empty save.
- * Shared by `roots adopt`, `roots accept s-…` on a TTY and `roots tend`.
+ * Shared by `luuna-roots adopt`, `luuna-roots accept s-…` on a TTY and `luuna-roots tend`.
  */
 export async function runAdoption(
 	io: Io,

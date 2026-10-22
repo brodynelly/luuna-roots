@@ -1,6 +1,6 @@
-// Agent notes (`roots note`, tier ≥ 1): artifacts an agent attaches to a
+// Agent notes (`luuna-roots note`, tier ≥ 1): artifacts an agent attaches to a
 // human idea (research, diagrams). Stored at
-//   .roots/agent/notes/<hex>/YYYY-MM-DD-<slug>.<ext>
+//   .luuna/roots/agent/notes/<hex>/YYYY-MM-DD-<slug>.<ext>
 // where <hex> is the idea's hex, <slug> comes from --name (else the source
 // file name) and a collision gets -2, -3, ... before the extension. The name
 // is rebuilt from sanitized parts, so no input can steer the path; the write
@@ -161,15 +161,15 @@ function reopenWithFinding(paths: RootsPaths, id: string, note: string, by: Acto
 	});
 }
 
-/** Validate and copy one note into .roots/agent/notes/<hex>/. */
+/** Validate and copy one note into .luuna/roots/agent/notes/<hex>/. */
 export async function attachNote(paths: RootsPaths, input: NoteInput): Promise<NoteResult> {
 	if (!input.by.startsWith("agent:")) throw new GuardError("only agents attach notes");
 	checkTarget(input.node);
-	requireTier(loadConfig(paths), 1, "`roots note`", input.node);
+	requireTier(loadConfig(paths), 1, "`luuna-roots note`", input.node);
 	const src = resolve(input.cwd, input.file);
 	if (input.question) checkQuestion(paths, input.node, input.question);
 	if (isInside(paths.dir, src) || isInside(paths.dir, realOrSelf(src))) {
-		throw new UsageError("a note is an outside artifact; files under .roots/ cannot be attached");
+		throw new UsageError("a note is an outside artifact; files under .luuna/roots/ cannot be attached");
 	}
 	const data = readSource(src);
 	const now = input.now ?? new Date();

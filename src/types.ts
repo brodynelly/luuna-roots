@@ -1,4 +1,4 @@
-// Record shapes for .roots/*.jsonl.
+// Record shapes for .luuna/roots/*.jsonl.
 
 export const IDEA_STATUSES = ["planted", "shaping", "committed", "built", "composted"] as const;
 export const SPROUT_STATUSES = ["open", "adopted", "rejected", "expired"] as const;
@@ -23,7 +23,7 @@ export interface NodeRecord {
 	author: Actor;
 	createdAt: string;
 	updatedAt?: string;
-	/** Per-idea agent tier override (`roots tier <id> <0-3>`). */
+	/** Per-idea agent tier override (`luuna-roots tier <id> <0-3>`). */
 	tier?: number;
 	/**
 	 * Sprouts only: when an open sprout expires (createdAt + limits.sproutTtlDays,
@@ -69,7 +69,7 @@ export interface Citation {
 export type HeadingStatus = "active" | "dismissed";
 
 /**
- * One line of headings.jsonl: an agent's read on where a `roots flow` session
+ * One line of headings.jsonl: an agent's read on where a `luuna-roots flow` session
  * is going. Shown only in the flow pane, labeled [agent]; never in views or
  * prime. Dedup by id, last wins (dismissal rewrites the record).
  */
@@ -109,9 +109,9 @@ export interface ProposalRecord {
 
 export type QuestionStatus = "open" | "answered" | "dismissed" | "snoozed" | "delegated";
 
-/** Agent research attached to a delegated question (`roots note --question`). */
+/** Agent research attached to a delegated question (`luuna-roots note --question`). */
 export interface QuestionFinding {
-	/** The note, relative to the project root (under .roots/agent/notes/). */
+	/** The note, relative to the project root (under .luuna/roots/agent/notes/). */
 	note: string;
 	by: Actor;
 	at: string;
@@ -176,7 +176,7 @@ export type EventType =
 
 /**
  * One line of events.jsonl. `node` is the primary subject; `refs` lists other
- * node ids the event concerns (so `roots log <id>` finds edge events from
+ * node ids the event concerns (so `luuna-roots log <id>` finds edge events from
  * both ends). Extra fields are event-specific.
  */
 export interface EventRecord {

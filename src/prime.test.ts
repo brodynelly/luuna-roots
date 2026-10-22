@@ -31,7 +31,7 @@ async function fixture() {
 	return { root, goal, sync, queue, auth, gone };
 }
 
-describe("roots prime", () => {
+describe("luuna-roots prime", () => {
 	test("anchors with serving ideas nested; tensions; overrides; composted left out", async () => {
 		const f = await fixture();
 		const r = await runJson<{
@@ -54,9 +54,9 @@ describe("roots prime", () => {
 		expect(md).toContain(`  - ${f.sync} sync-works-offline [planted]: Sync works offline`);
 		expect(md).toContain(`    - ${f.queue} queue [planted · tier 0]`);
 		expect(md).toContain("## Tensions");
-		expect(md).toContain("roots ask <id>");
+		expect(md).toContain("luuna-roots ask <id>");
 		expect(md).toContain("2 propose: tier 1 + proposals and sprouts  ← this project");
-		expect(md).toContain("roots propose edge <a> <b> <serves|tension|replaces>");
+		expect(md).toContain("luuna-roots propose edge <a> <b> <serves|tension|replaces>");
 		expect(md).toContain("Rejected proposals are permanent");
 		expect(md).not.toContain("Old idea");
 	});

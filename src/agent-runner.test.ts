@@ -61,11 +61,11 @@ describe("agent runner", () => {
 		);
 		const prompt = agentPrompt(packet, { actor: "agent:opus", asks: 2 });
 		expect(AGENT_INSTRUCTION).toContain("{{asks}}");
-		expect(prompt).toContain(`roots ask ${id} "<your question>" --as agent:opus`);
+		expect(prompt).toContain(`luuna-roots ask ${id} "<your question>" --as agent:opus`);
 		expect(prompt).toContain("ask up to 2 questions");
 		expect(prompt).toContain("at most 280 characters");
 		expect(prompt).not.toContain("{{");
-		expect(prompt).toContain(`# roots context: ${id} sync-works-offline`);
+		expect(prompt).toContain(`# luuna-roots context: ${id} sync-works-offline`);
 	});
 
 	test("ok: stdin delivered, env passed, cwd is the project", async () => {

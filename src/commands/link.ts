@@ -1,5 +1,5 @@
-// roots link <a> <b> <rel> (human, no TTY): add an edge directly.
-// roots unlink <edge-id> (human, no TTY): remove one.
+// luuna-roots link <a> <b> <rel> (human, no TTY): add an edge directly.
+// luuna-roots unlink <edge-id> (human, no TTY): remove one.
 // Both refuse inside an agent session (ROOTS_AGENT set). One `link`/`unlink`
 // event each; a `replaces` link also composts its target (`status` event).
 
@@ -21,7 +21,7 @@ export const linkCommand: CommandDef = {
 	description:
 		"Relations: serves (a is a means to b), tension (a and b pull against each other),\n" +
 		"replaces (a supersedes b; b is composted). serves and replaces stay acyclic;\n" +
-		"tension is stored once per pair. `derives` comes only from `roots adopt`.",
+		"tension is stored once per pair. `derives` comes only from `luuna-roots adopt`.",
 	minArgs: 3,
 	maxArgs: 3,
 	async run({ io, out, args }) {
@@ -56,7 +56,7 @@ export const unlinkCommand: CommandDef = {
 	summary: "Remove an edge",
 	usage: "unlink <edge-id>",
 	description:
-		"Edge ids are listed by `roots show <id>`. Unlinking a `replaces` edge does not\n" +
+		"Edge ids are listed by `luuna-roots show <id>`. Unlinking a `replaces` edge does not\n" +
 		"revive the replaced idea. `derives` edges (adoption lineage) stay.",
 	minArgs: 1,
 	maxArgs: 1,

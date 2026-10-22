@@ -1,14 +1,14 @@
 // Delegated questions (roots-1a70): the human presses [a]
 // in think to hand a question to the agent. After the session, agent.command
 // (tier ≥ 1) gets the idea's context packet plus the delegated questions and
-// attaches one findings note per question (`roots note --question`, checked
+// attaches one findings note per question (`luuna-roots note --question`, checked
 // in notes.ts), which reopens the question with the finding attached. The
 // human sees the finding's first paragraph under the question next time and
 // still answers in idea.md: the agent informs, the human decides.
 //
 // A question the run leaves without findings goes back to the human
 // (`undelegate`, by roots). Without agent.command, delegated questions wait
-// for a harness (they are listed in `roots context`).
+// for a harness (they are listed in `luuna-roots context`).
 
 import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
@@ -29,9 +29,9 @@ They handed you the questions under "Delegated questions" because they would rat
 research than answer cold. The idea and its context are below.
 
 Your job: for each delegated question, research it (read the repo, its docs, the idea's
-neighbors) and attach your findings as one Markdown file, written outside .roots/:
+neighbors) and attach your findings as one Markdown file, written outside .luuna/roots/:
 
-  roots note {{id}} --question <q-id> --file <findings.md> --as {{actor}}
+  luuna-roots note {{id}} --question <q-id> --file <findings.md> --as {{actor}}
 
 Rules:
 - Open the file with one plain paragraph of at most three sentences: the answer, as far as
@@ -42,8 +42,8 @@ Rules:
   decide for them.
 - If you cannot find an answer, say so in the first paragraph, and say what would settle
   it. Attach the note anyway.
-- One note per question. Do not create or edit any other file, and never touch .roots/human/.
-- If \`roots note\` fails, read its error, then fix the call or move on.
+- One note per question. Do not create or edit any other file, and never touch .luuna/roots/human/.
+- If \`luuna-roots note\` fails, read its error, then fix the call or move on.
 - When you are done, exit. roots ignores anything you print.
 `;
 

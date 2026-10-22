@@ -1,6 +1,6 @@
 // Mulch integration (roots-4689). Read-only: roots reads
-// <project>/.mulch/expertise/<domain>.jsonl directly and never writes to
-// .mulch/.
+// <project>/.luuna/atlas/expertise/<domain>.jsonl directly and never writes to
+// .luuna/atlas/.
 //
 // Record shape (../mulch/src/schemas/record.ts): `type` (convention |
 // pattern | failure | decision | reference | guide), optional `id`
@@ -13,14 +13,14 @@
 // evidence, relates_to, tags, ...) holds the exact `r-xxxx` token
 // (idea-refs.ts). Records are deduped per domain by id, last wins (mulch
 // rewrites files, but JSONL merge=union can leave duplicates). Archived
-// records (`archived_at`, or anything under .mulch/archive/) are skipped.
+// records (`archived_at`, or anything under .luuna/atlas/archive/) are skipped.
 
 import { existsSync, readdirSync } from "node:fs";
 import { basename, join } from "node:path";
 import { citedIdeaIds, shortLine, stringsIn } from "./idea-refs.ts";
 import { dedupBy, readJsonlFile } from "./store.ts";
 
-export const MULCH_EXPERTISE_DIR = join(".mulch", "expertise");
+export const MULCH_EXPERTISE_DIR = join(".luuna", "atlas", "expertise");
 
 export interface MulchLearning {
 	id: string | null;

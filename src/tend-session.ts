@@ -1,4 +1,4 @@
-// `roots tend`, the shell: expire overdue proposals and sprouts, collect
+// `luuna-roots tend`, the shell: expire overdue proposals and sprouts, collect
 // cards, drive the pure reducer (tend.ts) from keys, execute decisions
 // through decide.ts, and hand off to the human's editor when needed: an
 // accepted split opens a think session (with the proposal shown as guidance),
@@ -150,7 +150,7 @@ async function decide(live: Live, card: TendCard, action: TendAction): Promise<D
 async function thinkAfterSplit(live: Live, d: Decision): Promise<string | undefined> {
 	const runner = live.deps.think;
 	if (!d.think) return undefined;
-	if (!runner) return `split accepted; run \`roots think ${d.think.node}\` to do it`;
+	if (!runner) return `split accepted; run \`luuna-roots think ${d.think.node}\` to do it`;
 	const { node, guidance } = d.think;
 	return handOff(live, () => runner(node, guidance));
 }

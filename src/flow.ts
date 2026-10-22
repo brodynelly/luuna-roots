@@ -1,4 +1,4 @@
-// `roots flow`, the pure parts (roots-3ad0): the trail (what this flow did,
+// `luuna-roots flow`, the pure parts (roots-3ad0): the trail (what this flow did,
 // read back from events.jsonl), the next-idea picks, and the transition
 // card's key reducer. flow-render.ts draws the card; flow-session.ts is the
 // shell that runs think sessions, tend, plant and the background agent.

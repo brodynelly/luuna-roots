@@ -1,6 +1,6 @@
 // Security tests for the human/agent boundary (roots-ecaa;
 // AGENTS.md invariant 1): no agent command writes under
-// .roots/human/, whatever the input — path traversal, absolute paths,
+// .luuna/roots/human/, whatever the input — path traversal, absolute paths,
 // symlinks planted in the agent tree, or hostile names.
 
 import { describe, expect, test } from "bun:test";
@@ -52,7 +52,7 @@ async function setup() {
 }
 
 describe("assertAgentWritable", () => {
-	test("only inside .roots/agent/, never human/, no traversal", async () => {
+	test("only inside .luuna/roots/agent/, never human/, no traversal", async () => {
 		const { paths } = await setup();
 		const ok = join(paths.notes, "a1b2", "x.md");
 		expect(() => assertAgentWritable(paths, ok)).not.toThrow();
@@ -80,7 +80,7 @@ describe("assertAgentWritable", () => {
 		expect(readdirSync(outside)).toEqual([]);
 	});
 
-	test("refuses when .roots/agent itself is a symlink into human/", async () => {
+	test("refuses when .luuna/roots/agent itself is a symlink into human/", async () => {
 		const { paths } = await setup();
 		const target = join(paths.human, "evil");
 		mkdirSync(target);
@@ -105,15 +105,15 @@ describe("assertAgentWritable", () => {
 
 	test("isHumanPath: lexical and through symlinks", async () => {
 		const { paths } = await setup();
-		expect(isHumanPath(paths, ".roots/human/a1b2-x/idea.md")).toBe(true);
-		expect(isHumanPath(paths, ".roots/agent/notes/a1b2/x.md")).toBe(false);
+		expect(isHumanPath(paths, ".luuna/roots/human/a1b2-x/idea.md")).toBe(true);
+		expect(isHumanPath(paths, ".luuna/roots/agent/notes/a1b2/x.md")).toBe(false);
 		mkdirSync(paths.agent, { recursive: true });
 		symlinkSync(paths.human, join(paths.agent, "h"));
 		expect(isHumanPath(paths, join(paths.agent, "h", "idea.md"))).toBe(true);
 	});
 });
 
-describe("agent commands never write under .roots/human/", () => {
+describe("agent commands never write under .luuna/roots/human/", () => {
 	test("ask, note, propose, sprout, context, prime with hostile input", async () => {
 		const { root, a, b, paths } = await setup();
 		const before = snapshot(paths.human);

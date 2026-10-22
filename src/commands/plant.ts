@@ -1,4 +1,4 @@
-// roots plant [<statement>] (human, TTY): create an idea.
+// luuna-roots plant [<statement>] (human, TTY): create an idea.
 
 import { mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";

@@ -1,11 +1,11 @@
-// roots view [--from <id>] [--sprouts] [--html] [--out <file>] (read, anyone):
+// luuna-roots view [--from <id>] [--sprouts] [--html] [--out <file>] (read, anyone):
 // the compiled culmination. Markdown (or --html) to stdout, or to --out.
 //
 // With `view.write: true` in config.yaml, every run also refreshes ROOTS.md at
 // the repo root with the canonical view (no --from, no --sprouts, Markdown),
 // whatever flags were passed, so ROOTS.md always means the same thing. It is
 // rewritten only when its content changes. --out never writes under
-// .roots/human/.
+// .luuna/roots/human/.
 
 import { existsSync, readFileSync } from "node:fs";
 import { join, resolve } from "node:path";
@@ -78,7 +78,7 @@ export const viewCommand: CommandDef = {
 		const target = flagString(flags, "out");
 		const outFile = target === undefined ? null : resolve(io.cwd, target);
 		if (outFile && isHumanPath(ws.paths, outFile)) {
-			throw new GuardError(`refusing to write ${target}: it is inside .roots/human/`);
+			throw new GuardError(`refusing to write ${target}: it is inside .luuna/roots/human/`);
 		}
 		const events = readEvents(ws.paths);
 		const data = buildView(ws, config, questions, {

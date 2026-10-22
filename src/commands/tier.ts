@@ -1,4 +1,4 @@
-// roots tier <id> [<0-3>|default] (human, no TTY): per-idea agent tier
+// luuna-roots tier <id> [<0-3>|default] (human, no TTY): per-idea agent tier
 // override. With no tier, prints the effective tier. The override is the node
 // field `tier` in graph.jsonl; `default` removes it. One `tier` event per change.
 
@@ -45,9 +45,9 @@ export const tierCommand: CommandDef = {
 	summary: "Per-idea agent tier override",
 	usage: "tier <id> [<0-3>|default]",
 	description:
-		"Tiers: 0 off, 1 ask, 2 propose, 3 observe. `roots tier <id> 0` keeps agents out of an\n" +
+		"Tiers: 0 off, 1 ask, 2 propose, 3 observe. `luuna-roots tier <id> 0` keeps agents out of an\n" +
 		"idea you want to think about alone; `default` removes the override so the idea\n" +
-		"follows `tier:` in .roots/config.yaml. With no tier, prints the effective tier.",
+		"follows `tier:` in .luuna/roots/config.yaml. With no tier, prints the effective tier.",
 	minArgs: 1,
 	maxArgs: 2,
 	async run({ io, out, args }) {

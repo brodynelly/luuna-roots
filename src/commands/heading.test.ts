@@ -28,7 +28,7 @@ function heading(root: string, text: string, extra: string[] = []) {
 	return runJson<Filed>(["heading", text, "--flow", "fl-0001", ...extra, ...AGENT], root);
 }
 
-describe("roots heading", () => {
+describe("luuna-roots heading", () => {
 	test("files a cited heading; the newest active one is shown; event logged", async () => {
 		const { root, a, b, paths } = await setup();
 		const r = await heading(root, `Converging on ${a}.`, [

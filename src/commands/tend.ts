@@ -1,5 +1,5 @@
-// roots tend (human, TTY): review pending proposals one card at a time.
-// `roots tend --json` lists the cards without a TTY and without deciding
+// luuna-roots tend (human, TTY): review pending proposals one card at a time.
+// `luuna-roots tend --json` lists the cards without a TTY and without deciding
 // (or expiring) anything.
 
 import { flagBool } from "../args.ts";
@@ -105,7 +105,7 @@ export const tendCommand: CommandDef = {
 		requireTty(io, "tend");
 		const by = requireHumanCommand(io, "tend");
 		const terminal = io.terminal;
-		if (!terminal) throw new GuardError("`roots tend` needs an interactive terminal");
+		if (!terminal) throw new GuardError("`luuna-roots tend` needs an interactive terminal");
 		const ws = await openWorkspace(io.cwd);
 		const summary = await runTend({
 			paths: ws.paths,

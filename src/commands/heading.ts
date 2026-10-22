@@ -1,5 +1,5 @@
-// roots heading <text> --cite <id>:<quote> ... (agent, tier ≥ 1): the agent's
-// read on where a running `roots flow` session is going. See src/headings.ts
+// luuna-roots heading <text> --cite <id>:<quote> ... (agent, tier ≥ 1): the agent's
+// read on where a running `luuna-roots flow` session is going. See src/headings.ts
 // for every check.
 
 import { resolveAgentActor } from "../actor.ts";
@@ -18,7 +18,7 @@ export const headingCommand: CommandDef = {
 	summary: "Say where a flow session is going (tier ≥ 1)",
 	usage: "heading <text> --cite <id>:<quote> ... [--next <id>]",
 	description:
-		"Shown in the human's `roots flow` pane, labeled [agent]; never in views. At most two\n" +
+		"Shown in the human's `luuna-roots flow` pane, labeled [agent]; never in views. At most two\n" +
 		"sentences and 280 characters. Cite every idea the text names with an exact quote\n" +
 		"from its idea.md. --next suggests the idea to think about next. Refused outside a\n" +
 		"running flow ($ROOTS_FLOW or --flow) and for text a human dismissed before.",

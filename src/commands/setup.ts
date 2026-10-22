@@ -1,9 +1,9 @@
-// roots setup claude [--project|--user] [--remove] [--dry-run]: wire roots
+// luuna-roots setup claude [--project|--user] [--remove] [--dry-run]: wire roots
 // into Claude Code's hooks (roots-ecaa).
 //
-//   SessionStart  roots prime --hook   (quiet outside a roots project)
-//   PreToolUse    roots guard          (Write|Edit|MultiEdit|NotebookEdit|Bash)
-//   Stop          roots drift --diff HEAD   (tier 3, once `drift` exists)
+//   SessionStart  luuna-roots prime --hook   (quiet outside a roots project)
+//   PreToolUse    luuna-roots guard          (Write|Edit|MultiEdit|NotebookEdit|Bash)
+//   Stop          luuna-roots drift --diff HEAD   (tier 3, once `drift` exists)
 //
 // --project (default) edits <project>/.claude/settings.json (the roots
 // project root, else the current directory); --user edits
@@ -77,7 +77,7 @@ function refuseAgentRemove(io: Io): void {
 	refuseAgentSession(io, "setup claude --remove");
 	if (io.env.CLAUDECODE) {
 		throw new GuardError(
-			"`roots setup claude --remove` would switch off the guard, and this looks like a Claude Code session (CLAUDECODE is set); run it yourself in a terminal",
+			"`luuna-roots setup claude --remove` would switch off the guard, and this looks like a Claude Code session (CLAUDECODE is set); run it yourself in a terminal",
 		);
 	}
 }
@@ -146,9 +146,9 @@ export const setupCommand: CommandDef = {
 	usage: "setup claude [--project|--user] [--remove] [--dry-run]",
 	description:
 		"Merges roots hooks into .claude/settings.json (project, default) or\n" +
-		"~/.claude/settings.json (--user): SessionStart `roots prime --hook`, PreToolUse\n" +
-		"`roots guard` on Write|Edit|MultiEdit|NotebookEdit|Bash, and at tier 3 a Stop hook\n" +
-		"`roots drift --diff HEAD` (when available). Re-running is a no-op; other settings\n" +
+		"~/.claude/settings.json (--user): SessionStart `luuna-roots prime --hook`, PreToolUse\n" +
+		"`luuna-roots guard` on Write|Edit|MultiEdit|NotebookEdit|Bash, and at tier 3 a Stop hook\n" +
+		"`luuna-roots drift --diff HEAD` (when available). Re-running is a no-op; other settings\n" +
 		"and hooks are kept. --remove takes out only roots hooks.",
 	flags: {
 		project: { type: "boolean", description: "Edit <project>/.claude/settings.json (default)" },

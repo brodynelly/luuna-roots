@@ -1,14 +1,14 @@
 // The agent step before a think session (tier ≥ 1). Modes:
 //   off      effective tier 0: no agent questions at all (not even queued ones)
-//   harness  no agent.command: an already-running harness may `roots ask`;
+//   harness  no agent.command: an already-running harness may `luuna-roots ask`;
 //            its questions are picked up at start and live during the session
 //   full     the idea already has its cap of open agent questions; skip the run
-//   command  run agent.command with the context packet; it calls `roots ask`
+//   command  run agent.command with the context packet; it calls `luuna-roots ask`
 // A failed or slow agent never blocks the session.
 //
 // At session end (tier ≥ 2, agent.command set, lines changed),
 // runProposalPhase() runs agent.command again with the changed lines and the
-// other ideas, and an instruction to `roots propose edge --mention` for fuzzy
+// other ideas, and an instruction to `luuna-roots propose edge --mention` for fuzzy
 // mentions. Those land next to the deterministic mention proposals and
 // share a `tend` card with them.
 
@@ -158,7 +158,7 @@ other ideas in the project are below.
 Your only job: when a changed line refers to another idea (by name, paraphrase or
 implication, e.g. "this pulls against the auth idea"), propose ONE edge for that pair:
 
-  roots propose edge {{id}} <other-id> <serves|tension|replaces> --mention \\
+  luuna-roots propose edge {{id}} <other-id> <serves|tension|replaces> --mention \\
     --reason "<why, one line>" --cite '{{id}}:<words copied exactly from the changed line>' \\
     --as {{actor}}
 
@@ -170,8 +170,8 @@ Rules:
 - Propose at most {{max}} edges. Only for a clear reference; if unsure, propose nothing.
 - The cite must be copied exactly from a changed line (an exact substring).
 - Never re-propose anything under "Rejected proposals": a human already said no.
-- Do not create, edit or delete any file, and never touch .roots/human/.
-- If \`roots propose\` fails, read its error, then fix the call or move on.
+- Do not create, edit or delete any file, and never touch .luuna/roots/human/.
+- If \`luuna-roots propose\` fails, read its error, then fix the call or move on.
 - When you are done, exit. roots ignores anything you print.
 `;
 

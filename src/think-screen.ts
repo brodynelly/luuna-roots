@@ -260,7 +260,7 @@ export function renderScreen(v: ScreenView, columns: number, c: Colors, rows = 0
 		v.notice ? [{ t: `✓ ${v.notice}`, s: c.green }] : [],
 		...keyRows(v, inner, c),
 	];
-	const title = truncate(` roots think ${v.slug} `, width - 4);
+	const title = truncate(` luuna-roots think ${v.slug} `, width - 4);
 	const top = `┌─${title}${"─".repeat(Math.max(0, width - 3 - [...title].length))}┐`;
 	const hint = wrapText(v.editorHint, width - 2).map((l) => ` ${c.dim(l)}`);
 	const room = rows > 0 ? Math.max(0, rows - footer.length - 2 - hint.length) : Infinity;

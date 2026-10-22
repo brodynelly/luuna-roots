@@ -1,4 +1,4 @@
-// roots flow [<id>] (human, TTY): think, review and plant in one session.
+// luuna-roots flow [<id>] (human, TTY): think, review and plant in one session.
 // See src/flow-session.ts.
 
 import { flagBool } from "../args.ts";
@@ -27,7 +27,7 @@ function steps(io: Io, ws: Workspace, by: Actor, split: boolean) {
 	const pane: EditorPane = { id: null };
 	const launch = (file: string) => showInEditorPane(io.env, pane, file, ws.paths.root);
 	const terminal = io.terminal;
-	if (!terminal) throw new GuardError("`roots flow` needs an interactive terminal");
+	if (!terminal) throw new GuardError("`luuna-roots flow` needs an interactive terminal");
 	return {
 		think: async (id: string, background: Parameters<typeof startThink>[3]["background"]) => {
 			const fresh = await openWorkspace(io.cwd);
@@ -94,7 +94,7 @@ export const flowCommand: CommandDef = {
 		requireTty(io, "flow");
 		const by = requireHumanCommand(io, "flow");
 		const terminal = io.terminal;
-		if (!terminal) throw new GuardError("`roots flow` needs an interactive terminal");
+		if (!terminal) throw new GuardError("`luuna-roots flow` needs an interactive terminal");
 		const ws = await openWorkspace(io.cwd);
 		const start = args[0] ? resolveNode(ws.graph.nodes, args[0], { kind: "idea" }).id : undefined;
 		const summary = await runFlow({

@@ -1,5 +1,5 @@
-// Human decisions on agent suggestions: `roots accept` / `roots reject` and
-// the keys in `roots tend`. Dispatches on the id prefix; sprouts (s-) are
+// Human decisions on agent suggestions: `luuna-roots accept` / `luuna-roots reject` and
+// the keys in `luuna-roots tend`. Dispatches on the id prefix; sprouts (s-) are
 // plugged in by sprout-decide.ts with registerDecider("s", ...).
 //
 // Proposals (p-):
@@ -47,9 +47,9 @@ export interface DecideContext {
 	now?: Date;
 	/**
 	 * Accepting a sprout means adopting it: the human writes the idea in
-	 * $EDITOR. Only callers with an interactive terminal (`roots accept` on a
-	 * TTY, `roots tend`) provide this; without it, accepting a sprout fails
-	 * with a pointer to `roots adopt`.
+	 * $EDITOR. Only callers with an interactive terminal (`luuna-roots accept` on a
+	 * TTY, `luuna-roots tend`) provide this; without it, accepting a sprout fails
+	 * with a pointer to `luuna-roots adopt`.
 	 */
 	adopt?: (sproutId: string) => Promise<Decision>;
 }
@@ -118,7 +118,7 @@ export function rejectItem(ctx: DecideContext, id: string, reason?: string) {
 
 function findPending(rows: ProposalRecord[], id: string): ProposalRecord {
 	const p = rows.find((r) => r.id === id);
-	if (!p) throw new NotFoundError(`no proposal ${id}; \`roots tend\` lists pending proposals`);
+	if (!p) throw new NotFoundError(`no proposal ${id}; \`luuna-roots tend\` lists pending proposals`);
 	if (p.status !== "pending") {
 		const who = p.decidedBy ? ` by ${p.decidedBy}` : "";
 		throw new ConflictError(`${id} is already ${p.status}${who}`, { status: p.status });
@@ -150,7 +150,7 @@ function chooseRel(group: ProposalRecord[], raw: string | undefined): EdgeChoice
 	if (!match) {
 		throw new UsageError(
 			`${withRel?.id} proposes \`${withRel?.rel}\`, not \`${rel}\`; ` +
-				`reject it and run \`roots link ${p?.from} ${p?.to} ${rel}\` instead`,
+				`reject it and run \`luuna-roots link ${p?.from} ${p?.to} ${rel}\` instead`,
 		);
 	}
 	return { rel, source: match };

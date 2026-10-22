@@ -14,7 +14,7 @@ export interface Io {
 	stdoutIsTTY: boolean;
 	/** Interactive screen + raw key input (think). Tests inject a fake. */
 	terminal?: Terminal;
-	/** All of stdin as text (hook handlers like `roots guard`). Tests inject a string. */
+	/** All of stdin as text (hook handlers like `luuna-roots guard`). Tests inject a string. */
 	readStdin?: () => Promise<string>;
 }
 

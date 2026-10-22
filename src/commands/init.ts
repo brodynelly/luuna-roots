@@ -1,4 +1,4 @@
-// roots init: create .roots/ in the current directory.
+// luuna-roots init: create .luuna/roots/ in the current directory.
 
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { basename, join } from "node:path";
@@ -10,7 +10,7 @@ import type { Io } from "../io.ts";
 import { ROOTS_DIR, type RootsPaths, rootsPaths } from "../paths.ts";
 import type { CommandDef } from "../registry.ts";
 
-export const GITATTRIBUTES_LINE = ".roots/*.jsonl merge=union";
+export const GITATTRIBUTES_LINE = ".luuna/roots/*.jsonl merge=union";
 export const ROOTS_GITIGNORE = "*.lock\n*.tmp.*\n";
 
 /** Append the union-merge rule to <root>/.gitattributes. Returns true if added. */
@@ -57,10 +57,10 @@ function initActor(io: Io): string {
 export const initCommand: CommandDef = {
 	name: "init",
 	group: "setup",
-	summary: "Initialize .roots/ in the current directory",
+	summary: "Initialize .luuna/roots/ in the current directory",
 	usage: "init",
 	description:
-		"Creates .roots/ (config.yaml, JSONL stores, human/ and agent/ trees) and adds\n" +
+		"Creates .luuna/roots/ (config.yaml, JSONL stores, human/ and agent/ trees) and adds\n" +
 		`\`${GITATTRIBUTES_LINE}\` to .gitattributes. Fails if already initialized.`,
 	maxArgs: 0,
 	async run({ io, out }) {
@@ -79,6 +79,6 @@ export const initCommand: CommandDef = {
 		});
 		await out.success(`initialized ${ROOTS_DIR}/ in ${paths.root}`);
 		if (gitattributes) await out.info(`  added \`${GITATTRIBUTES_LINE}\` to .gitattributes`);
-		await out.info(`  next: roots plant "<one sentence of intent>"`);
+		await out.info(`  next: luuna-roots plant "<one sentence of intent>"`);
 	},
 };

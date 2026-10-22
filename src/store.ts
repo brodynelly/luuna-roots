@@ -1,6 +1,6 @@
 // JSONL storage: advisory locks, atomic writes, dedup-on-read (last wins).
 //
-// Pattern follows ../seeds/src/store.ts. Every .roots/*.jsonl file is
+// Pattern follows ../seeds/src/store.ts. Every .luuna/roots/*.jsonl file is
 // `merge=union` in git, so a file may contain several versions of the same
 // record after a merge; readers dedup by id and the LAST occurrence wins.
 // Writers that rewrite a file compact it to one line per id.

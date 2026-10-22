@@ -25,7 +25,7 @@ async function fixture() {
 	return { root, id };
 }
 
-describe("roots blame", () => {
+describe("luuna-roots blame", () => {
 	test("--json attributes lines to questions", async () => {
 		const { root, id } = await fixture();
 		const { exitCode, body } = await runJson<{

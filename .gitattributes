@@ -1,5 +1,1 @@
-.seeds/issues.jsonl merge=union
-.seeds/templates.jsonl merge=union
-.seeds/plans.jsonl merge=union
-.mulch/expertise/*.jsonl merge=union
-.roots/*.jsonl merge=union
+.luuna/roots/*.jsonl merge=union

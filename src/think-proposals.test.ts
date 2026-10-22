@@ -1,5 +1,5 @@
 // Tier 2: at the end of a think session, agent.command gets the changed
-// lines and the other ideas, and may `roots propose edge --mention`. The
+// lines and the other ideas, and may `luuna-roots propose edge --mention`. The
 // agent is a real shell script calling the real CLI.
 
 import { describe, expect, test } from "bun:test";
@@ -26,7 +26,7 @@ function agentScript(dir: string, other: string): string {
 		`roots() { bun "${CLI_ENTRY}" "$@"; }`,
 		`prompt=$(cat); echo "$prompt" >> "${join(dir, "prompts.log")}"`,
 		'case "$prompt" in *"propose ONE edge"*) ;; *) exit 0 ;; esac',
-		`roots propose edge "$ROOTS_NODE" ${other} tension --mention --reason "edits vs server truth" --cite "$ROOTS_NODE:pulls against the server idea"`,
+		`luuna-roots propose edge "$ROOTS_NODE" ${other} tension --mention --reason "edits vs server truth" --cite "$ROOTS_NODE:pulls against the server idea"`,
 	];
 	writeFileSync(file, `${body.join("\n")}\n`);
 	chmodSync(file, 0o755);
@@ -88,7 +88,7 @@ describe("session-end agent proposals (tier 2)", () => {
 		const prompts = readFileSync(join(root, "prompts.log"), "utf8");
 		expect(prompts).toContain("## Changed lines (this session)");
 		expect(prompts).toContain(`- ${b} `);
-		expect(prompts).toContain(`roots propose edge ${a} <other-id>`);
+		expect(prompts).toContain(`luuna-roots propose edge ${a} <other-id>`);
 	}, 40000);
 
 	test("below tier 2 the session-end run is skipped", async () => {

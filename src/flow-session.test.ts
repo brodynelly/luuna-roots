@@ -69,11 +69,11 @@ describe("runFlow", () => {
 		const { a, b, paths, terminal, deps, thought } = await setup((root, a, b) =>
 			agentScript(
 				root,
-				`roots heading "Converging on ${a}." --cite "${a}:named principal" --next ${b}`,
+				`luuna-roots heading "Converging on ${a}." --cite "${a}:named principal" --next ${b}`,
 			),
 		);
 		const running = runFlow(deps);
-		await waitFor(() => terminal.screen().includes("roots flow ── warren"), 3000, "card");
+		await waitFor(() => terminal.screen().includes("luuna-roots flow ── warren"), 3000, "card");
 		expect(terminal.screen()).toContain("nothing yet");
 		expect(terminal.screen()).toContain("[enter] think:");
 		terminal.send("\r");

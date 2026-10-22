@@ -1,4 +1,4 @@
-// `roots prime`: the accepted graph as agent context.
+// `luuna-roots prime`: the accepted graph as agent context.
 // Anchors (top-level goals) with the ideas that serve them nested below,
 // tensions, per-idea tier overrides, and a short guide to using roots as an
 // agent. Read-only; only human prose and human-made edges appear. Sprouts,
@@ -161,36 +161,36 @@ function slugOf(graph: Graph, id: string): string {
 
 // Keep this list to commands that exist.
 const AGENT_COMMANDS: readonly [string, string][] = [
-	["roots context <id>", "one idea in full: prose, neighbors, prior + dismissed questions"],
-	["roots show <id> · roots list · roots queue · roots log <id>", "read the graph"],
-	['roots ask <id> "<question>" --as agent:<model>', "queue a question for the human (tier ≥ 1)"],
+	["luuna-roots context <id>", "one idea in full: prose, neighbors, prior + dismissed questions"],
+	["luuna-roots show <id> · luuna-roots list · luuna-roots queue · luuna-roots log <id>", "read the graph"],
+	['luuna-roots ask <id> "<question>" --as agent:<model>', "queue a question for the human (tier ≥ 1)"],
 	[
-		'roots propose edge <a> <b> <serves|tension|replaces> --reason "<why>" --cite <a>:<quote> --cite <b>:<quote> --as agent:<model>',
+		'luuna-roots propose edge <a> <b> <serves|tension|replaces> --reason "<why>" --cite <a>:<quote> --cite <b>:<quote> --as agent:<model>',
 		"propose a link (tier ≥ 2); quotes are exact substrings of each idea",
 	],
 	[
-		"roots propose split <id> | merge <a> <b> | compost <id> --reason ... --cite <id>:<quote>",
-		"propose restructuring (tier ≥ 2); a human decides in `roots tend`",
+		"luuna-roots propose split <id> | merge <a> <b> | compost <id> --reason ... --cite <id>:<quote>",
+		"propose restructuring (tier ≥ 2); a human decides in `luuna-roots tend`",
 	],
 	[
-		'roots sprout "<one-line claim>" [--file <md>] --as agent:<model>',
+		'luuna-roots sprout "<one-line claim>" [--file <md>] --as agent:<model>',
 		"propose a new idea in the agent tree (tier ≥ 2); a human adopts it in their own words or rejects it",
 	],
 	[
-		"roots note <id> --file <path> [--name <n>] --as agent:<model>",
-		"attach an artifact (research, diagram) under .roots/agent/notes/ (tier ≥ 1)",
+		"luuna-roots note <id> --file <path> [--name <n>] --as agent:<model>",
+		"attach an artifact (research, diagram) under .luuna/roots/agent/notes/ (tier ≥ 1)",
 	],
 	[
-		"roots drift [--diff <rev>]",
+		"luuna-roots drift [--diff <rev>]",
 		"ideas your changes touch; ask whether each still holds (tier 3; the Stop hook runs it)",
 	],
 ];
 
 const TIER_RULES: readonly [number, string][] = [
 	[0, "off: nothing; only deterministic questions"],
-	[1, "ask: `roots ask`, `roots note`"],
+	[1, "ask: `luuna-roots ask`, `luuna-roots note`"],
 	[2, "propose: tier 1 + proposals and sprouts"],
-	[3, "observe: tier 2 + `roots drift` from harness hooks on repo activity"],
+	[3, "observe: tier 2 + `luuna-roots drift` from harness hooks on repo activity"],
 ];
 
 function guideLines(d: PrimeData): string[] {
@@ -198,14 +198,14 @@ function guideLines(d: PrimeData): string[] {
 		"",
 		"## Using roots as an agent",
 		"",
-		"- Human ideas live in `.roots/human/`. Never create, edit or delete files there, and never",
+		"- Human ideas live in `.luuna/roots/human/`. Never create, edit or delete files there, and never",
 		"  pass `--as human:*`. Humans write intent; you ask questions and (at tier ≥ 2) propose.",
 		"- Identify yourself on every write: `--as agent:<model>` or `ROOTS_AGENT=agent:<model>`.",
-		"- Ask questions specific to one idea; never generic ones. Read `roots context <id>` first:",
+		"- Ask questions specific to one idea; never generic ones. Read `luuna-roots context <id>` first:",
 		"  dismissed questions there are ones the human refused.",
 		`- Each idea takes at most ${d.questionsPerSession} open agent questions (limits.questionsPerSession).`,
 		"- Proposals must cite the human's own words. Rejected proposals are permanent: never refile",
-		"  them (`roots context <id>` lists them). Nothing you propose is linked until a human accepts.",
+		"  them (`luuna-roots context <id>` lists them). Nothing you propose is linked until a human accepts.",
 		"- Every command accepts `--json`.",
 		"",
 		...AGENT_COMMANDS.map(([cmd, what]) => `- \`${cmd}\`: ${what}`),

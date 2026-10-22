@@ -15,11 +15,11 @@ async function setup() {
 	const root = await initProject();
 	const auth = await plant(root, "Login uses passkeys only");
 	const sync = await plant(root, "Sync works offline");
-	const file = join(root, ".roots/human", `${sync.slice(2)}-sync-works-offline`, "idea.md");
+	const file = join(root, ".luuna/roots/human", `${sync.slice(2)}-sync-works-offline`, "idea.md");
 	return { root, auth, sync, file, paths: rootsPaths(root) };
 }
 
-describe("roots scan", () => {
+describe("luuna-roots scan", () => {
 	test("unchanged ideas are skipped; edits outside a session are scanned once", async () => {
 		const { root, auth, sync, file, paths } = await setup();
 		const none = await runJson<ScanBody>(["scan"], root);

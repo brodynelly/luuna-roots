@@ -1,5 +1,5 @@
 #!/usr/bin/env bun
-// roots CLI entry. Keep thin: all logic lives in cli.ts and commands/.
+// Luuna Roots CLI entry. Keep thin: all logic lives in cli.ts and commands/.
 
 import { runCli } from "./cli.ts";
 import { processIo } from "./io.ts";

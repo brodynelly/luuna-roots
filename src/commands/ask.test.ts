@@ -23,7 +23,7 @@ function snapshot(dir: string): string {
 	return out.join("\n");
 }
 
-describe("roots ask", () => {
+describe("luuna-roots ask", () => {
 	test("records an open agent question with one ask event; never touches human/", async () => {
 		const root = await initProject();
 		const id = await plant(root, "Sync works offline");
@@ -105,9 +105,9 @@ describe("roots ask", () => {
 		await run(["tier", id, "0"], root);
 		const off = await runJson<{ error: string }>(["ask", id, Q, ...AS], root);
 		expect(off.exitCode).toBe(EXIT.guard);
-		expect(off.body.error).toContain(`roots tier ${id} 1`);
+		expect(off.body.error).toContain(`luuna-roots tier ${id} 1`);
 		await run(["tier", id, "default"], root);
-		const cfg = join(root, ".roots", "config.yaml");
+		const cfg = join(root, ".luuna/roots", "config.yaml");
 		const { writeFileSync } = await import("node:fs");
 		writeFileSync(cfg, readFileSync(cfg, "utf8").replace(/^tier: 2/m, "tier: 0"));
 		const project = await runJson<{ error: string }>(["ask", id, Q, ...AS], root);

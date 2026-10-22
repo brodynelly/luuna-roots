@@ -1,6 +1,6 @@
 // The agent side of a think session (tier ≥ 1, see agent-phase.ts): the
-// question run before the session (blocking for `roots think`, background for
-// `roots flow`), the one-line screen notice, the session-end proposal run and
+// question run before the session (blocking for `luuna-roots think`, background for
+// `luuna-roots flow`), the one-line screen notice, the session-end proposal run and
 // the research run for questions delegated with [a] (delegation.ts).
 // A failed or slow agent never blocks thinking.
 

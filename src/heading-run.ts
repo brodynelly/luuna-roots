@@ -1,6 +1,6 @@
-// The heading run (`roots flow`, tier ≥ 1, agent.command set, flow.heading
+// The heading run (`luuna-roots flow`, tier ≥ 1, agent.command set, flow.heading
 // on): after each think session in a flow, agent.command gets the trail and
-// the ideas and calls `roots heading` once (headings.ts checks every call).
+// the ideas and calls `luuna-roots heading` once (headings.ts checks every call).
 // Runs in the background; a failed or slow agent only means no heading.
 // Ideas with a per-idea tier 0 are left out of the packet.
 
@@ -24,7 +24,7 @@ Your only job: say in at most two sentences where their thinking is converging a
 most important thing still unsaid (a gap, an open question, an unresolved tension).
 Say it by running this once:
 
-  roots heading "<text>" --cite '<id>:<words copied exactly from that idea>' \\
+  luuna-roots heading "<text>" --cite '<id>:<words copied exactly from that idea>' \\
     [--cite ...] [--next <id>] --as {{actor}}
 
 Rules:
@@ -34,8 +34,8 @@ Rules:
 - Describe the human's own thinking. Never add intent, plans or features of your own.
   No praise, and no recap of what they did (they can see the trail).
 - Never repeat or rephrase anything under "Dismissed headings": the human rejected those.
-- Do not create, edit or delete any file, and never touch .roots/human/.
-- If \`roots heading\` fails, read its error, then fix the call. Succeed at most once.
+- Do not create, edit or delete any file, and never touch .luuna/roots/human/.
+- If \`luuna-roots heading\` fails, read its error, then fix the call. Succeed at most once.
 - When you are done, exit. roots ignores anything you print.
 `;
 

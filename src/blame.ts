@@ -1,4 +1,4 @@
-// Which question each line of idea.md answered (`roots blame`). Pure.
+// Which question each line of idea.md answered (`luuna-roots blame`). Pure.
 //
 // When a think save answers a question, the `answer` event stores a short
 // hash of every line the save added (`lines`, from changedLines()). Hashes,
@@ -164,7 +164,7 @@ export interface AnswerBlock {
 /**
  * The body (everything after the statement line) split into runs of lines
  * that answered the same question. Blank lines stay with the run above them,
- * so paragraph breaks do not start a new block. For `roots view`.
+ * so paragraph breaks do not start a new block. For `luuna-roots view`.
  */
 export function answerBlocks(b: Blame): AnswerBlock[] {
 	const start = b.lines.findIndex((l) => l.text.trim() !== "");

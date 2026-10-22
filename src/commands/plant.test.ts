@@ -19,7 +19,7 @@ interface PlantBody {
 	code?: string;
 }
 
-describe("roots plant", () => {
+describe("luuna-roots plant", () => {
 	test("with a statement: writes idea.md, node, event", async () => {
 		const root = await initProject();
 		const { exitCode, body } = await runJson<PlantBody>(
@@ -37,7 +37,7 @@ describe("roots plant", () => {
 		const paths = rootsPaths(root);
 		const text = readFileSync(join(root, body.path), "utf8");
 		expect(text).toBe("Sync works fully offline, and nobody loses work.\n");
-		expect(body.path).toBe(`.roots/human/${body.id.slice(2)}-sync-works-fully-offline/idea.md`);
+		expect(body.path).toBe(`.luuna/roots/human/${body.id.slice(2)}-sync-works-fully-offline/idea.md`);
 		const node = readGraph(paths).nodes[0];
 		expect(node).toMatchObject({ id: body.id, kind: "idea", author: "human:test-human" });
 		expect(node && "statement" in node).toBe(false); // never cached

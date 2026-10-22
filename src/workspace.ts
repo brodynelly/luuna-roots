@@ -1,7 +1,7 @@
-// Open a roots project for a command: locate .roots/, reconcile node
+// Open a roots project for a command: locate .luuna/roots/, reconcile node
 // directories the human renamed by hand, and load the graph.
 //
-// Directory fix-up (roots-4143): if `.roots/human/a1b2-offline-sync`
+// Directory fix-up (roots-4143): if `.luuna/roots/human/a1b2-offline-sync`
 // was renamed in the shell to `a1b2-sync-offline`, the next read finds it by
 // hex prefix and updates the node's slug to `sync-offline`, logging an `mv`
 // event by `roots:dir-rename`. Fix-up only writes graph.jsonl/events.jsonl,
@@ -80,7 +80,7 @@ export async function reconcileDirs(paths: RootsPaths): Promise<SlugFix[]> {
 
 /**
  * Locate the project from `cwd`, apply directory fix-ups, and load the graph.
- * Throws NotInitializedError when there is no .roots/.
+ * Throws NotInitializedError when there is no .luuna/roots/.
  */
 export async function openWorkspace(cwd: string): Promise<Workspace> {
 	const paths = requireRootsPaths(cwd);

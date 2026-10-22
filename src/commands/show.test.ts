@@ -87,7 +87,7 @@ async function fixture() {
 	return { root, a, b, c, paths };
 }
 
-describe("roots show", () => {
+describe("luuna-roots show", () => {
 	test("json: node, prose, edges both ways, questions, contributors", async () => {
 		const { root, a, c } = await fixture();
 		const { exitCode, body } = await runJson<Record<string, unknown>>(["show", "offline"], root);
@@ -141,7 +141,7 @@ describe("roots show", () => {
 		expect(r.stdout).toContain("[agent] s-9f3e  conflict-ui  open");
 		expect(r.stdout).toContain("Why.");
 		expect(r.stdout).toMatch(/adopted as\s+← r-/);
-		expect(r.stdout).toContain(".roots/agent/sprouts/9f3e-conflict-ui/sprout.md");
+		expect(r.stdout).toContain(".luuna/roots/agent/sprouts/9f3e-conflict-ui/sprout.md");
 	});
 
 	test("missing prose and dangling edges are reported, not fatal", async () => {

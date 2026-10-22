@@ -1,9 +1,9 @@
 // Seeds integration (roots-4689). Read-only: roots reads
-// <project>/.seeds/issues.jsonl directly (no `sd` process, no dependency on
-// seeds) and never writes to .seeds/.
+// <project>/.luuna/missions/issues.jsonl directly (no `sd` process, no dependency on
+// seeds) and never writes to .luuna/missions/.
 //
 // Reading follows seeds' own rule: JSONL, dedup by id, last occurrence wins.
-// Unknown fields are ignored; malformed lines are skipped; no .seeds/ means
+// Unknown fields are ignored; malformed lines are skipped; no .luuna/missions/ means
 // no issues.
 //
 // Linking an issue to an idea, in order of precedence:
@@ -16,7 +16,7 @@
 //      description or labels links the issue to that idea.
 //
 // Only a human changes status (invariant 5): when every issue linked to a
-// committed idea is closed, `roots queue` *prompts* `roots status <id>
+// committed idea is closed, `luuna-roots queue` *prompts* `luuna-roots status <id>
 // built`. Nothing here changes an idea.
 
 import { existsSync } from "node:fs";
@@ -25,7 +25,7 @@ import { citedIdeaIds } from "./idea-refs.ts";
 import { dedupById, readJsonlFile } from "./store.ts";
 import type { Graph, NodeRecord } from "./types.ts";
 
-export const SEEDS_DIR = ".seeds";
+export const SEEDS_DIR = ".luuna/missions";
 
 export type LinkVia = "intent" | "mention";
 
@@ -58,7 +58,7 @@ function isIssue(v: Record<string, unknown>): boolean {
 	return typeof v.id === "string" && v.id !== "";
 }
 
-/** All issues in <root>/.seeds/issues.jsonl (dedup, last wins); [] when absent. */
+/** All issues in <root>/.luuna/missions/issues.jsonl (dedup, last wins); [] when absent. */
 export function readSeedsIssues(root: string): SeedsIssue[] {
 	const rows = readJsonlFile<Record<string, unknown>>(join(root, SEEDS_DIR, "issues.jsonl"));
 	return dedupById(rows.filter(isIssue) as { id: string }[]).map((r) => {

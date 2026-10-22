@@ -7,7 +7,7 @@ import { readGraph } from "../graph.ts";
 import { rootsPaths } from "../paths.ts";
 import { initProject, plant, run, runJson } from "../test-helpers.ts";
 
-describe("roots mv", () => {
+describe("luuna-roots mv", () => {
 	test("renames directory and slug; id stays; logs mv", async () => {
 		const root = await initProject();
 		const id = await plant(root, "Sync works fully offline");
@@ -21,7 +21,7 @@ describe("roots mv", () => {
 		}>(["mv", hex, "offline-sync"], root, { tty: false });
 		expect(exitCode).toBe(0);
 		expect(body).toMatchObject({ id, oldSlug: "sync-works-fully-offline", slug: "offline-sync" });
-		expect(body.path).toBe(`.roots/human/${hex}-offline-sync`);
+		expect(body.path).toBe(`.luuna/roots/human/${hex}-offline-sync`);
 		expect(existsSync(join(paths.human, `${hex}-sync-works-fully-offline`))).toBe(false);
 		expect(readFileSync(join(paths.human, `${hex}-offline-sync`, "idea.md"), "utf8")).toBe(
 			"Sync works fully offline\n",

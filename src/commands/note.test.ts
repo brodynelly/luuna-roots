@@ -20,14 +20,14 @@ async function setup() {
 	return { root, a, hex: a.slice(2), paths: rootsPaths(root) };
 }
 
-describe("roots note", () => {
+describe("luuna-roots note", () => {
 	test("copies into agent/notes/<hex>/YYYY-MM-DD-<slug>.<ext>; collisions get a suffix", async () => {
 		const { root, a, hex, paths } = await setup();
 		const first = await runJson<Noted>(["note", a, "--file", "Prior Art.md", ...AGENT], root, {
 			tty: false,
 		});
 		expect(first.exitCode).toBe(0);
-		expect(first.body.note.path).toBe(`.roots/agent/notes/${hex}/${today()}-prior-art.md`);
+		expect(first.body.note.path).toBe(`.luuna/roots/agent/notes/${hex}/${today()}-prior-art.md`);
 		expect(readFileSync(join(root, first.body.note.path), "utf8")).toBe("# prior art\n");
 		const second = await runJson<Noted>(["note", a, "--file", "Prior Art.md", ...AGENT], root);
 		expect(second.body.note.name).toBe(`${today()}-prior-art-2.md`);
@@ -35,7 +35,7 @@ describe("roots note", () => {
 			["note", a, "--file", "Prior Art.md", "--name", "../../human/Diagram.SVG", ...AGENT],
 			root,
 		);
-		expect(named.body.note.path).toBe(`.roots/agent/notes/${hex}/${today()}-human-diagram.svg`);
+		expect(named.body.note.path).toBe(`.luuna/roots/agent/notes/${hex}/${today()}-human-diagram.svg`);
 		expect(readEvents(paths).filter((e) => e.type === "note")).toHaveLength(3);
 		const show = await runJson<{ notes: { name: string }[] }>(["show", a], root);
 		expect(show.body.notes).toHaveLength(3);
@@ -44,7 +44,7 @@ describe("roots note", () => {
 		expect((await run(["show", a], root)).stdout).toContain("Agent notes (3)");
 	});
 
-	test("size cap, missing file, directories and .roots/ sources are refused", async () => {
+	test("size cap, missing file, directories and .luuna/roots/ sources are refused", async () => {
 		const { root, a, paths } = await setup();
 		writeFileSync(join(root, "big.bin"), Buffer.alloc(NOTE_MAX_BYTES + 1));
 		const big = await runJson<Noted>(["note", a, "--file", "big.bin", ...AGENT], root);
@@ -53,7 +53,7 @@ describe("roots note", () => {
 			EXIT.notFound,
 		);
 		expect((await runJson(["note", a, "--file", ".", ...AGENT], root)).exitCode).toBe(EXIT.usage);
-		const inner = await runJson(["note", a, "--file", ".roots/graph.jsonl", ...AGENT], root);
+		const inner = await runJson(["note", a, "--file", ".luuna/roots/graph.jsonl", ...AGENT], root);
 		expect(inner.exitCode).toBe(EXIT.usage);
 		expect((await runJson(["note", a, ...AGENT], root)).exitCode).toBe(EXIT.usage);
 		expect(existsSync(paths.notes) ? readdirSync(paths.notes) : []).toEqual([]);

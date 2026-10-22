@@ -21,7 +21,7 @@ const VIEW: ScreenView = {
 		total: 3,
 	},
 	notice: "answered (lines 3–5)",
-	editorHint: "Editing .roots/human/a1b2-offline-sync/idea.md in a tmux pane.",
+	editorHint: "Editing .luuna/roots/human/a1b2-offline-sync/idea.md in a tmux pane.",
 };
 
 describe("think screen", () => {
@@ -53,7 +53,7 @@ describe("think screen", () => {
 		const full = renderScreen(VIEW, 60, plain).length;
 		const short = renderScreen(VIEW, 60, plain, full - 1);
 		expect(short).toHaveLength(full - 1);
-		expect(short[0]).toContain("roots think offline-sync");
+		expect(short[0]).toContain("luuna-roots think offline-sync");
 		expect(short.join("\n")).toContain("2 links (terminal too short)");
 		expect(short.join("\n")).toContain("[q] end session");
 	});
@@ -62,7 +62,7 @@ describe("think screen", () => {
 		const lines = renderScreen(VIEW, 42, plain);
 		expect(lines.join("\n")).toBe(
 			[
-				"┌─ roots think offline-sync ─────────────┐",
+				"┌─ luuna-roots think offline-sync ─────────────┐",
 				"│ r-a1b2  offline-sync           shaping │",
 				'│ "Sync works fully offline, and nobody… │',
 				"│                                        │",
@@ -78,7 +78,7 @@ describe("think screen", () => {
 				"│ [s] skip       [q] end session         │",
 				"└────────────────────────────────────────┘",
 				" Editing",
-				" .roots/human/a1b2-offline-sync/idea.md",
+				" .luuna/roots/human/a1b2-offline-sync/idea.md",
 				" in a tmux pane.",
 			].join("\n"),
 		);

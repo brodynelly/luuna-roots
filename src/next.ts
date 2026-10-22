@@ -37,7 +37,7 @@ function cardReason(cards: readonly TendCard[]): string {
 
 export function nextStep(paths: RootsPaths, now: Date, exclude?: string): NextStep {
 	const cards = collectCards(paths, now);
-	if (cards.length > 0) return { command: "roots tend", reason: cardReason(cards) };
+	if (cards.length > 0) return { command: "luuna-roots tend", reason: cardReason(cards) };
 	const graph = readGraph(paths);
 	const ranked = rankAttention(
 		collectAttention(paths, graph, scanNodeDirs(paths), loadConfig(paths), now),
@@ -50,9 +50,9 @@ export function nextStep(paths: RootsPaths, now: Date, exclude?: string): NextSt
 			: open
 				? plural(open, "open question")
 				: plural(pick.candidates.length, "new question");
-		return { command: `roots think ${pick.node.id}`, reason: `${pick.node.slug}: ${why}` };
+		return { command: `luuna-roots think ${pick.node.id}`, reason: `${pick.node.slug}: ${why}` };
 	}
-	return { command: 'roots plant "<one sentence>"', reason: "nothing needs thinking" };
+	return { command: 'luuna-roots plant "<one sentence>"', reason: "nothing needs thinking" };
 }
 
 /** Print the `next:` line (human mode only; never fails the command). */

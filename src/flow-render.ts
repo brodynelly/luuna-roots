@@ -1,7 +1,7 @@
 // The flow transition card (roots-3ad0). Pure: FlowCard + frame info in,
 // lines out. Same box and helpers as the think screen.
 //
-//   ┌─ roots flow ── warren ── 23m ── inbox 3 ──────────┐
+//   ┌─ luuna-roots flow ── warren ── 23m ── inbox 3 ──────────┐
 //   │ trail                                             │
 //   │   r-c818 team-agent-platform  3 answered  shaping │
 //   │ ── heading ── [agent] ─────────────── [x] dismiss │
@@ -148,7 +148,7 @@ export function renderFlowCard(
 	}
 	const content = [...trail, ...rest].slice(0, room);
 	const inbox = card.inbox > 0 ? ` ── inbox ${card.inbox}` : "";
-	const title = truncate(` roots flow ── ${f.project} ── ${f.minutes}m${inbox} `, width - 4);
+	const title = truncate(` luuna-roots flow ── ${f.project} ── ${f.minutes}m${inbox} `, width - 4);
 	const top = `┌─${title}${"─".repeat(Math.max(0, width - 3 - [...title].length))}┐`;
 	const spare = Math.max(0, rows - (content.length + keys.length + 2));
 	const filler: Seg[][] = Array.from({ length: spare }, () => []);

@@ -1,4 +1,4 @@
-// Agent proposals (`roots propose`, tier ≥ 2). Every agent write is validated
+// Agent proposals (`luuna-roots propose`, tier ≥ 2). Every agent write is validated
 // (AGENTS.md invariant 4) before it reaches proposals.jsonl:
 //
 //   - the actor is an agent (checked by the command via resolveAgentActor)
@@ -71,7 +71,7 @@ export function parseCite(raw: string, nodes: readonly NodeRecord[]): Citation {
 export function parseLinkRel(raw: string): EdgeRel {
 	const rel = raw.trim().toLowerCase();
 	if (rel === "derives") {
-		throw new UsageError("`derives` edges come only from `roots adopt`");
+		throw new UsageError("`derives` edges come only from `luuna-roots adopt`");
 	}
 	if (!isLinkRel(rel)) {
 		throw new UsageError(`unknown relation "${raw}"; use ${LINK_RELS.join(", ")}`);
@@ -113,7 +113,7 @@ function liveIdea(node: NodeRecord): NodeRecord {
 /** Validation 1: the tier allows proposals, on every idea involved. */
 function checkTiers(config: RootsConfig, nodes: readonly (NodeRecord | undefined)[]): void {
 	for (const node of nodes) {
-		if (node?.kind === "idea") requireTier(config, 2, "`roots propose`", node);
+		if (node?.kind === "idea") requireTier(config, 2, "`luuna-roots propose`", node);
 	}
 }
 

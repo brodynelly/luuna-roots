@@ -1,6 +1,6 @@
 // Graph invariants (roots-4143). Pure. Used when an edge is created
 // (`link`, `accept`, `adopt`), when an agent proposes one (so it cannot file
-// an edge a human could never accept), and by `roots verify` over the whole
+// an edge a human could never accept), and by `luuna-roots verify` over the whole
 // graph.
 //
 //   no self edges; both endpoints exist
@@ -69,7 +69,7 @@ function label(n: NodeRecord): string {
 }
 
 function checkDerives(from: NodeRecord, to: NodeRecord, opts: EdgeCheckOptions): string | null {
-	if (!opts.allowDerives) return "`derives` edges are created only by `roots adopt`";
+	if (!opts.allowDerives) return "`derives` edges are created only by `luuna-roots adopt`";
 	if (from.kind !== "idea" || to.kind !== "sprout") {
 		return "`derives` goes from an idea (r-) to a sprout (s-)";
 	}
@@ -115,7 +115,7 @@ export interface GraphViolation {
 
 /**
  * Every edge that breaks an invariant, checked against the rest of the graph
- * (for `roots verify`). A `replaces` target that is not composted is also a
+ * (for `luuna-roots verify`). A `replaces` target that is not composted is also a
  * violation. Endpoint status is not re-checked here: ideas may be composted
  * after their edges were made.
  */

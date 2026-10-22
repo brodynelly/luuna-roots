@@ -1,5 +1,5 @@
-// roots propose edge|split|merge|compost ... --as agent:<model> (agent,
-// tier ≥ 2): file a proposal for the human to review in `roots tend`. See
+// luuna-roots propose edge|split|merge|compost ... --as agent:<model> (agent,
+// tier ≥ 2): file a proposal for the human to review in `luuna-roots tend`. See
 // src/agent-proposals.ts for every check.
 
 import { resolveAgentActor } from "../actor.ts";
@@ -24,7 +24,7 @@ function splitArgs(args: string[]): { kind: ProposalKind; nodes: string[]; rel?:
 			merge: "merge <a> <b>",
 			compost: "compost <id>",
 		};
-		throw new UsageError(`usage: roots propose ${shape[kind]} --reason <text> --cite <id>:<quote>`);
+		throw new UsageError(`usage: luuna-roots propose ${shape[kind]} --reason <text> --cite <id>:<quote>`);
 	}
 	if (kind === "edge") return { kind, nodes: rest.slice(0, 2), rel: rest[2] };
 	return { kind, nodes: rest };
@@ -36,14 +36,14 @@ export const proposeCommand: CommandDef = {
 	summary: "Propose an edge, split, merge or compost (tier ≥ 2)",
 	usage: "propose edge|split|merge|compost ...",
 	description:
-		"  roots propose edge <a> <b> <serves|tension|replaces> --reason <t> --cite <id>:<quote> ...\n" +
-		"  roots propose split <id> --reason <how it splits> --cite <id>:<quote>\n" +
-		"  roots propose merge <a> <b> --reason <t> --cite <a>:<quote> --cite <b>:<quote>\n" +
-		"  roots propose compost <id> --reason <t> --cite <id>:<quote> ...\n\n" +
+		"  luuna-roots propose edge <a> <b> <serves|tension|replaces> --reason <t> --cite <id>:<quote> ...\n" +
+		"  luuna-roots propose split <id> --reason <how it splits> --cite <id>:<quote>\n" +
+		"  luuna-roots propose merge <a> <b> --reason <t> --cite <a>:<quote> --cite <b>:<quote>\n" +
+		"  luuna-roots propose compost <id> --reason <t> --cite <id>:<quote> ...\n\n" +
 		"Every quote must be an exact substring of the cited idea's current idea.md (the\n" +
 		"text after the FIRST colon; later colons are part of the quote). Edges and merges\n" +
 		"cite both ideas; splits and composts cite the idea. Nothing is linked until a human\n" +
-		"accepts it in `roots tend`. Refused below tier 2, at limits.proposals pending, or when\n" +
+		"accepts it in `luuna-roots tend`. Refused below tier 2, at limits.proposals pending, or when\n" +
 		"a human already rejected the same proposal (rejections are permanent).\n" +
 		"--mention: cite only the line that mentions the other idea; roots adds its statement.",
 	flags: {
@@ -82,6 +82,6 @@ export const proposeCommand: CommandDef = {
 			p.kind === "edge"
 				? `${p.from} ${p.rel} ${p.to}`
 				: `${p.kind} ${p.from}${p.to ? ` ${p.to}` : ""}`;
-		await out.success(`proposed ${out.c.id(p.id)}: ${what} (a human reviews it in \`roots tend\`)`);
+		await out.success(`proposed ${out.c.id(p.id)}: ${what} (a human reviews it in \`luuna-roots tend\`)`);
 	},
 };

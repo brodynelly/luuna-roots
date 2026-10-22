@@ -1,11 +1,11 @@
-// roots commit <id> · roots status <id> <status> · roots compost <id>
+// luuna-roots commit <id> · luuna-roots status <id> <status> · luuna-roots compost <id>
 // (human, no TTY; refused inside an agent session). Transitions follow
 // src/lifecycle.ts. One `status` event per change;
 // `compost` logs a `compost` event with the optional reason.
 //
 // Seeds integration (roots-4689): committing an idea can prompt "Create seeds
 // issues?" at tier ≥ 2. Implemented conservatively: when the idea's
-// effective tier is ≥ 2 and the repo has .seeds/, `roots commit` prints a
+// effective tier is ≥ 2 and the repo has .luuna/missions/, `luuna-roots commit` prints a
 // hint (and `seedsHint` in --json) on how to break the idea into issues that
 // link back to it. No agent runs and nothing is written to seeds: drafting
 // issues "in seeds" needs a seeds-side draft concept that does not exist yet.
@@ -30,7 +30,7 @@ export function seedsHint(ws: Workspace, node: NodeRecord): string | null {
 	return (
 		`Create seeds issues? Link each one to this idea with ${node.id} in its description ` +
 		`(e.g. sd create --title "..." --description "Realizes ${node.id}"); ` +
-		`an agent can draft them from \`roots context ${node.id}\`.`
+		`an agent can draft them from \`luuna-roots context ${node.id}\`.`
 	);
 }
 
@@ -83,7 +83,7 @@ export const statusCommand: CommandDef = {
 	usage: "status <id> <status>",
 	description:
 		"planted → shaping → committed → built; any live idea → composted.\n" +
-		"shaping is set by the first `roots think` session; composted ideas stay composted.",
+		"shaping is set by the first `luuna-roots think` session; composted ideas stay composted.",
 	minArgs: 2,
 	maxArgs: 2,
 	run: (ctx) => {

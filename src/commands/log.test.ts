@@ -8,7 +8,7 @@ interface LogBody {
 	events: { type: string; node?: string; by: string }[];
 }
 
-describe("roots log", () => {
+describe("luuna-roots log", () => {
 	test("all events, filtered by node, limited", async () => {
 		const root = await initProject();
 		const a = await plant(root, "Alpha", ["--slug", "alpha"]);

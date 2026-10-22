@@ -10,7 +10,7 @@ const AGENT = ["--as", "agent:opus"];
 
 type Sprouted = { id: string; slug: string; path: string; expiresAt: string; error?: string };
 
-describe("roots sprout", () => {
+describe("luuna-roots sprout", () => {
 	test("files a sprout with an optional body from --file", async () => {
 		const root = await initProject();
 		writeFileSync(join(root, "why.md"), "Users lose edits today.\n");
@@ -21,7 +21,7 @@ describe("roots sprout", () => {
 		);
 		expect(r.exitCode).toBe(0);
 		expect(r.body.path).toBe(
-			`.roots/agent/sprouts/${r.body.id.slice(2)}-conflicts-get-merge-ui/sprout.md`,
+			`.luuna/roots/agent/sprouts/${r.body.id.slice(2)}-conflicts-get-merge-ui/sprout.md`,
 		);
 		expect(readFileSync(join(root, r.body.path), "utf8")).toBe(
 			"Conflicts get a merge UI\n\nUsers lose edits today.\n",

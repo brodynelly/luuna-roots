@@ -64,7 +64,7 @@ export function changedLines(before: string, after: string): ChangedLine[] {
 	return out;
 }
 
-/** Every non-blank line of `text` (for `roots scan`, which has no "before"). */
+/** Every non-blank line of `text` (for `luuna-roots scan`, which has no "before"). */
 export function allLines(text: string): ChangedLine[] {
 	return changedLines("", text);
 }

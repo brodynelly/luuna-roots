@@ -56,7 +56,7 @@ function flagLines(specs: FlagSpecs, c: Colors): string[] {
 }
 
 export function renderCommandHelp(def: CommandDef, c: Colors): string {
-	const lines = [`${c.bold("Usage:")} roots ${def.usage}`, "", def.summary];
+	const lines = [`${c.bold("Usage:")} luuna-roots ${def.usage}`, "", def.summary];
 	if (def.description) lines.push("", def.description);
 	if (def.flags && Object.keys(def.flags).length > 0) {
 		lines.push("", c.bold("Options:"), ...flagLines(def.flags, c));
@@ -76,9 +76,9 @@ function commandLine(d: CommandDef, width: number, c: Colors): string[] {
 export function renderRootHelp(defs: readonly CommandDef[], version: string, c: Colors): string {
 	const width = Math.min(USAGE_COLUMN, Math.max(...defs.map((d) => d.usage.length)) + 2);
 	const lines = [
-		`${c.bold("roots")} ${c.dim(`v${version}`)}: git-native intent for projects`,
+		`${c.bold("luuna-roots")} ${c.dim(`v${version}`)}: human-owned intent for Luuna projects`,
 		"",
-		`${c.bold("Usage:")} roots <command> [options]`,
+		`${c.bold("Usage:")} luuna-roots <command> [options]`,
 	];
 	for (const group of Object.keys(GROUP_TITLES) as CommandGroup[]) {
 		const inGroup = defs.filter((d) => d.group === group);
@@ -91,7 +91,7 @@ export function renderRootHelp(defs: readonly CommandDef[], version: string, c: 
 		c.bold("Global options:"),
 		...flagLines({ ...GLOBAL_FLAGS, version: VERSION_FLAG }, c),
 		"",
-		"Run `roots <command> --help` for details. Every command accepts --json.",
+		"Run `luuna-roots <command> --help` for details. Every command accepts --json.",
 	);
 	return `${lines.join("\n")}\n`;
 }

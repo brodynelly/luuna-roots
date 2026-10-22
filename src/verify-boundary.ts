@@ -1,4 +1,4 @@
-// `roots verify` checks on disk: node directories, the .roots/human/ tree
+// `luuna-roots verify` checks on disk: node directories, the .luuna/roots/human/ tree
 // (stray files, symlinks), and the idea.md hash ledger (roots-ecaa; guard 4).
 // Codes are documented in verify.ts.
 
@@ -107,7 +107,7 @@ interface Walk {
 function checkSymlink(w: Walk, p: string): void {
 	const target = realOrSelf(p);
 	if (existsSync(p) && isInside(w.realHuman, target)) return;
-	const why = existsSync(p) ? `points outside .roots/human/ (${target})` : "is dangling";
+	const why = existsSync(p) ? `points outside .luuna/roots/human/ (${target})` : "is dangling";
 	w.out.push(
 		issue("boundary.symlink", "error", `${rel(w.ctx, p)} is a symlink that ${why}`, {
 			file: rel(w.ctx, p),
@@ -127,7 +127,7 @@ function walkTree(w: Walk, dir: string, allowed: (name: string, isDir: boolean) 
 		}
 		if (name.startsWith(".")) {
 			w.out.push(
-				issue("boundary.hidden", "warning", `${rel(w.ctx, p)}: hidden file under .roots/human/`, {
+				issue("boundary.hidden", "warning", `${rel(w.ctx, p)}: hidden file under .luuna/roots/human/`, {
 					file: rel(w.ctx, p),
 				}),
 			);
@@ -161,7 +161,7 @@ const checkHumanTree: VerifyCheck = (ctx) => {
 	if (!st) return [];
 	if (st.isSymbolicLink()) {
 		return [
-			issue("boundary.symlink", "error", ".roots/human is a symlink", { file: rel(ctx, human) }),
+			issue("boundary.symlink", "error", ".luuna/roots/human is a symlink", { file: rel(ctx, human) }),
 		];
 	}
 	const ideaHexes = new Set(
@@ -181,7 +181,7 @@ const checkHumanTree: VerifyCheck = (ctx) => {
 			walkTree(w, p, nodeEntry);
 		} else if (name.startsWith(".")) {
 			w.out.push(
-				issue("boundary.hidden", "warning", `${rel(ctx, p)}: hidden file under .roots/human/`, {
+				issue("boundary.hidden", "warning", `${rel(ctx, p)}: hidden file under .luuna/roots/human/`, {
 					file: rel(ctx, p),
 				}),
 			);
@@ -235,7 +235,7 @@ function ledgerIssue(ctx: VerifyContext, n: NodeRecord, file: string): VerifyIss
 		return issue(
 			"ledger.untrusted-edit",
 			"error",
-			`${label(n)}: idea.md changed outside a think session and the change is not committed. If you wrote it, run \`roots think ${n.id}\` or commit it; otherwise restore it (git checkout)`,
+			`${label(n)}: idea.md changed outside a think session and the change is not committed. If you wrote it, run \`luuna-roots think ${n.id}\` or commit it; otherwise restore it (git checkout)`,
 			at,
 		);
 	}

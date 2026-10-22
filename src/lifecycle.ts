@@ -5,8 +5,8 @@
 //
 // `shaping` is set automatically by the first think session (see
 // think-session.ts), never by hand. Humans move ideas forward one step with
-// `roots commit` / `roots status <id> built`, and retire any live idea with
-// `roots compost` (or a `replaces` edge). There is no way back: a composted
+// `luuna-roots commit` / `luuna-roots status <id> built`, and retire any live idea with
+// `luuna-roots compost` (or a `replaces` edge). There is no way back: a composted
 // idea stays composted (plant a new one instead).
 
 import { ConflictError, UsageError } from "./errors.ts";
@@ -48,13 +48,13 @@ export function transitionError(node: NodeRecord, to: IdeaStatus): string | null
 	const allowed = MANUAL_FROM[to];
 	if (!allowed) {
 		return to === "shaping"
-			? "`shaping` is set by the first `roots think` session, not by hand"
+			? "`shaping` is set by the first `luuna-roots think` session, not by hand"
 			: `\`${to}\` cannot be set by hand`;
 	}
 	if (allowed.includes(from)) return null;
 	if (from === "composted") return `${node.id} is composted; composted ideas stay composted`;
 	if (to === "committed" && from === "planted") {
-		return `${node.id} is only planted; shape it with \`roots think ${node.id}\` before committing`;
+		return `${node.id} is only planted; shape it with \`luuna-roots think ${node.id}\` before committing`;
 	}
 	return `${node.id} is ${from}; it can move to ${to} only from ${allowed.join(" or ")}`;
 }
