@@ -1004,7 +1004,7 @@ fn exit_status_parts(status: &std::process::ExitStatus) -> (Option<i32>, Option<
     #[cfg(unix)]
     {
         use std::os::unix::process::ExitStatusExt;
-        return (status.code(), status.signal().map(signal_name));
+        (status.code(), status.signal().map(signal_name))
     }
     #[cfg(not(unix))]
     {

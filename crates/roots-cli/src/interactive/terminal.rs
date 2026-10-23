@@ -288,9 +288,9 @@ impl ProcessTerminal {
         // the only code that calls session callbacks.
         let (hup, term, winch) = unsafe {
             (
-                signal(SIGHUP, quit_signal as usize),
-                signal(SIGTERM, quit_signal as usize),
-                signal(SIGWINCH, resize_signal as usize),
+                signal(SIGHUP, quit_signal as *const () as usize),
+                signal(SIGTERM, quit_signal as *const () as usize),
+                signal(SIGWINCH, resize_signal as *const () as usize),
             )
         };
         let handlers = SignalHandlers {
@@ -566,7 +566,8 @@ fn process_dimensions(_output: OutputTarget) -> (usize, usize) {
         .ok()
         .filter(|result| result.status.success())
         .and_then(|result| {
-            let mut values = String::from_utf8_lossy(&result.stdout)
+            let text = String::from_utf8_lossy(&result.stdout);
+            let mut values = text
                 .split_whitespace()
                 .filter_map(|part| part.parse::<usize>().ok());
             Some((values.next()?, values.next()?))
