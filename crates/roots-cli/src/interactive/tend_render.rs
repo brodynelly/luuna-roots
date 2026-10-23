@@ -121,11 +121,11 @@ fn proposal_body(card: &ProposalCard, inner: usize, colors: Colors) -> Vec<Strin
             .map(|line| format!("  {line}")),
         );
     }
-    if card.pick_rel {
-        if let Some(rel) = card.rel {
-            lines.push(String::new());
-            lines.push(colors.dim(&format!("suggested: {}; or pick one", rel.as_str())));
-        }
+    if card.pick_rel
+        && let Some(rel) = card.rel
+    {
+        lines.push(String::new());
+        lines.push(colors.dim(&format!("suggested: {}; or pick one", rel.as_str())));
     }
     lines
 }

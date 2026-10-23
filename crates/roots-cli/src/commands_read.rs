@@ -1327,13 +1327,13 @@ pub fn view_command(context: CommandContext<'_>) -> RootsResult<()> {
     let html = flag_bool(context.flags, "html");
     let target = flag_string(context.flags, "out");
     let out_file = target.map(|target| lexical_absolute(context.io.cwd(), target));
-    if let Some(file) = &out_file {
-        if is_human_path(&workspace.paths, file) {
-            return Err(RootsError::guard(format!(
-                "refusing to write {}: it is inside .luuna/roots/human/",
-                target.unwrap_or_default()
-            )));
-        }
+    if let Some(file) = &out_file
+        && is_human_path(&workspace.paths, file)
+    {
+        return Err(RootsError::guard(format!(
+            "refusing to write {}: it is inside .luuna/roots/human/",
+            target.unwrap_or_default()
+        )));
     }
     let from = flag_string(context.flags, "from")
         .map(|query| {

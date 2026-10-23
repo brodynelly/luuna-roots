@@ -412,14 +412,14 @@ fn decision_events(by: &str, outcome: &Outcome, primary: &str) -> Vec<crate::mod
                     .unwrap_or(Value::Null),
             );
         }
-        if let Some(edge) = &outcome.edge {
-            if edge.proposal.as_deref() == Some(proposal.id.as_str()) {
-                extra.insert("edge".to_owned(), Value::String(edge.id.clone()));
-                extra.insert(
-                    "edgeRel".to_owned(),
-                    Value::String(edge.rel.as_str().to_owned()),
-                );
-            }
+        if let Some(edge) = &outcome.edge
+            && edge.proposal.as_deref() == Some(proposal.id.as_str())
+        {
+            extra.insert("edge".to_owned(), Value::String(edge.id.clone()));
+            extra.insert(
+                "edgeRel".to_owned(),
+                Value::String(edge.rel.as_str().to_owned()),
+            );
         }
         if let Some(reason) = &proposal.decision_reason {
             extra.insert("reason".to_owned(), Value::String(reason.clone()));

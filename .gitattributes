@@ -1,1 +1,4 @@
 .luuna/roots/*.jsonl merge=union
+# The compatibility corpus contains byte-level snapshots and input hashes
+# captured from the reference CLI. Keep it LF-identical on Windows runners.
+tests/compat/** text eol=lf

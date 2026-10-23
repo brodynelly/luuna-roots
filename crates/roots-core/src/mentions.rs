@@ -153,10 +153,10 @@ fn target_match(target: &MentionTarget, line: &ChangedLine) -> Option<(String, S
         return Some(("id".to_owned(), target.id.clone()));
     }
     let words = tokens(&line.text);
-    if let Some(phrase) = slug_phrase(&target.slug) {
-        if contains_phrase(&words, &phrase) {
-            return Some(("slug".to_owned(), phrase.join(" ")));
-        }
+    if let Some(phrase) = slug_phrase(&target.slug)
+        && contains_phrase(&words, &phrase)
+    {
+        return Some(("slug".to_owned(), phrase.join(" ")));
     }
     statement_phrases(&target.statement)
         .into_iter()

@@ -1,9 +1,8 @@
 //! Read-side, line-level question attribution for human idea prose.
 
 use crate::model::{EventRecord, QuestionRecord};
-use crate::prose::content_hash;
+use crate::prose::{content_hash, sha256_hex};
 use serde::Serialize;
-use sha2::{Digest, Sha256};
 use std::collections::{HashMap, HashSet};
 
 #[derive(Clone, Debug, Eq, PartialEq, Serialize)]
@@ -49,7 +48,7 @@ pub struct AnswerBlock {
 /// 12 hexadecimal SHA-256 digits for a trimmed line.
 #[must_use]
 pub fn line_hash(text: &str) -> String {
-    format!("{:x}", Sha256::digest(text.trim().as_bytes()))[..12].to_owned()
+    sha256_hex(text.trim().as_bytes())[..12].to_owned()
 }
 
 #[must_use]

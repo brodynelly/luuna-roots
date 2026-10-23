@@ -248,15 +248,15 @@ fn replace_general(value: &str, normalizers: &Normalizers) -> String {
     for (actual, expected) in values {
         replaced = replaced.replace(actual, expected);
     }
-    if let Some(date) = &normalizers.note_date {
-        if replaced.contains("-evidence.txt") {
-            replaced = replaced.replace(date, "<NOTE_DATE>");
-        }
+    if let Some(date) = &normalizers.note_date
+        && replaced.contains("-evidence.txt")
+    {
+        replaced = replaced.replace(date, "<NOTE_DATE>");
     }
-    if normalizers.normalize_project {
-        if let Some(project) = &normalizers.project {
-            replaced = replaced.replace(project, "<PROJECT>");
-        }
+    if normalizers.normalize_project
+        && let Some(project) = &normalizers.project
+    {
+        replaced = replaced.replace(project, "<PROJECT>");
     }
     replaced
 }
@@ -316,11 +316,11 @@ fn collect_note_replacements(
             }
         }
         Value::String(text) => {
-            if let Some(date) = &normalizers.note_date {
-                if text.contains("-evidence.txt") {
-                    let normalized = text.replace(date, "<NOTE_DATE>");
-                    replacements.insert(json_fragment(text), json_fragment(&normalized));
-                }
+            if let Some(date) = &normalizers.note_date
+                && text.contains("-evidence.txt")
+            {
+                let normalized = text.replace(date, "<NOTE_DATE>");
+                replacements.insert(json_fragment(text), json_fragment(&normalized));
             }
         }
         _ => {}
@@ -343,10 +343,10 @@ fn normalize_json_text(actual: &str, normalizers: &Normalizers) -> String {
     for (actual, expected) in &normalizers.values {
         replacements.insert(json_fragment(actual), expected.clone());
     }
-    if normalizers.normalize_project {
-        if let Some(project) = &normalizers.project {
-            replacements.insert(json_fragment(project), "<PROJECT>".to_owned());
-        }
+    if normalizers.normalize_project
+        && let Some(project) = &normalizers.project
+    {
+        replacements.insert(json_fragment(project), "<PROJECT>".to_owned());
     }
     let mut ordered: Vec<_> = replacements.into_iter().collect();
     ordered.sort_by_key(|(actual, _)| std::cmp::Reverse(actual.len()));

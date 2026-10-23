@@ -140,49 +140,49 @@ fn print_summary(
             &format!("  status {} → {}", change.from, change.to),
         );
     }
-    if let Some(mentions) = &summary.mentions {
-        if !mentions.result.filed.is_empty() {
-            let refs = mentions
-                .result
-                .filed
-                .iter()
-                .map(|proposal| {
-                    let target = proposal
-                        .to
-                        .as_deref()
-                        .and_then(|id| workspace.graph.nodes.iter().find(|node| node.id == id))
-                        .map(|node| node.slug.as_str())
-                        .unwrap_or_default();
-                    format!("{} → {target}", context.out.colors.id(&proposal.id))
-                })
-                .collect::<Vec<_>>()
-                .join(", ");
-            context.out.info(
-                context.io,
-                &format!(
-                    "  {} filed: {refs}",
-                    plural(mentions.result.filed.len(), "mention proposal")
-                ),
-            );
-        }
+    if let Some(mentions) = &summary.mentions
+        && !mentions.result.filed.is_empty()
+    {
+        let refs = mentions
+            .result
+            .filed
+            .iter()
+            .map(|proposal| {
+                let target = proposal
+                    .to
+                    .as_deref()
+                    .and_then(|id| workspace.graph.nodes.iter().find(|node| node.id == id))
+                    .map(|node| node.slug.as_str())
+                    .unwrap_or_default();
+                format!("{} → {target}", context.out.colors.id(&proposal.id))
+            })
+            .collect::<Vec<_>>()
+            .join(", ");
+        context.out.info(
+            context.io,
+            &format!(
+                "  {} filed: {refs}",
+                plural(mentions.result.filed.len(), "mention proposal")
+            ),
+        );
     }
     if let Some(problem) = &summary.mention_error {
         context
             .out
             .warn(context.io, &format!("mention scan failed: {problem}"));
     }
-    if let Some(proposals) = &summary.proposals {
-        if !proposals.filed.is_empty() {
-            context.out.info(
-                context.io,
-                &format!(
-                    "  {} proposed {}: {}",
-                    proposals.actor,
-                    plural(proposals.filed.len(), "link"),
-                    proposals.filed.join(", ")
-                ),
-            );
-        }
+    if let Some(proposals) = &summary.proposals
+        && !proposals.filed.is_empty()
+    {
+        context.out.info(
+            context.io,
+            &format!(
+                "  {} proposed {}: {}",
+                proposals.actor,
+                plural(proposals.filed.len(), "link"),
+                proposals.filed.join(", ")
+            ),
+        );
     }
     let mention_count = summary
         .mentions

@@ -219,18 +219,18 @@ pub fn rank_picks(
         picks.insert(0, hit);
         return picks;
     }
-    if let Some(node) = graph.nodes.iter().find(|node| node.id == heading_next) {
-        if is_thinkable(node) {
-            picks.insert(
-                0,
-                FlowPick {
-                    id: node.id.clone(),
-                    slug: node.slug.clone(),
-                    reason: "the heading suggests it".to_owned(),
-                    from_heading: true,
-                },
-            );
-        }
+    if let Some(node) = graph.nodes.iter().find(|node| node.id == heading_next)
+        && is_thinkable(node)
+    {
+        picks.insert(
+            0,
+            FlowPick {
+                id: node.id.clone(),
+                slug: node.slug.clone(),
+                reason: "the heading suggests it".to_owned(),
+                from_heading: true,
+            },
+        );
     }
     picks
 }

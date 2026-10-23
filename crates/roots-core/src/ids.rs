@@ -1,6 +1,6 @@
 //! Stable Roots identifiers and collision handling.
 
-use rand::RngCore;
+use rand::Rng;
 use std::collections::BTreeSet;
 
 pub const SHORT_ATTEMPTS: usize = 20;
