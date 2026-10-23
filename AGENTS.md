@@ -14,6 +14,10 @@ No agent may write `.luuna/roots/human/`, accept its own proposal, or claim that
 
 ## Code layout
 
-`src/index.ts` starts the Bun CLI, `src/cli.ts` routes commands, `src/register-all.ts` registers them, `src/paths.ts` resolves the Roots store, `src/store.ts` owns JSONL operations, `src/actor.ts` enforces actor identity, and `src/hook-guard.ts` guards human-authored files. `src/seeds-link.ts` and `src/mulch-link.ts` are inherited filenames that currently read Luuna Missions and Atlas stores; rename these modules only with a compatibility review.
+- `crates/roots-cli/src/bin/luuna-roots.rs` and `crates/roots-cli/src/bin/lrt.rs` start the two native binaries; `lib.rs` owns dispatch and output boundaries.
+- `crates/roots-cli/src/registry.rs` defines the public command order, help, flags, and handlers. Command modules own command wiring; `interactive/` owns terminal, editor, think, tend, and flow interaction.
+- `crates/roots-core/src/paths.rs` resolves the Roots store, `store.rs` owns JSONL/lock/atomic-write behavior, `actor.rs` enforces identity, and `hook_guard.rs` implements the Claude hook protocol.
+- `crates/roots-core/src/integrations.rs` is the compatibility adapter for read-only Luuna Missions and Atlas records. Preserve the inherited seeds-link/mulch-link behavior when changing it.
+- `tests/compat/` freezes reference CLI and storage behavior; `specs/rust-parity-matrix.md` records rewrite evidence.
 
-For any path or format change, inspect source readers, writers, hook guards, CLI help, and affected callers together. Preserve legacy data through an explicit migration instead of treating a renamed directory as an automatic upgrade. Do not hand-edit project JSONL records.
+For any path or format change, inspect readers, writers, hook guards, CLI help, compatibility fixtures, and affected callers together. Preserve legacy data through an explicit migration instead of treating a renamed directory as an automatic upgrade. Do not hand-edit project JSONL records.

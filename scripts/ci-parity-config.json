@@ -1,5 +1,0 @@
-{
-	"$comment": "Per-repo escape hatches for check-ci-parity.ts (docs/check-all-standard.md §6). aliases: test:ci runs the same bun test suite as check:coverage but with junit/lcov reporters for CI artifact upload. ciOnly: report:test-timing and report:quality render GITHUB_STEP_SUMMARY tables from CI artifacts and have no local gate equivalent.",
-	"aliases": { "test:ci": "check:coverage" },
-	"ciOnly": ["report:test-timing", "report:quality"]
-}

@@ -12,8 +12,8 @@
 
 ## Test plan
 
-- [ ] `bun run lint` passes
-- [ ] `bun run typecheck` passes
-- [ ] `bun test` passes
-- [ ] `bun run check:all` passes
+- [ ] `cargo fmt --all -- --check` passes
+- [ ] `cargo clippy --workspace --all-targets --all-features -- -D warnings` passes
+- [ ] `cargo test --workspace --all-features` passes
+- [ ] `cargo build --workspace --release --locked` passes
 - [ ] Manual verification (if applicable)

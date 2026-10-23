@@ -10,6 +10,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 First implementation of roots (stages 1-7 of the original design spec).
 
 ### Changed
+- Rewrote the CLI from TypeScript/Bun to the native Cargo workspace (`roots-core` and
+  `roots-cli`) while preserving executable names, command and flag surface, JSONL format,
+  actor/guard boundaries, interactive behavior, and legacy environment aliases.
+- Replaced Bun quality tooling with Cargo formatting, Clippy, workspace tests, locked release
+  builds, and a configured Windows/macOS/Linux CI matrix.
 - SPEC.md removed. Direction now lives in seeds issues and roots ideas.
 - Herdr split-pane support removed; `think` and `adopt` open split panes only inside tmux or
   zellij. Fixes `tend` → adopt opening a second pane under herdr.
@@ -66,11 +71,13 @@ First implementation of roots (stages 1-7 of the original design spec).
   otherwise they show as untracked.
 - **`roots view` labels answered paragraphs** with a quoted `**Q:**` line (question, id, asker),
   in Markdown and `--html`.
-- **Core (stage 1).** `init`, `plant`, `show`, `list`, `mv`, `log`. `.roots/` layout with
+- **Core (stage 1; historical former Bun implementation).** `init`, `plant`,
+  `show`, `list`, `mv`, `log`. `.roots/` layout with
   CLI-owned `graph.jsonl` and append-only `events.jsonl` (one event with `by` per mutation).
   IDs `r-xxxx` resolve by id, hex, slug or unique prefix; a manual directory rename is fixed up
   on the next read. JSONL with advisory locks, atomic writes and last-wins dedup (seeds pattern).
-  `--json` envelope on every command, did-you-mean for unknown commands, zero runtime deps.
+  `--json` envelope on every command, did-you-mean for unknown commands, and zero runtime deps
+  in that former Bun implementation.
 - **Think loop, tier 0 (stage 2).** `think [<id>]`: two-pane session that watches `idea.md` for
   saves; a save that changes the file answers the current question. Keys `[d]` dismiss,
   `[z]` snooze, `[s]` skip, `[q]` end. Opens `$EDITOR` in a split inside tmux, zellij or herdr.
@@ -95,7 +102,7 @@ First implementation of roots (stages 1-7 of the original design spec).
 - **Integrations, tier 3 (stage 7).** Read-only seeds link (`sd create --intent r-xxxx`; `show`
   lists linked issues; `queue` suggests `built` when all close), mulch learnings that cite an
   `r-` id in `show`, `drift [--diff <rev>]`, and `prime [--scope <id>]`.
-- Fleet `check:all` gate suite (`bun run verify`): lint, typecheck, AGENTS.md accuracy,
+- **Historical former Bun tooling:** Fleet `check:all` gate suite (`bun run verify`): lint, typecheck, AGENTS.md accuracy,
   duplication, unused deps, file-size and debt-marker ratchets, coverage floors, CI parity.
   GitHub CI, Dependabot, issue/PR templates, labels.
 

@@ -1,7 +1,0 @@
-# Bun runtime configuration for roots.
-# See https://bun.sh/docs/runtime/bunfig for available options.
-#
-# Tests live next to the file under test (src/foo.test.ts,
-# src/commands/bar.test.ts) and next to the ratchet scripts
-# (scripts/check-*.test.ts). We intentionally do NOT set `[test] root` so
-# Bun's default recursive discovery covers both src/ and scripts/.

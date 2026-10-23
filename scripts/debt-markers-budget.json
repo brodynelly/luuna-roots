@@ -1,5 +1,0 @@
-{
-	"_comment": "Debt-marker scanner config used by scripts/check-debt-markers.ts. `trackerPatterns` are JavaScript regex sources (matched case-insensitively); a TODO/FIXME/HACK/XXX line passes if ANY pattern matches it. Roots tracker prefixes: `roots-` (this repo's seed IDs), `sd-`/`seeds-`, `mx-` (mulch), `#NNN` (GitHub), and any URL. `allowlist` entries are `path:line` strings grandfathering an existing untracked marker. Baselined 2026-09-28 with zero markers. The ratchet only goes DOWN — pair new markers with a tracker reference or remove them; do not append to the allowlist without justification. The script never auto-edits this file: loosening requires an explicit commit by a human.",
-	"trackerPatterns": ["\\b(?:roots|sd|seeds|mx)-[0-9a-f]+\\b", "#\\d+\\b", "https?://\\S+"],
-	"allowlist": []
-}

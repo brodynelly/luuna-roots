@@ -1,11 +1,7 @@
 version: 2
 updates:
-  # Dependency-update delay via Dependabot's `cooldown` block. Holds back PRs
-  # for freshly published versions so the project does not auto-adopt a
-  # release on day zero — gives the ecosystem (and the maintainer) time to
-  # surface regressions before they land on main. Mirrors Renovate's
-  # `minimumReleaseAge` behaviour. Closes the `min_release_age` criterion.
-  - package-ecosystem: npm
+  # Keep Cargo manifest and lockfile updates on a deliberate cadence.
+  - package-ecosystem: cargo
     directory: /
     schedule:
       interval: weekly
