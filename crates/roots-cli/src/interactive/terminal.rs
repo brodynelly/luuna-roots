@@ -288,9 +288,9 @@ impl ProcessTerminal {
         // the only code that calls session callbacks.
         let (hup, term, winch) = unsafe {
             (
-                signal(SIGHUP, quit_signal as usize),
-                signal(SIGTERM, quit_signal as usize),
-                signal(SIGWINCH, resize_signal as usize),
+                signal(SIGHUP, quit_signal as *const () as usize),
+                signal(SIGTERM, quit_signal as *const () as usize),
+                signal(SIGWINCH, resize_signal as *const () as usize),
             )
         };
         let handlers = SignalHandlers {
