@@ -489,18 +489,18 @@ fn execute_without_handoff(
         }
     };
     let outcome = outcome_of(&decision);
-    if let RecordedDecision::Proposal(proposal) = &decision {
-        if let Some(think) = &proposal.think {
-            // The decision is deliberately recorded before the nested session,
-            // mirroring JS: an editor/think error leaves the accepted card
-            // visible with the error rather than rolling back audited state.
-            decisions.push(decision.clone());
-            return Ok(EffectResult::Think {
-                outcome,
-                node: think.node.clone(),
-                guidance: think.guidance.clone(),
-            });
-        }
+    if let RecordedDecision::Proposal(proposal) = &decision
+        && let Some(think) = &proposal.think
+    {
+        // The decision is deliberately recorded before the nested session,
+        // mirroring JS: an editor/think error leaves the accepted card
+        // visible with the error rather than rolling back audited state.
+        decisions.push(decision.clone());
+        return Ok(EffectResult::Think {
+            outcome,
+            node: think.node.clone(),
+            guidance: think.guidance.clone(),
+        });
     }
     let notice = Some(notice_of(&decision));
     decisions.push(decision);

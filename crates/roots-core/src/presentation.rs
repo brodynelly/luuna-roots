@@ -1453,10 +1453,10 @@ pub fn build_view(
     let tensions = view_tensions(graph, &initial_document);
     for tension in &tensions {
         for id in [&tension.a, &tension.b] {
-            if find_view_idea(&ideas, id).is_none() {
-                if let Some(node) = find_node(graph, id) {
-                    ideas.push(read_view_idea(paths, graph, events, questions, node)?);
-                }
+            if find_view_idea(&ideas, id).is_none()
+                && let Some(node) = find_node(graph, id)
+            {
+                ideas.push(read_view_idea(paths, graph, events, questions, node)?);
             }
         }
     }
@@ -1801,15 +1801,15 @@ fn layout_view(data: &ViewData) -> (f64, f64, Vec<LayoutNode>) {
         }
         rows[row].push((idea.id.clone(), idea.slug.clone(), false));
     }
-    if let Some(sprouts) = &data.sprouts {
-        if !sprouts.is_empty() {
-            rows.push(
-                sprouts
-                    .iter()
-                    .map(|sprout| (sprout.id.clone(), format!("[agent] {}", sprout.slug), true))
-                    .collect(),
-            );
-        }
+    if let Some(sprouts) = &data.sprouts
+        && !sprouts.is_empty()
+    {
+        rows.push(
+            sprouts
+                .iter()
+                .map(|sprout| (sprout.id.clone(), format!("[agent] {}", sprout.slug), true))
+                .collect(),
+        );
     }
     let widest = std::cmp::max(1, rows.iter().map(Vec::len).max().unwrap_or(0));
     let width = PAD * 2.0 + widest as f64 * BOX_W + (widest.saturating_sub(1)) as f64 * GAP_X;

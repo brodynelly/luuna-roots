@@ -292,17 +292,17 @@ fn move_node(paths: &RootsPaths, id: &str, new_slug: &str) -> RootsResult<MoveRe
         graph.nodes[index].updated_at = Some(iso_now());
         let node = graph.nodes[index].clone();
         let to_dir = canonical_node_dir(paths, &node);
-        if let Some(from) = &from_dir {
-            if *from != to_dir {
-                if to_dir.exists() {
-                    return Err(RootsError::conflict(format!(
-                        "directory already exists: {}",
-                        to_dir.display()
-                    )));
-                }
-                fs::rename(from, &to_dir).map_err(error)?;
-                renamed = Some((from.clone(), to_dir.clone()));
+        if let Some(from) = &from_dir
+            && *from != to_dir
+        {
+            if to_dir.exists() {
+                return Err(RootsError::conflict(format!(
+                    "directory already exists: {}",
+                    to_dir.display()
+                )));
             }
+            fs::rename(from, &to_dir).map_err(error)?;
+            renamed = Some((from.clone(), to_dir.clone()));
         }
         Ok((
             true,
@@ -313,10 +313,10 @@ fn move_node(paths: &RootsPaths, id: &str, new_slug: &str) -> RootsResult<MoveRe
             },
         ))
     });
-    if outcome.is_err() {
-        if let Some((from, to)) = renamed {
-            let _ = fs::rename(to, from);
-        }
+    if outcome.is_err()
+        && let Some((from, to)) = renamed
+    {
+        let _ = fs::rename(to, from);
     }
     outcome
 }
@@ -1033,15 +1033,15 @@ struct ListFilter {
 
 fn parse_list_filter(context: &CommandContext<'_>) -> RootsResult<ListFilter> {
     let status = flag_string(context.flags, "status").map(ToOwned::to_owned);
-    if let Some(status) = &status {
-        if !IDEA_STATUSES.contains(&status.as_str()) && !SPROUT_STATUSES.contains(&status.as_str())
-        {
-            return Err(RootsError::usage(format!(
-                "invalid --status \"{status}\" (valid: {}|{})",
-                IDEA_STATUSES.join("|"),
-                SPROUT_STATUSES.join("|")
-            )));
-        }
+    if let Some(status) = &status
+        && !IDEA_STATUSES.contains(&status.as_str())
+        && !SPROUT_STATUSES.contains(&status.as_str())
+    {
+        return Err(RootsError::usage(format!(
+            "invalid --status \"{status}\" (valid: {}|{})",
+            IDEA_STATUSES.join("|"),
+            SPROUT_STATUSES.join("|")
+        )));
     }
     let kind = match flag_string(context.flags, "kind") {
         None => None,

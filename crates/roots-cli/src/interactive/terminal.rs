@@ -566,7 +566,8 @@ fn process_dimensions(_output: OutputTarget) -> (usize, usize) {
         .ok()
         .filter(|result| result.status.success())
         .and_then(|result| {
-            let mut values = String::from_utf8_lossy(&result.stdout)
+            let stdout = String::from_utf8_lossy(&result.stdout);
+            let mut values = stdout
                 .split_whitespace()
                 .filter_map(|part| part.parse::<usize>().ok());
             Some((values.next()?, values.next()?))
@@ -833,10 +834,10 @@ impl Terminal for FakeTerminal {
     }
 
     fn write(&mut self, text: &str) {
-        if text.starts_with(HOME) {
-            if let Ok(mut state) = self.state.lock() {
-                state.frames.push(text.to_owned());
-            }
+        if text.starts_with(HOME)
+            && let Ok(mut state) = self.state.lock()
+        {
+            state.frames.push(text.to_owned());
         }
     }
 

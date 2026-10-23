@@ -143,7 +143,17 @@ pub fn parse_prose(text: &str) -> Prose {
 
 #[must_use]
 pub fn content_hash(text: &str) -> String {
-    format!("sha256:{:x}", Sha256::digest(text.as_bytes()))
+    format!("sha256:{}", sha256_hex(text.as_bytes()))
+}
+
+/// Render a SHA-256 digest as lowercase hexadecimal, preserving Roots' stable
+/// content-hash representation across digest crate versions.
+#[must_use]
+pub fn sha256_hex(input: impl AsRef<[u8]>) -> String {
+    Sha256::digest(input)
+        .iter()
+        .map(|byte| format!("{byte:02x}"))
+        .collect()
 }
 
 #[derive(Clone, Debug, Eq, PartialEq)]

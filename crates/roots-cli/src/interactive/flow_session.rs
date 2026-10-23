@@ -204,21 +204,20 @@ fn refresh_card(deps: &FlowDeps, live: &mut Live) -> RootsResult<()> {
         _ => None,
     };
     let mut picks = rank_picks(&ranked, &touched, &graph, next);
-    if let Some(preferred) = &live.preferred {
-        if let Some(node) = find_node(&graph, preferred) {
-            if !touched.contains(&node.id) {
-                picks.retain(|pick| pick.id != node.id);
-                picks.insert(
-                    0,
-                    super::flow::FlowPick {
-                        id: node.id.clone(),
-                        slug: node.slug.clone(),
-                        reason: "just planted".to_owned(),
-                        from_heading: false,
-                    },
-                );
-            }
-        }
+    if let Some(preferred) = &live.preferred
+        && let Some(node) = find_node(&graph, preferred)
+        && !touched.contains(&node.id)
+    {
+        picks.retain(|pick| pick.id != node.id);
+        picks.insert(
+            0,
+            super::flow::FlowPick {
+                id: node.id.clone(),
+                slug: node.slug.clone(),
+                reason: "just planted".to_owned(),
+                from_heading: false,
+            },
+        );
     }
     let selected = (live.card.pick > 0)
         .then(|| {
@@ -281,8 +280,8 @@ fn resume_card(
 fn after_session(deps: &FlowDeps, live: &mut Live, summary: &SessionSummary) -> RootsResult<()> {
     let graph = read_graph(&deps.paths)?;
     let node = find_node(&graph, &summary.node).cloned();
-    if let (Some(node), Some(changed)) = (node, summary.changed_lines.clone()) {
-        if let Some(job) = start_session_proposals(
+    if let (Some(node), Some(changed)) = (node, summary.changed_lines.clone())
+        && let Some(job) = start_session_proposals(
             deps.paths.clone(),
             deps.config.clone(),
             node,
@@ -290,9 +289,9 @@ fn after_session(deps: &FlowDeps, live: &mut Live, summary: &SessionSummary) -> 
             changed,
             deps.environment.clone(),
             deps.agent_timeout_ms,
-        )? {
-            enqueue_job(live, job, false);
-        }
+        )?
+    {
+        enqueue_job(live, job, false);
     }
     if !heading_enabled(&deps.config) {
         return Ok(());
@@ -434,11 +433,11 @@ pub fn run_flow(
     let result = (|| -> RootsResult<()> {
         attach(terminal, &sender);
         refresh(&deps, &mut live, terminal);
-        if let Some(id) = deps.start.clone() {
-            if let Err(problem) = do_think(&deps, &mut live, terminal, &sender, steps, id) {
-                live.card.notice = Some(format!("! {}", problem.message));
-                refresh(&deps, &mut live, terminal);
-            }
+        if let Some(id) = deps.start.clone()
+            && let Err(problem) = do_think(&deps, &mut live, terminal, &sender, steps, id)
+        {
+            live.card.notice = Some(format!("! {}", problem.message));
+            refresh(&deps, &mut live, terminal);
         }
         let wait = Duration::from_millis(deps.refresh_ms.unwrap_or(1_000).max(1));
         while !live.card.ended {

@@ -547,13 +547,13 @@ fn adoption_in_graph(
         current.updated_at = current.decided_at.clone();
         current.clone()
     };
-    if let Some(endorsement) = endorsed {
-        if let Some(idea_record) = graph.nodes.iter_mut().find(|node| node.id == idea.id) {
-            idea_record.endorses = Some(Endorsement {
-                sprout: sprout.id.clone(),
-                hash: endorsement.hash,
-            });
-        }
+    if let Some(endorsement) = endorsed
+        && let Some(idea_record) = graph.nodes.iter_mut().find(|node| node.id == idea.id)
+    {
+        idea_record.endorses = Some(Endorsement {
+            sprout: sprout.id.clone(),
+            hash: endorsement.hash,
+        });
     }
     let idea = graph
         .nodes

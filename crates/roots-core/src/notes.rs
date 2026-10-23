@@ -7,13 +7,13 @@ use crate::events::{EventFields, append_event, make_event};
 use crate::ids::hex_of;
 use crate::model::{NodeKind, NodeRecord, NodeStatus, QuestionStatus};
 use crate::paths::RootsPaths;
+use crate::prose::sha256_hex;
 use crate::questions::{read_questions, reopen_with_finding};
 use crate::slug::slugify;
 use crate::tier::require_tier;
 use crate::time::{iso_at, iso_now};
 use serde::{Deserialize, Serialize};
 use serde_json::{Map, Value};
-use sha2::{Digest, Sha256};
 use std::collections::BTreeSet;
 use std::fs;
 use std::path::{Path, PathBuf};
@@ -294,12 +294,10 @@ pub fn attach_note(paths: &RootsPaths, input: NoteInput<'_>) -> RootsResult<Note
     extra.insert("bytes".into(), Value::Number(note.bytes.into()));
     extra.insert(
         "hash".into(),
-        Value::String(format!("sha256:{:x}", Sha256::digest(&data))),
+        Value::String(format!("sha256:{}", sha256_hex(&data))),
     );
-    if reopened {
-        if let Some(question) = input.question {
-            extra.insert("question".into(), Value::String(question.to_owned()));
-        }
+    if reopened && let Some(question) = input.question {
+        extra.insert("question".into(), Value::String(question.to_owned()));
     }
     append_event(
         paths,

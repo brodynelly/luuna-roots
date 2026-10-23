@@ -284,10 +284,10 @@ fn object(entries: impl IntoIterator<Item = (String, Value)>) -> Value {
 
 fn config_yaml(config: &RootsConfig) -> YamlMap {
     let mut agent = Map::new();
-    if let Some(command) = &config.agent.command {
-        if !command.is_empty() {
-            agent.insert("command".to_owned(), Value::String(command.clone()));
-        }
+    if let Some(command) = &config.agent.command
+        && !command.is_empty()
+    {
+        agent.insert("command".to_owned(), Value::String(command.clone()));
     }
     if config.agent.timeout_seconds != DEFAULT_AGENT_TIMEOUT_SECONDS {
         agent.insert(
